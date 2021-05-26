@@ -11,7 +11,7 @@ function App(props) {
   const [isLoggedIn, setIsLoggedIn] = useState(
     localStorage.getItem("token") ? true: false
   );
-  const [username, setUsername] = useState(""); // where username refers to first name 
+  const [username, setUsername] = useState(""); // current impl does not take in first/last name. username as it is
   const [id, setID] = useState(""); // where ID refers to user's email 
   //const [isTutor, setIsTutor] = useState(false);    // for future dashboard where selective access to announcment posting 
 
