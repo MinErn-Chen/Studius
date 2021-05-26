@@ -1,12 +1,12 @@
 import React from 'react';
 import {Router} from "react-router-dom";
 import ReactDOM from 'react-dom';
-import Button from "@material-ui/core/Button";
 import './index.css';
 import App from './App';
 import { createMuiTheme, ThemeProvider} from "@material-ui/core";
-import CssBaseline from "@material-ui/core/CssBaseline";
 import {createBrowserHistory} from "history";
+import {transitions, positions, Provider as AlertProvider} from "react-alert";
+import AlertTemplate from "react-alert-template-basic"
 
 const theme = createMuiTheme({
   palette: {
@@ -40,13 +40,23 @@ const theme = createMuiTheme({
 }
 });
 
+const options = {
+  position: positions.TOP_CENTER,
+  timeout: 5000,
+  offset: '30px',
+  transition: transitions.SCALE
+}
+
+
 let history = createBrowserHistory();
 
 ReactDOM.render(
     <React.StrictMode>
       <ThemeProvider theme={theme}>
       <Router history = {history}>
+      <AlertProvider template={AlertTemplate} {...options}>
       <App />
+      </AlertProvider>
       </Router>
       </ThemeProvider>
     </React.StrictMode>,
