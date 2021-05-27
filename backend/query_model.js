@@ -24,8 +24,8 @@ const getUser = () => {
 
 const createUser = (body) => {
   return new Promise(function(resolve, reject) {
-    const {username, email} = body; // kiv the rest of the attribbutes that goes into the db 
-    pool.query('INSERT INTO user (username, email) VALUES ($1, $2) RETURNING *', [username, email], (error, results) => {
+    const {username, email, password} = body; // kiv the rest of the attribbutes that goes into the db 
+    pool.query('INSERT INTO user (username, email, password) VALUES ($1, $2) RETURNING *', [username, email, password], (error, results) => {
       if (error) {
         reject(error);
       }
