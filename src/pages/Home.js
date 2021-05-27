@@ -1,9 +1,9 @@
 import {
     CssBaseline, 
-    Container,
+   /* Container,
     Typograhy,
     Button,
-    Box,
+    Box,*/
 } from "@material-ui/core";
 import React from "react";
 import {makeStyles, withStyles} from "@material-ui/core/styles";
@@ -12,7 +12,7 @@ import Landing from "./Landing";
 const useStyles = makeStyles((theme) => ({}));
 
 export default function Home() {
-    const classes = useStyles();
+    //const classes = useStyles();
 
     return (
         <React.Fragment>
