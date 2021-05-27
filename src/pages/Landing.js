@@ -57,7 +57,7 @@ export default function Landing() {
                         to="/Login"
                         style={{ textDecoration: "none", color: "white" }}
                     >
-                        <RoundedButton
+                        <RoundedButton style={{margin:5 }}
                             variant="contained"
                             color="primary"
                             href="#"
@@ -66,8 +66,7 @@ export default function Landing() {
                             Student 
                         </RoundedButton>
                         
-
-                        <RoundedButton
+                        <RoundedButton style={{margin:5 }}
                             variant="contained"
                             color="primary"
                             href="#"
