@@ -44,7 +44,7 @@ export default function Landing() {
             <Grid container xs={6} className={classes.left} alignItems="center">
                 <Box pr={10}>
                     <Box mb={2} mt={-9}>
-                        <Typography variant="h2">
+                        <Typography variant="h5">
                             Study with us!
                         </Typography>
                     </Box>
