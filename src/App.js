@@ -11,29 +11,29 @@ function App(props) {
   const [isLoggedIn, setIsLoggedIn] = useState(
     localStorage.getItem("token") ? true: false
   );
-  const [username, setUsername] = useState(""); // current impl does not take in first/last name. username as it is
-  const [id, setID] = useState(""); // where ID refers to user's email 
+  const [username, setUsername] = useState(""); // where username refers to first name 
+  const [email, setEmail] = useState(""); // where ID refers to user's email 
   //const [isTutor, setIsTutor] = useState(false);    // for future dashboard where selective access to announcment posting 
 
   useEffect(() => {
     if (isLoggedIn) {
-      fetch(HERE)// connect to the database here 
+      fetch('http://localhost:3001')// connect to the database here 
       .then((response) => response.json())
-      .then((json) => {
+      .then((json) => {  //or data, whatever 
         setUsername(json.username);
-        setID(json.id);
+        setEmail(json.email);
       });
     }
   }, [isLoggedIn]); 
 
-// watch out for useState names vs database attribute name here -- does not correspond 
+// watch out for useState names vs database attribute name here -- does not correspond, settle in future impl
   const handleLogin = (e, data) => {
     console.log(data);
     e.preventDefault();
-    fetch(HERE) // connect to db here 
+    fetch('http://localhost:3001') // connect to db here 
     .then((response) => {
       if (response.ok) {
-        return response.json();
+        return response.json();  // or .text() ????
       } else {
         throw new Error("Error");
       }
@@ -42,7 +42,7 @@ function App(props) {
     localStorage.setItem("token", json.token);
     setIsLoggedIn(true);
     setUsername(json.user.username);
-    setID(json.user.id);
+    setEmail(json.user.email);
     props.history.push("/");
   })
   .catch((error) => alert.show("Wrong Username or Password"));
@@ -50,7 +50,13 @@ function App(props) {
 
   const handleRegister = (e, data) => {
     e.preventDefault();
-    fetch(HERE) // connect to db here 
+    fetch('http://localhost:3001', { // connect to db here 
+method: 'POST',
+headers: {
+  'Content-Type': 'application/json', 
+},
+body: JSON.stringify({username, email}),
+    })
     .then((response) => {
       console.log(response);
       if (response.ok) {
@@ -61,30 +67,31 @@ function App(props) {
   })
   .then((json) => {
     localStorage.setItem("token", json.token);
-    props.history.push("/login");
+    props.history.push("/Login");
   })
   .catch((error) => alert.show("This email has already been used"));
   };
 
+  /*   
   const handleLogout = () => {
     localStorage.removeItem('token');
     setIsLoggedIn(false);
     setUsername("");
     alert.show("Logged Out");
   };  
-
+*/
 
   return (
     <div className = "App">
       <Switch>
         <Route 
-        path = "/login"
+        path = "/Login"
         render= {(props) => (
           <Login {...props} handleLogin={handleLogin}/>)}
         />
 
         <Route 
-        path = "/register"
+        path = "/Register"
         render= {(props) => (
           <Register {...props} handleRegister={handleRegister}/>)}
         />
