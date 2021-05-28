@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
+import Box from "@material-ui/core/Box";
 import TextField from "@material-ui/core/TextField";
 import { Link } from "react-router-dom";
 import Grid from "@material-ui/core/Grid";
@@ -49,6 +50,7 @@ export default function Register(props) {
     return (
         <Container component="main" maxWidth="xs">
             <CssBaseline />
+            <Box mb={1} mt={-25}>
             <div className={classes.paper}>
                 <Avatar className={classes.avatar}>
                     <LockOutlinedIcon />
@@ -132,6 +134,7 @@ export default function Register(props) {
                     </Grid>
                 </form>
             </div>
+            </Box>
         </Container>
     );
 }
