@@ -41,11 +41,11 @@ export default function Landing() {
 
     return (
         <Container maxWidth="lg" className={classes.top}>
-            <Grid container xs={6} className={classes.left} alignItems="center">
-                <Box pl={25}>
-                    <Box mb={2} mt={-9}>
-                        <Typography variant="h5">
-                            Study with us!
+            <Grid container xs={6} className={classes.center} alignItems="center">
+                <Box>
+                    <Box mb={5} mt={-25}>
+                        <Typography variant="h4">
+                            Study With Us!
                         </Typography>
                     </Box>
                     <Box mb={6}>
@@ -53,11 +53,13 @@ export default function Landing() {
                             I am a...
                         </Typography>
                     </Box>
+                    
                     <Link
                         to="/Login"
                         style={{ textDecoration: "none", color: "white" }}
                     >
-                        <RoundedButton style={{margin:5 }}
+                    <Box display="flex">
+                        <RoundedButton style={{margin:10 } }
                             variant="contained"
                             color="primary"
                             href="#"
@@ -66,7 +68,7 @@ export default function Landing() {
                             Student 
                         </RoundedButton>
                         
-                        <RoundedButton style={{margin:5 }}
+                        <RoundedButton style={{margin:10 }}
                             variant="contained"
                             color="primary"
                             href="#"
@@ -74,6 +76,7 @@ export default function Landing() {
                         >
                             Tutor 
                         </RoundedButton>
+                    </Box>
                     </Link>
                 </Box>
             </Grid>
