@@ -48,6 +48,7 @@ export default function Login(props) {
     return (
         <Container component="main" maxWidth="xs">
             <CssBaseline />
+            <Box mb={2} mt={-25}>
             <div className={classes.paper}>
                 <Avatar className={classes.avatar}>
                     <LockOutlinedIcon />
@@ -119,6 +120,7 @@ export default function Login(props) {
                     </Grid>
                 </form>
             </div>
+            </Box>
         </Container>
     );
 }
