@@ -26,7 +26,7 @@ Log in to PostgreSQL locally and run all commands in `server/database.sql`, sequ
 
 ### Establishing connection from server to database
 
-Edit the user credentials in `server/db.js` to match that of the local PostgreSQL account. Host, port and database should most likely be the same.
+Edit the user credentials in `server/db.js` to match that of the local PostgreSQL account. Host, port and database should most likely be kept the same.
 
 ### Starting server and client
 
