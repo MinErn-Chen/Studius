@@ -22,11 +22,11 @@ and install the necessary dependencies for both server and client,
 
 ### Creating database
 
-Log in to PostgreSQL locally and run all commands in `server/database.sql`, sequentially. Try out the sample user input command to confirm creation of the database and users table.
+Log in to PostgreSQL locally and run all commands in `/server/database.sql`, sequentially. Try out the sample user input command to confirm creation of the database and users table.
 
 ### Establishing connection from server to database
 
-Edit the user credentials in `server/db.js` to match that of the local PostgreSQL account. Host, port and database should most likely be kept the same.
+Edit the user credentials in `/server/db.js` to match that of the local PostgreSQL account. Host, port and database should most likely be kept the same.
 
 ### Starting server and client
 
