@@ -6,7 +6,7 @@ module.exports = (req, res, next) => {
     const token = req.header("token");
 
     if (token === "undefined") {
-      return res.status(401).json("Not authorized");
+      return res.status(403).json("Not authorized");
     }
 
     const verify = jwt.verify(token, process.env.jwtSecret);
@@ -16,6 +16,6 @@ module.exports = (req, res, next) => {
     next();
   } catch (error) {
     console.error(error.message);
-    return res.status(401).json("Not authorized");
+    return res.status(403).json("Not authorized");
   }
 };

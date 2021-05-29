@@ -72,8 +72,8 @@ router.post("/login", validInfo, async (req, res) => {
 
     return res.json({ token });
   } catch (error) {
-    console.error(err.message);
-    res.status(500).json("Server error");
+    console.error(error.message);
+    res.status(500).json("Server error: " + error.message);
   }
 });
 
@@ -81,8 +81,8 @@ router.post("/verify", authorisation, async (req, res) => {
   try {
     res.json(true);
   } catch (error) {
-    console.error(err.message);
-    res.status(500).json("Server error");
+    console.error(error.message);
+    res.status(500).json("Server error: " + error.message);
   }
 });
 

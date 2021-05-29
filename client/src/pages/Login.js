@@ -10,6 +10,8 @@ import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
+import Snackbar from "@material-ui/core/Snackbar";
+import MuiAlert from "@material-ui/lab/Alert";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -31,6 +33,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const Alert = (props) => {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+};
+
 const Login = ({ setAuth }) => {
   const classes = useStyles();
 
@@ -39,10 +45,25 @@ const Login = ({ setAuth }) => {
     password: "",
   });
 
+  const [notification, setNotification] = useState({
+    open: false,
+    severity: "",
+    message: "",
+  });
+
   const { email, password } = inputs;
 
   const handleInputs = (event) => {
     setInputs({ ...inputs, [event.target.name]: event.target.value });
+  };
+
+  const handleNotification = (event, reason) => {
+    // disable clickaway
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setNotification({ ...notification, open: false });
   };
 
   const onSubmitForm = async (event) => {
@@ -60,12 +81,27 @@ const Login = ({ setAuth }) => {
       const parseRes = await response.json();
 
       if (parseRes.token) {
+        // setNotification({
+        //   open: true,
+        //   severity: "success",
+        //   message: "Log in success!",
+        // });
         localStorage.setItem("token", parseRes.token);
         setAuth(true);
       } else {
+        setNotification({
+          open: true,
+          severity: "error",
+          message: parseRes,
+        });
         setAuth(false);
       }
     } catch (error) {
+      setNotification({
+        open: true,
+        severity: "error",
+        message: error.message,
+      });
       console.log(error.message);
     }
   };
@@ -129,6 +165,15 @@ const Login = ({ setAuth }) => {
             </Grid>
           </Grid>
         </form>
+        <Snackbar
+          open={notification.open}
+          autoHideDuration={6000}
+          onClose={handleNotification}
+        >
+          <Alert onClose={handleNotification} severity={notification.severity}>
+            {notification.message}
+          </Alert>
+        </Snackbar>
       </div>
     </Container>
   );
