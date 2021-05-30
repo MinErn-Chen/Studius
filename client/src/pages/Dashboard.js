@@ -14,7 +14,7 @@ const Dashboard = ({ setAuth, setNotification }) => {
       const parseRes = await response.json();
 
       setType(parseRes.user_type);
-      setName(parseRes.user_name);
+      setName(`${parseRes.user_firstname} ${parseRes.user_lastname}`);
     } catch (error) {
       console.error(error.message);
     }

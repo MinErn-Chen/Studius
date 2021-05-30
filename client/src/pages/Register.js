@@ -40,12 +40,13 @@ const Register = ({ setAuth, setNotification }) => {
 
   const [inputs, setInputs] = useState({
     type: "",
-    name: "",
+    firstName: "",
+    lastName: "",
     email: "",
     password: "",
   });
 
-  const { type, name, email, password } = inputs;
+  const { type, firstname, lastname, email, password } = inputs;
 
   const handleInputs = (event) => {
     setInputs({ ...inputs, [event.target.name]: event.target.value });
@@ -55,7 +56,7 @@ const Register = ({ setAuth, setNotification }) => {
     event.preventDefault();
 
     try {
-      const body = { type, name, email, password };
+      const body = { type, firstname, lastname, email, password };
       const response = await fetch("http://localhost:3000/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -124,15 +125,27 @@ const Register = ({ setAuth, setNotification }) => {
                 </Select>
               </FormControl>
             </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={12} sm={6}>
               <TextField
                 variant="outlined"
                 required
                 fullWidth
-                id="name"
-                label="Full name"
-                name="name"
-                value={name}
+                id="firstname"
+                label="First name"
+                name="firstname"
+                value={firstname}
+                onChange={handleInputs}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                variant="outlined"
+                required
+                fullWidth
+                id="lastname"
+                label="Last name"
+                name="lastname"
+                value={lastname}
                 onChange={handleInputs}
               />
             </Grid>
