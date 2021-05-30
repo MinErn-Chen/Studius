@@ -93,7 +93,7 @@ const Login = ({ setAuth, setNotification }) => {
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-          Sign in
+          Log in to your account
         </Typography>
         <form className={classes.form} onSubmit={onSubmitForm}>
           <TextField
@@ -129,7 +129,7 @@ const Login = ({ setAuth, setNotification }) => {
             color="primary"
             className={classes.submit}
           >
-            Sign In
+            Log in
           </Button>
           <Grid container>
             <Grid item xs justify="center">

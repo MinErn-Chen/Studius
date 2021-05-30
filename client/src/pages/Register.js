@@ -99,7 +99,7 @@ const Register = ({ setAuth, setNotification }) => {
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-          Sign up
+          Get started with Studius
         </Typography>
         <form className={classes.form} onSubmit={onSubmitForm}>
           <Grid container spacing={2}>
