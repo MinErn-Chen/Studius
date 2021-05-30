@@ -95,7 +95,12 @@ export default function Pricing() {
             noWrap
             className={classes.toolbarTitle}
           >
-            Studius
+            <img
+              src="https://cdn-thumbs.imagevenue.com/e1/a1/43/ME13FBT5_t.png"
+              alt="STUDIUS"
+              width="75px"
+              height="75px"
+            />
           </Typography>
           <Button
             href="#"
