@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react";
+import Snackbar from "@material-ui/core/Snackbar";
+import MuiAlert from "@material-ui/lab/Alert";
 import "./App.css";
 import {
   BrowserRouter as Router,
@@ -12,8 +14,18 @@ import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 
+const Alert = (props) => {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+};
+
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  const [notification, setNotification] = useState({
+    open: false,
+    severity: "",
+    message: "",
+  });
 
   const setAuth = (boolean) => {
     setIsAuthenticated(boolean);
@@ -38,6 +50,15 @@ function App() {
     isAuth();
   }, []);
 
+  const handleNotification = (event, reason) => {
+    // disable clickaway
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setNotification({ ...notification, open: false });
+  };
+
   return (
     <>
       <Router>
@@ -50,7 +71,11 @@ function App() {
             path="/register"
             render={(props) =>
               !isAuthenticated ? (
-                <Register {...props} setAuth={setAuth} />
+                <Register
+                  {...props}
+                  setAuth={setAuth}
+                  setNotification={setNotification}
+                />
               ) : (
                 <Redirect to="/dashboard" />
               )
@@ -61,7 +86,11 @@ function App() {
             path="/login"
             render={(props) =>
               !isAuthenticated ? (
-                <Login {...props} setAuth={setAuth} />
+                <Login
+                  {...props}
+                  setAuth={setAuth}
+                  setNotification={setNotification}
+                />
               ) : (
                 <Redirect to="/dashboard" />
               )
@@ -72,7 +101,11 @@ function App() {
             path="/dashboard"
             render={(props) =>
               isAuthenticated ? (
-                <Dashboard {...props} setAuth={setAuth} />
+                <Dashboard
+                  {...props}
+                  setAuth={setAuth}
+                  setNotification={setNotification}
+                />
               ) : (
                 <Redirect to="/login" />
               )
@@ -80,6 +113,15 @@ function App() {
           />
         </Switch>
       </Router>
+      <Snackbar
+        open={notification.open}
+        autoHideDuration={4000}
+        onClose={handleNotification}
+      >
+        <Alert onClose={handleNotification} severity={notification.severity}>
+          {notification.message}
+        </Alert>
+      </Snackbar>
     </>
   );
 }

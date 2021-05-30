@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-const Dashboard = ({ setAuth }) => {
+const Dashboard = ({ setAuth, setNotification }) => {
   const [type, setType] = useState("");
   const [name, setName] = useState("");
 
@@ -20,12 +20,22 @@ const Dashboard = ({ setAuth }) => {
     }
   };
 
-  const logout = async (event) => {
+  const onlogout = async (event) => {
     event.preventDefault();
     try {
+      setNotification({
+        open: true,
+        severity: "success",
+        message: "Log out success!",
+      });
       localStorage.removeItem("token");
       setAuth(false);
     } catch (error) {
+      setNotification({
+        open: true,
+        severity: "error",
+        message: error.message,
+      });
       console.error(error.message);
     }
   };
@@ -40,7 +50,7 @@ const Dashboard = ({ setAuth }) => {
       <p>
         Welcome {type} {name}!
       </p>
-      <button onClick={logout}>Log out</button>
+      <button onClick={onlogout}>Log out</button>
     </>
   );
 };
