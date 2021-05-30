@@ -14,6 +14,7 @@ import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
+import Box from "@material-ui/core/Box"; 
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -94,6 +95,7 @@ const Register = ({ setAuth, setNotification }) => {
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
+      <Box mb={2} mt={-12}>
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>
           <LockOutlinedIcon />
@@ -102,7 +104,7 @@ const Register = ({ setAuth, setNotification }) => {
           Sign up
         </Typography>
         <form className={classes.form} onSubmit={onSubmitForm}>
-          <Grid container spacing={2}>
+          <Grid container spacing={1}>
             <Grid item xs={12}>
               <FormControl
                 variant="outlined"
@@ -185,6 +187,7 @@ const Register = ({ setAuth, setNotification }) => {
           </Grid>
         </form>
       </div>
+      </Box>
     </Container>
   );
 };
