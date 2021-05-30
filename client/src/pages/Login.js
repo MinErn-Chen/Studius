@@ -10,6 +10,7 @@ import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
+import Box from "@material-ui/core/Box";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -88,6 +89,7 @@ const Login = ({ setAuth, setNotification }) => {
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
+      <Box mb={2} mt={-4}>
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>
           <LockOutlinedIcon />
@@ -145,6 +147,7 @@ const Login = ({ setAuth, setNotification }) => {
           </Grid>
         </form>
       </div>
+      </Box>
     </Container>
   );
 };
