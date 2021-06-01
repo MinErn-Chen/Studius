@@ -8,11 +8,23 @@ import {
   Route,
   Redirect,
 } from "react-router-dom";
+import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 
 import Home from "./pages/Home";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
+
+const theme = createMuiTheme({
+  palette: {
+    primary: {
+      main: "#E33E7F",
+    },
+    secondary: {
+      main: "#000000",
+    },
+  },
+});
 
 const Alert = (props) => {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -61,67 +73,69 @@ function App() {
 
   return (
     <>
-      <Router>
-        <Switch>
-          <Route exact path="/">
-            <Home />
-          </Route>
-          <Route
-            exact
-            path="/register"
-            render={(props) =>
-              !isAuthenticated ? (
-                <Register
-                  {...props}
-                  setAuth={setAuth}
-                  setNotification={setNotification}
-                />
-              ) : (
-                <Redirect to="/dashboard" />
-              )
-            }
-          />
-          <Route
-            exact
-            path="/login"
-            render={(props) =>
-              !isAuthenticated ? (
-                <Login
-                  {...props}
-                  setAuth={setAuth}
-                  setNotification={setNotification}
-                />
-              ) : (
-                <Redirect to="/dashboard" />
-              )
-            }
-          />
-          <Route
-            exact
-            path="/dashboard"
-            render={(props) =>
-              isAuthenticated ? (
-                <Dashboard
-                  {...props}
-                  setAuth={setAuth}
-                  setNotification={setNotification}
-                />
-              ) : (
-                <Redirect to="/login" />
-              )
-            }
-          />
-        </Switch>
-      </Router>
-      <Snackbar
-        open={notification.open}
-        autoHideDuration={4000}
-        onClose={handleNotification}
-      >
-        <Alert onClose={handleNotification} severity={notification.severity}>
-          {notification.message}
-        </Alert>
-      </Snackbar>
+      <MuiThemeProvider theme={theme}>
+        <Router>
+          <Switch>
+            <Route exact path="/">
+              <Home />
+            </Route>
+            <Route
+              exact
+              path="/register"
+              render={(props) =>
+                !isAuthenticated ? (
+                  <Register
+                    {...props}
+                    setAuth={setAuth}
+                    setNotification={setNotification}
+                  />
+                ) : (
+                  <Redirect to="/dashboard" />
+                )
+              }
+            />
+            <Route
+              exact
+              path="/login"
+              render={(props) =>
+                !isAuthenticated ? (
+                  <Login
+                    {...props}
+                    setAuth={setAuth}
+                    setNotification={setNotification}
+                  />
+                ) : (
+                  <Redirect to="/dashboard" />
+                )
+              }
+            />
+            <Route
+              exact
+              path="/dashboard"
+              render={(props) =>
+                isAuthenticated ? (
+                  <Dashboard
+                    {...props}
+                    setAuth={setAuth}
+                    setNotification={setNotification}
+                  />
+                ) : (
+                  <Redirect to="/login" />
+                )
+              }
+            />
+          </Switch>
+        </Router>
+        <Snackbar
+          open={notification.open}
+          autoHideDuration={4000}
+          onClose={handleNotification}
+        >
+          <Alert onClose={handleNotification} severity={notification.severity}>
+            {notification.message}
+          </Alert>
+        </Snackbar>
+      </MuiThemeProvider>
     </>
   );
 }
