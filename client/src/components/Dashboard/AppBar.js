@@ -36,13 +36,14 @@ const AppBar = ({ firstName, handleLogout }) => {
   };
 
   const menuId = "primary-search-account-menu";
+
   const renderMenu = (
     <Menu
       anchorEl={anchorEl}
       anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      transformOrigin={{ vertical: "top", horizontal: "right" }}
       id={menuId}
       keepMounted
-      transformOrigin={{ vertical: "top", horizontal: "right" }}
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
@@ -59,7 +60,6 @@ const AppBar = ({ firstName, handleLogout }) => {
             edge="start"
             className={classes.menuButton}
             color="inherit"
-            aria-label="open drawer"
           >
             <MenuIcon />
           </IconButton>
@@ -70,9 +70,6 @@ const AppBar = ({ firstName, handleLogout }) => {
           <div className={classes.sectionDesktop}>
             <IconButton
               edge="end"
-              aria-label="account of current user"
-              aria-controls={menuId}
-              aria-haspopup="true"
               onClick={handleProfileMenuOpen}
               color="inherit"
             >

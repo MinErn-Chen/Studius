@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-import Temp from "../components/Dashboard/AppBar";
+import AppBar from "../components/Dashboard/AppBar";
 
 const Dashboard = ({ setAuth, setNotification }) => {
   // const [type, setType] = useState("");
@@ -50,7 +50,7 @@ const Dashboard = ({ setAuth, setNotification }) => {
 
   return (
     <>
-      <Temp firstName={firstName} handleLogout={handleLogout} />
+      <AppBar firstName={firstName} handleLogout={handleLogout} />
     </>
   );
 };
