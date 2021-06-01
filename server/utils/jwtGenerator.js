@@ -6,5 +6,5 @@ module.exports = (user_id) => {
     user: user_id,
   };
 
-  return jwt.sign(payload, process.env.jwtSecret);
+  return jwt.sign(payload, process.env.jwtSecret, { expiresIn: "1hr" });
 };
