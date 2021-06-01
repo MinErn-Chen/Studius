@@ -1,8 +1,11 @@
 import { useState, useEffect } from "react";
 
+import Temp from "../components/Dashboard/AppBar";
+
 const Dashboard = ({ setAuth, setNotification }) => {
-  const [type, setType] = useState("");
-  const [name, setName] = useState("");
+  // const [type, setType] = useState("");
+  // const [name, setName] = useState("");
+  const [firstName, setFirstName] = useState("");
 
   const getProfile = async () => {
     try {
@@ -13,14 +16,15 @@ const Dashboard = ({ setAuth, setNotification }) => {
 
       const parseRes = await response.json();
 
-      setType(parseRes.user_type);
-      setName(`${parseRes.user_firstname} ${parseRes.user_lastname}`);
+      // setType(parseRes.user_type);
+      // setName(`${parseRes.user_firstname} ${parseRes.user_lastname}`);
+      setFirstName(parseRes.user_firstname);
     } catch (error) {
       console.error(error.message);
     }
   };
 
-  const onlogout = async (event) => {
+  const handleLogout = async (event) => {
     event.preventDefault();
     try {
       setNotification({
@@ -46,11 +50,7 @@ const Dashboard = ({ setAuth, setNotification }) => {
 
   return (
     <>
-      <h1>Dashboard</h1>
-      <p>
-        Welcome {type} {name}!
-      </p>
-      <button onClick={onlogout}>Log out</button>
+      <Temp firstName={firstName} handleLogout={handleLogout} />
     </>
   );
 };
