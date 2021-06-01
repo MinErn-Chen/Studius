@@ -30,7 +30,7 @@ const Alert = (props) => {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 };
 
-function App() {
+const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   const [notification, setNotification] = useState({
@@ -70,6 +70,18 @@ function App() {
 
     setNotification({ ...notification, open: false });
   };
+
+  const renderSnackbar = (
+    <Snackbar
+      open={notification.open}
+      autoHideDuration={4000}
+      onClose={handleNotification}
+    >
+      <Alert onClose={handleNotification} severity={notification.severity}>
+        {notification.message}
+      </Alert>
+    </Snackbar>
+  );
 
   return (
     <>
@@ -126,18 +138,10 @@ function App() {
             />
           </Switch>
         </Router>
-        <Snackbar
-          open={notification.open}
-          autoHideDuration={4000}
-          onClose={handleNotification}
-        >
-          <Alert onClose={handleNotification} severity={notification.severity}>
-            {notification.message}
-          </Alert>
-        </Snackbar>
+        {renderSnackbar}
       </MuiThemeProvider>
     </>
   );
-}
+};
 
 export default App;
