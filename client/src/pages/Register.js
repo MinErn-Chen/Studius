@@ -17,7 +17,7 @@ import Select from "@material-ui/core/Select";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
-    marginTop: theme.spacing(16),
+    marginTop: theme.spacing(8),
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
