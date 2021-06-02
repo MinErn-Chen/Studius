@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 const cors = require("cors");
+const morgan = require("morgan");
 
 // default port
 const port = 3000;
@@ -8,6 +9,7 @@ const port = 3000;
 // middleware
 app.use(express.json());
 app.use(cors());
+app.use(morgan("dev"));
 
 // register and login routes
 app.use("/auth", require("./routes/jwtAuth"));
