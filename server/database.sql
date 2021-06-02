@@ -14,5 +14,14 @@ CREATE TABLE users(
   user_password VARCHAR(255) NOT NULL
 );
 
+-- create tutor_credentials table
+CREATE TABLE tutor_credentials(
+    id uuid PRIMARY KEY,
+    filename TEXT UNIQUE NOT NULL,
+    filepath TEXT NOT NULL,
+    mimetype TEXT NOT NULL,
+    size BIGINT NOT NULL
+);
+
 --insert sample user
 INSERT INTO users (user_type, user_firstName, user_lastName, user_email, user_password) VALUES ('Student', 'John', 'Doe', 'johndoe@email.com', 'password');

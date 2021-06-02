@@ -20,6 +20,9 @@ app.use("/dashboard", require("./routes/dashboard"));
 // profile routes
 app.use("/profile", require("./routes/profile"));
 
+// file routes
+app.use("/files", require("./routes/fileUpload"));
+
 app.listen(port, () => {
   console.log(`Server is running on port ${port}.`);
 });
