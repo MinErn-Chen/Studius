@@ -14,6 +14,7 @@ import Home from "./pages/Home";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
+import Profile from "./pages/Profile";
 
 const theme = createMuiTheme({
   palette: {
@@ -136,6 +137,9 @@ const App = () => {
                 )
               }
             />
+            <Route exact path="/profile">
+              <Profile />
+            </Route>
           </Switch>
         </Router>
         {renderSnackbar}
