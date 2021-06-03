@@ -29,4 +29,18 @@ router.put("/", [authorisation, validInfo], async (req, res) => {
   }
 });
 
+router.get("/", authorisation, async (req, res) => {
+  try {
+    const user = await pool.query(
+      "SELECT user_firstname, user_lastname, user_email FROM users WHERE user_id = $1",
+      [req.user]
+    );
+
+    res.json(user.rows[0]);
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json("Server error");
+  }
+});
+
 module.exports = router;

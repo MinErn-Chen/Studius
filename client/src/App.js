@@ -137,9 +137,17 @@ const App = () => {
                 )
               }
             />
-            <Route exact path="/profile">
-              <Profile />
-            </Route>
+            <Route
+              exact
+              path="/profile"
+              render={(props) =>
+                isAuthenticated ? (
+                  <Profile {...props} />
+                ) : (
+                  <Redirect to="/login" />
+                )
+              }
+            />
           </Switch>
         </Router>
         {renderSnackbar}

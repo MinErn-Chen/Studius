@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import Paper from "@material-ui/core/Paper";
@@ -7,7 +8,8 @@ import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
-import PermIdentityIcon from "@material-ui/icons/PermIdentity";
+import { Link } from "react-router-dom";
+import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import Divider from "@material-ui/core/Divider";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
@@ -40,8 +42,35 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SimplePaper() {
+const Profile = () => {
   const classes = useStyles();
+
+  const [accountInformation, setAccountInformation] = useState({
+    user_firstname: "",
+    user_lastName: "",
+    user_email: "",
+  });
+
+  const getAccountInformation = async () => {
+    try {
+      const response = await fetch("http://localhost:3000/profile/", {
+        method: "GET",
+        headers: { token: localStorage.token },
+      });
+
+      const parseRes = await response.json();
+
+      // setType(parseRes.user_type);
+      // setName(`${parseRes.user_firstname} ${parseRes.user_lastname}`);
+      setAccountInformation(parseRes);
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
+
+  useEffect(() => {
+    getAccountInformation();
+  }, []);
 
   return (
     <>
@@ -63,11 +92,16 @@ export default function SimplePaper() {
                   </ListItemIcon>
                   <ListItemText primary={"Account information"} />
                 </ListItem>
-                <ListItem button key={"Profile"}>
+                <ListItem
+                  button
+                  key={"Profile"}
+                  component={Link}
+                  to="/dashboard"
+                >
                   <ListItemIcon>
-                    <PermIdentityIcon />
+                    <ArrowBackIcon />
                   </ListItemIcon>
-                  <ListItemText primary={"Profile"} />
+                  <ListItemText primary={"Return to dashboard"} />
                 </ListItem>
               </List>
             </Paper>
@@ -76,78 +110,40 @@ export default function SimplePaper() {
             <Paper className={classes.detailPaper} elevation={2}>
               <div className={classes.attributes}>
                 <List className={classes.root}>
-                  <ListItem alignItems="center">
-                    <ListItemText
-                      primary={
-                        <Typography gutterBottom variant="h5">
-                          First name
-                        </Typography>
-                      }
-                      secondary={
-                        <>
-                          <Typography
-                            component="span"
-                            variant="body1"
-                            color="textPrimary"
-                          >
-                            Test
-                          </Typography>
-                        </>
-                      }
-                    />
-                    <Button variant="contained" color="primary">
-                      Edit
-                    </Button>
-                  </ListItem>
-                  <Divider component="li" />
-                  <ListItem alignItems="center">
-                    <ListItemText
-                      primary={
-                        <Typography gutterBottom variant="h5">
-                          Last name
-                        </Typography>
-                      }
-                      secondary={
-                        <>
-                          <Typography
-                            component="span"
-                            variant="body1"
-                            color="textPrimary"
-                          >
-                            Test
-                          </Typography>
-                        </>
-                      }
-                    />
-                    <Button variant="contained" color="primary">
-                      Edit
-                    </Button>
-                  </ListItem>
-                  <Divider component="li" />
-                  <ListItem alignItems="center">
-                    <ListItemText
-                      primary={
-                        <Typography gutterBottom variant="h5">
-                          Email address
-                        </Typography>
-                      }
-                      secondary={
-                        <>
-                          <Typography
-                            component="span"
-                            variant="body1"
-                            color="textPrimary"
-                          >
-                            Test
-                          </Typography>
-                        </>
-                      }
-                    />
-                    <Button variant="contained" color="primary">
-                      Edit
-                    </Button>
-                  </ListItem>
-                  <Divider component="li" />
+                  {["First name", "Last name", "Email address"].map(
+                    (attribute, index) => (
+                      <>
+                        <ListItem alignItems="center">
+                          <ListItemText
+                            primary={
+                              <Typography gutterBottom variant="h5">
+                                {attribute}
+                              </Typography>
+                            }
+                            secondary={
+                              <>
+                                <Typography
+                                  component="span"
+                                  variant="body1"
+                                  color="textPrimary"
+                                >
+                                  {
+                                    accountInformation[
+                                      Object.keys(accountInformation)[index]
+                                    ]
+                                  }
+                                </Typography>
+                              </>
+                            }
+                          />
+                          <Button variant="contained" color="primary">
+                            Edit
+                          </Button>
+                        </ListItem>
+                        <Divider component="li" />
+                      </>
+                    )
+                  )}
                   <ListItem alignItems="center">
                     <ListItemText
                       primary={
@@ -162,7 +158,7 @@ export default function SimplePaper() {
                             variant="body1"
                             color="textPrimary"
                           >
-                            Test
+                            Placeholder
                           </Typography>
                         </>
                       }
@@ -180,4 +176,6 @@ export default function SimplePaper() {
       </Container>
     </>
   );
-}
+};
+
+export default Profile;
