@@ -5,7 +5,7 @@ module.exports = (req, res, next) => {
   try {
     const token = req.header("token");
 
-    if (token === "undefined") {
+    if (token === undefined) {
       return res.status(403).json("Not authorized");
     }
 

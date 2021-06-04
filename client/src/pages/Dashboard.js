@@ -24,6 +24,10 @@ const Dashboard = ({ setAuth, setNotification }) => {
     }
   };
 
+  useEffect(() => {
+    getProfile();
+  }, []);
+
   const handleLogout = async (event) => {
     event.preventDefault();
     try {
@@ -43,10 +47,6 @@ const Dashboard = ({ setAuth, setNotification }) => {
       console.error(error.message);
     }
   };
-
-  useEffect(() => {
-    getProfile();
-  }, []);
 
   return (
     <>

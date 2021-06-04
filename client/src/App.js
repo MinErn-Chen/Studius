@@ -15,6 +15,7 @@ import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import Profile from "./pages/Profile";
+import Loading from "./pages/Loading";
 
 const theme = createMuiTheme({
   palette: {
@@ -32,7 +33,10 @@ const Alert = (props) => {
 };
 
 const App = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [userState, setUserState] = useState({
+    isLoading: true,
+    isAuthenticated: false,
+  });
 
   const [notification, setNotification] = useState({
     open: false,
@@ -40,8 +44,11 @@ const App = () => {
     message: "",
   });
 
-  const setAuth = (boolean) => {
-    setIsAuthenticated(boolean);
+  const setAuth = (authBoolean) => {
+    setUserState({
+      isLoading: false,
+      isAuthenticated: authBoolean,
+    });
   };
 
   const isAuth = async () => {
@@ -53,7 +60,10 @@ const App = () => {
 
       const parseRes = await response.json();
 
-      setIsAuthenticated(parseRes === true);
+      setUserState({
+        isLoading: false,
+        isAuthenticated: parseRes === true,
+      });
     } catch (error) {
       console.log(error.message);
     }
@@ -96,14 +106,16 @@ const App = () => {
               exact
               path="/register"
               render={(props) =>
-                !isAuthenticated ? (
+                userState.isAuthenticated ? (
+                  <Redirect to="/dashboard" />
+                ) : userState.isLoading ? (
+                  <Loading />
+                ) : (
                   <Register
                     {...props}
                     setAuth={setAuth}
                     setNotification={setNotification}
                   />
-                ) : (
-                  <Redirect to="/dashboard" />
                 )
               }
             />
@@ -111,14 +123,16 @@ const App = () => {
               exact
               path="/login"
               render={(props) =>
-                !isAuthenticated ? (
+                userState.isAuthenticated ? (
+                  <Redirect to="/dashboard" />
+                ) : userState.isLoading ? (
+                  <Loading />
+                ) : (
                   <Login
                     {...props}
                     setAuth={setAuth}
                     setNotification={setNotification}
                   />
-                ) : (
-                  <Redirect to="/dashboard" />
                 )
               }
             />
@@ -126,12 +140,14 @@ const App = () => {
               exact
               path="/dashboard"
               render={(props) =>
-                isAuthenticated ? (
+                userState.isAuthenticated ? (
                   <Dashboard
                     {...props}
                     setAuth={setAuth}
                     setNotification={setNotification}
                   />
+                ) : userState.isLoading ? (
+                  <Loading />
                 ) : (
                   <Redirect to="/login" />
                 )
@@ -141,8 +157,14 @@ const App = () => {
               exact
               path="/profile"
               render={(props) =>
-                isAuthenticated ? (
-                  <Profile {...props} />
+                userState.isAuthenticated ? (
+                  <Profile
+                    {...props}
+                    setAuth={setAuth}
+                    setNotification={setNotification}
+                  />
+                ) : userState.isLoading ? (
+                  <Loading />
                 ) : (
                   <Redirect to="/login" />
                 )
