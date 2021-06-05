@@ -1,22 +1,30 @@
 import { useState, useEffect } from "react";
+import { useHistory } from "react-router-dom";
 import Container from "@material-ui/core/Container";
+import Grid from "@material-ui/core/Grid";
+
+import Content from "../components/Profile/Content";
 import Dialogue from "../components/Profile/Dialogue";
 import Menu from "../components/Profile/Menu";
 
-const Profile = ({ setNotification }) => {
+const Profile = ({ match, setAuth, setNotification }) => {
+  let history = useHistory();
+
   const [dialogue, setDialogue] = useState({
     open: false,
-    attribute: "",
-    defaultValue: "",
+    type: "",
+    title: "",
+    description: "",
     input: "",
   });
 
-  const handleOpen = (attribute, defaultValue) => () => {
+  const handleOpen = (type) => (title, description) => () => {
     setDialogue({
       open: true,
-      attribute: attribute,
-      defaultValue: defaultValue,
-      input: defaultValue,
+      type: type,
+      title: title,
+      description: description,
+      input: description,
     });
   };
 
@@ -34,34 +42,37 @@ const Profile = ({ setNotification }) => {
 
   const handleEnter = (event) => {
     if (event.key === "Enter") {
-      handleConfirm(event);
+      handleConfirmEdit(event);
     }
   };
 
-  const handleConfirm = async (event) => {
+  const handleLogout = () => {
+    localStorage.clear();
+    setAuth(false);
+    history.push("/login");
+  };
+
+  const handleConfirmEdit = async (event) => {
     try {
-      const attribute =
-        dialogue.attribute === "First name"
+      const title =
+        dialogue.title === "First name"
           ? "firstname"
-          : dialogue.attribute === "Last name"
+          : dialogue.title === "Last name"
           ? "lastname"
-          : dialogue.attribute === "Email address"
+          : dialogue.title === "Email address"
           ? "email"
           : null;
       const input = dialogue.input;
-      const body = { [attribute]: input };
+      const body = { [title]: input };
 
-      const response = await fetch(
-        `http://localhost:3000/profile/${attribute}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            token: localStorage.token,
-          },
-          body: JSON.stringify(body),
-        }
-      );
+      const response = await fetch(`http://localhost:3000/profile/${title}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          token: localStorage.token,
+        },
+        body: JSON.stringify(body),
+      });
 
       const parseRes = await response.json();
 
@@ -69,9 +80,46 @@ const Profile = ({ setNotification }) => {
         setNotification({
           open: true,
           severity: "success",
-          message: `${dialogue.attribute} update success!`,
+          message: `${dialogue.title} update success!`,
         });
         handleClose();
+      } else {
+        setNotification({
+          open: true,
+          severity: "error",
+          message: parseRes,
+        });
+      }
+    } catch (error) {
+      setNotification({
+        open: true,
+        severity: "error",
+        message: error.message,
+      });
+      console.log(error.message);
+    }
+  };
+
+  const handleConfirmDelete = async (event) => {
+    try {
+      const response = await fetch(`http://localhost:3000/profile/`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          token: localStorage.token,
+        },
+      });
+
+      const parseRes = await response.json();
+
+      if (parseRes === true) {
+        setNotification({
+          open: true,
+          severity: "success",
+          message: "Account delete success!",
+        });
+        handleClose();
+        handleLogout();
       } else {
         setNotification({
           open: true,
@@ -117,13 +165,32 @@ const Profile = ({ setNotification }) => {
   return (
     <>
       <Container maxWidth="lg">
-        <Menu accountInformation={accountInformation} handleOpen={handleOpen} />
+        <Grid
+          container
+          spacing={2}
+          direction="row"
+          alignItems="center"
+          justify="center"
+          style={{ minHeight: "100vh" }}
+        >
+          <Grid item md={3}>
+            <Menu match={match} />
+          </Grid>
+          <Grid item md={9}>
+            <Content
+              match={match}
+              accountInformation={accountInformation}
+              handleOpen={handleOpen}
+            />
+          </Grid>
+        </Grid>
         <Dialogue
           dialogue={dialogue}
           handleClose={handleClose}
           handleChange={handleChange}
           handleEnter={handleEnter}
-          handleConfirm={handleConfirm}
+          handleConfirmEdit={handleConfirmEdit}
+          handleConfirmDelete={handleConfirmDelete}
         />
       </Container>
     </>

@@ -1,13 +1,13 @@
 import { useState, useEffect } from "react";
-import Snackbar from "@material-ui/core/Snackbar";
-import MuiAlert from "@material-ui/lab/Alert";
-import "./App.css";
 import {
   BrowserRouter as Router,
   Switch,
   Route,
   Redirect,
 } from "react-router-dom";
+import Snackbar from "@material-ui/core/Snackbar";
+import MuiAlert from "@material-ui/lab/Alert";
+import "./App.css";
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 
 import Home from "./pages/Home";
@@ -99,11 +99,8 @@ const App = () => {
       <MuiThemeProvider theme={theme}>
         <Router>
           <Switch>
-            <Route exact path="/">
-              <Home />
-            </Route>
+            <Route exact path="/" render={() => <Home />} />
             <Route
-              exact
               path="/register"
               render={(props) =>
                 userState.isAuthenticated ? (
@@ -120,7 +117,6 @@ const App = () => {
               }
             />
             <Route
-              exact
               path="/login"
               render={(props) =>
                 userState.isAuthenticated ? (
@@ -137,7 +133,6 @@ const App = () => {
               }
             />
             <Route
-              exact
               path="/dashboard"
               render={(props) =>
                 userState.isAuthenticated ? (
@@ -154,7 +149,6 @@ const App = () => {
               }
             />
             <Route
-              exact
               path="/profile"
               render={(props) =>
                 userState.isAuthenticated ? (

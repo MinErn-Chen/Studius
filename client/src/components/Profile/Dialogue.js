@@ -11,8 +11,14 @@ const Dialogue = ({
   handleClose,
   handleChange,
   handleEnter,
-  handleConfirm,
+  handleConfirmEdit,
+  handleConfirmDelete,
 }) => {
+  const handleConfirm =
+    dialogue.type === "Account information"
+      ? handleConfirmEdit
+      : handleConfirmDelete;
+
   return (
     <Dialog
       open={dialogue.open}
@@ -22,26 +28,35 @@ const Dialogue = ({
       fullWidth
     >
       <DialogTitle id="attribute-dialogue">
-        {`Edit ${dialogue.attribute.toLowerCase()}`}
+        {dialogue.type === "Account information"
+          ? `Edit ${dialogue.title.toLowerCase()}`
+          : dialogue.title}
       </DialogTitle>
       <DialogContent>
         <DialogContentText>
-          <TextField
-            id="outlined-textarea"
-            label={`New ${dialogue.attribute.toLowerCase()}`}
-            placeholder="Placeholder"
-            fullWidth
-            variant="outlined"
-            defaultValue={dialogue.defaultValue}
-            value={dialogue.input}
-            inputProps={{ spellCheck: "false" }}
-            onChange={handleChange}
-            onKeyPress={handleEnter}
-            autoFocus
-            onFocus={(e) =>
-              e.currentTarget.setSelectionRange(0, e.currentTarget.value.length)
-            }
-          />
+          {dialogue.type === "Account information" ? (
+            <TextField
+              id="outlined-textarea"
+              label={`New ${dialogue.title.toLowerCase()}`}
+              placeholder="Placeholder"
+              fullWidth
+              variant="outlined"
+              defaultValue={dialogue.description}
+              value={dialogue.input}
+              inputProps={{ spellCheck: "false" }}
+              onChange={handleChange}
+              onKeyPress={handleEnter}
+              autoFocus
+              onFocus={(e) =>
+                e.currentTarget.setSelectionRange(
+                  0,
+                  e.currentTarget.value.length
+                )
+              }
+            />
+          ) : (
+            "Are you sure you would like to delete this account? This action cannot be reversed."
+          )}
         </DialogContentText>
       </DialogContent>
       <DialogActions>

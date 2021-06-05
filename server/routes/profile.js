@@ -1,8 +1,6 @@
 const router = require("express").Router();
 const pool = require("../db");
-const bcrypt = require("bcrypt");
 const authorisation = require("../middleware/authorisation");
-const validInfo = require("../middleware/validInfo");
 
 router.put("/firstname", authorisation, async (req, res) => {
   try {
@@ -14,7 +12,7 @@ router.put("/firstname", authorisation, async (req, res) => {
     );
 
     if (updateAttributes.rows.length === 0) {
-      res.json("This attribute is not yours");
+      res.json("Update failed!");
     }
 
     res.json(true);
@@ -34,7 +32,7 @@ router.put("/lastname", authorisation, async (req, res) => {
     );
 
     if (updateAttributes.rows.length === 0) {
-      res.json("This attribute is not yours");
+      res.json("Update failed!");
     }
 
     res.json(true);
@@ -62,7 +60,25 @@ router.put("/email", authorisation, async (req, res) => {
     );
 
     if (updateAttributes.rows.length === 0) {
-      res.json("This attribute is not yours");
+      res.json("Update failed!");
+    }
+
+    res.json(true);
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json("Server error");
+  }
+});
+
+router.delete("/", authorisation, async (req, res) => {
+  try {
+    const updateAttributes = await pool.query(
+      "DELETE FROM users WHERE user_id = $1 RETURNING *",
+      [req.user]
+    );
+
+    if (updateAttributes.rows.length === 0) {
+      res.json("Delete failed!");
     }
 
     res.json(true);
