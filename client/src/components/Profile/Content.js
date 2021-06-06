@@ -1,9 +1,9 @@
-import { Route, Redirect } from "react-router-dom";
+import { Route, Redirect, Switch } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 
-import AccountInformation from "./Content/AccountInformation";
-import Advanced from "./Content/Advanced";
+import AccountInformation from "./Contents/AccountInformation";
+import Advanced from "./Contents/Advanced";
 
 const useStyles = makeStyles((theme) => ({
   attributes: {
@@ -30,30 +30,31 @@ const Content = ({ accountInformation, handleOpen, match }) => {
   return (
     <Paper className={classes.detailPaper} elevation={2}>
       <div className={classes.attributes}>
-        <Route
-          exact
-          path={`${match.url}/`}
-          render={() => <Redirect to={`${match.url}/account-information`} />}
-        />
-        <Route
-          exact
-          path={`${match.url}/account-information`}
-          render={() => (
-            <AccountInformation
-              accountInformation={accountInformation}
-              handleOpen={handleOpen("Account information")}
-            />
-          )}
-        />
-        <Route
-          path={`${match.url}/advanced`}
-          render={() => (
-            <Advanced
-              accountInformation={accountInformation}
-              handleOpen={handleOpen("Advanced")}
-            />
-          )}
-        />
+        <Switch>
+          <Route
+            exact
+            path={`${match.url}/`}
+            render={() => <Redirect to={`${match.url}/account-information`} />}
+          />
+          <Route
+            path={`${match.url}/account-information`}
+            render={() => (
+              <AccountInformation
+                accountInformation={accountInformation}
+                handleOpen={handleOpen("Account information")}
+              />
+            )}
+          />
+          <Route
+            path={`${match.url}/advanced`}
+            render={() => (
+              <Advanced
+                accountInformation={accountInformation}
+                handleOpen={handleOpen("Advanced")}
+              />
+            )}
+          />
+        </Switch>
       </div>
     </Paper>
   );
