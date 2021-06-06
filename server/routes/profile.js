@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const pool = require("../db");
 const authorisation = require("../middleware/authorisation");
+const bcrypt = require("bcrypt");
 
 router.put("/firstname", authorisation, async (req, res) => {
   try {
@@ -57,6 +58,32 @@ router.put("/email", authorisation, async (req, res) => {
     const updateAttributes = await pool.query(
       "UPDATE users SET user_email = $1 where user_id = $2 RETURNING *",
       [email, req.user]
+    );
+
+    if (updateAttributes.rows.length === 0) {
+      res.json("Update failed!");
+    }
+
+    res.json(true);
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json("Server error");
+  }
+});
+
+router.put("/password", authorisation, async (req, res) => {
+  try {
+    const { password } = req.body;
+
+    // bcrypt the user password
+    const saltRounds = 10;
+    const salt = await bcrypt.genSalt(saltRounds);
+
+    const bcryptPassword = await bcrypt.hash(password, salt);
+
+    const updateAttributes = await pool.query(
+      "UPDATE users SET user_password = $1 where user_id = $2 RETURNING *",
+      [bcryptPassword, req.user]
     );
 
     if (updateAttributes.rows.length === 0) {

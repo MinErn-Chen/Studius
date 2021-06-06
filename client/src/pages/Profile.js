@@ -61,6 +61,8 @@ const Profile = ({ match, setAuth, setNotification }) => {
           ? "lastname"
           : dialogue.title === "Email address"
           ? "email"
+          : dialogue.title === "Password"
+          ? "password"
           : null;
       const input = dialogue.input;
       const body = { [title]: input };
@@ -141,6 +143,7 @@ const Profile = ({ match, setAuth, setNotification }) => {
     user_firstname: "",
     user_lastname: "",
     user_email: "",
+    user_password: "",
   });
 
   const getAccountInformation = async () => {
@@ -152,7 +155,7 @@ const Profile = ({ match, setAuth, setNotification }) => {
 
       const parseRes = await response.json();
 
-      setAccountInformation(parseRes);
+      setAccountInformation({ ...parseRes, user_password: "" });
     } catch (error) {
       console.error(error.message);
     }

@@ -36,9 +36,10 @@ const Dialogue = ({
         <DialogContentText>
           {dialogue.type === "Account information" ? (
             <TextField
-              id="outlined-textarea"
+              id="dialogue-textfield"
+              type={dialogue.title.toLowerCase()} // cheap solution :/
               label={`New ${dialogue.title.toLowerCase()}`}
-              placeholder="Placeholder"
+              placeholder={`Enter new ${dialogue.title.toLowerCase()}`}
               fullWidth
               variant="outlined"
               defaultValue={dialogue.description}

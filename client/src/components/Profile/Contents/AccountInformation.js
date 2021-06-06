@@ -25,68 +25,47 @@ const AccountInformation = ({ accountInformation, handleOpen }) => {
         Account information
       </Typography>
       <List className={classes.list}>
-        {["First name", "Last name", "Email address"].map((title, index) => (
-          <>
-            <ListItem alignItems="center" key={title}>
-              <ListItemText
-                primary={
-                  <Typography gutterBottom variant="h5">
-                    {title}
-                  </Typography>
-                }
-                secondary={
-                  <>
-                    <Typography
-                      component="span"
-                      variant="body1"
-                      color="textPrimary"
-                    >
-                      {
-                        accountInformation[
-                          Object.keys(accountInformation)[index]
-                        ]
-                      }
+        {["First name", "Last name", "Email address", "Password"].map(
+          (title, index) => (
+            <>
+              <ListItem alignItems="center" key={title}>
+                <ListItemText
+                  primary={
+                    <Typography gutterBottom variant="h5">
+                      {title}
                     </Typography>
-                  </>
-                }
-              />
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={handleOpen(
-                  title,
-                  accountInformation[Object.keys(accountInformation)[index]]
-                )}
-              >
-                Edit
-              </Button>
-            </ListItem>
-            <Divider component="li" />
-          </>
-        ))}
-        <ListItem alignItems="center">
-          <ListItemText
-            primary={
-              <Typography gutterBottom variant="h5">
-                Password
-              </Typography>
-            }
-            secondary={
-              <>
-                <Typography
-                  component="span"
-                  variant="body1"
-                  color="textPrimary"
+                  }
+                  secondary={
+                    <>
+                      <Typography
+                        component="span"
+                        variant="body1"
+                        color="textPrimary"
+                      >
+                        {
+                          accountInformation[
+                            Object.keys(accountInformation)[index]
+                          ]
+                        }
+                      </Typography>
+                    </>
+                  }
+                />
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={handleOpen(
+                    title,
+                    accountInformation[Object.keys(accountInformation)[index]]
+                  )}
                 >
-                  Placeholder
-                </Typography>
-              </>
-            }
-          />
-          <Button variant="contained" color="primary">
-            Edit
-          </Button>
-        </ListItem>
+                  Edit
+                </Button>
+              </ListItem>
+              <Divider component="li" />
+            </>
+          )
+        )}
         <Divider component="li" />
       </List>
     </>
