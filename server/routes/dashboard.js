@@ -2,13 +2,16 @@ const router = require("express").Router();
 const pool = require("../db");
 const authorisation = require("../middleware/authorisation");
 
+// get user information
 router.get("/", authorisation, async (req, res) => {
   try {
+    // retrieve user information from database
     const user = await pool.query(
       "SELECT user_type, user_firstname, user_lastname FROM users WHERE user_id = $1",
       [req.user]
     );
 
+    // return the user information
     res.json(user.rows[0]);
   } catch (error) {
     console.error(error.message);

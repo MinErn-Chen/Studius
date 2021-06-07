@@ -3,10 +3,13 @@ const pool = require("../db");
 const authorisation = require("../middleware/authorisation");
 const bcrypt = require("bcrypt");
 
+// update first name
 router.put("/firstname", authorisation, async (req, res) => {
   try {
+    // destructure the req.body (firstname)
     const { firstname } = req.body;
 
+    // update user first name and handle if user or attribute does not exist
     const updateAttributes = await pool.query(
       "UPDATE users SET user_firstname = $1 where user_id = $2 RETURNING *",
       [firstname, req.user]
@@ -16,6 +19,7 @@ router.put("/firstname", authorisation, async (req, res) => {
       res.json("Update failed!");
     }
 
+    // return update success
     res.json(true);
   } catch (error) {
     console.error(error.message);
@@ -23,10 +27,13 @@ router.put("/firstname", authorisation, async (req, res) => {
   }
 });
 
+// update last name
 router.put("/lastname", authorisation, async (req, res) => {
   try {
+    // destructure the req.body (lastname)
     const { lastname } = req.body;
 
+    // update user last name and handle if user or attribute does not exist
     const updateAttributes = await pool.query(
       "UPDATE users SET user_lastname = $1 where user_id = $2 RETURNING *",
       [lastname, req.user]
@@ -36,6 +43,7 @@ router.put("/lastname", authorisation, async (req, res) => {
       res.json("Update failed!");
     }
 
+    // return update success
     res.json(true);
   } catch (error) {
     console.error(error.message);
@@ -43,10 +51,13 @@ router.put("/lastname", authorisation, async (req, res) => {
   }
 });
 
+// update email address
 router.put("/email", authorisation, async (req, res) => {
   try {
+    // destructure the req.body (email)
     const { email } = req.body;
 
+    // confirm whether input email is valid and handle accordingly
     function validEmail(userEmail) {
       return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(userEmail);
     }
@@ -55,6 +66,7 @@ router.put("/email", authorisation, async (req, res) => {
       return res.status(401).json("Invalid email address");
     }
 
+    // update user email address and handle if user or attribute does not exist
     const updateAttributes = await pool.query(
       "UPDATE users SET user_email = $1 where user_id = $2 RETURNING *",
       [email, req.user]
@@ -64,6 +76,7 @@ router.put("/email", authorisation, async (req, res) => {
       res.json("Update failed!");
     }
 
+    // return update success
     res.json(true);
   } catch (error) {
     console.error(error.message);
@@ -71,8 +84,10 @@ router.put("/email", authorisation, async (req, res) => {
   }
 });
 
+// update password
 router.put("/password", authorisation, async (req, res) => {
   try {
+    // destructure req.body (password)
     const { password } = req.body;
 
     // bcrypt the user password
@@ -81,6 +96,7 @@ router.put("/password", authorisation, async (req, res) => {
 
     const bcryptPassword = await bcrypt.hash(password, salt);
 
+    // update user password and handle if user or attribute does not exist
     const updateAttributes = await pool.query(
       "UPDATE users SET user_password = $1 where user_id = $2 RETURNING *",
       [bcryptPassword, req.user]
@@ -90,6 +106,7 @@ router.put("/password", authorisation, async (req, res) => {
       res.json("Update failed!");
     }
 
+    // return update success
     res.json(true);
   } catch (error) {
     console.error(error.message);
@@ -97,8 +114,10 @@ router.put("/password", authorisation, async (req, res) => {
   }
 });
 
+// delete user
 router.delete("/", authorisation, async (req, res) => {
   try {
+    // delete user and handle if user does not exist
     const updateAttributes = await pool.query(
       "DELETE FROM users WHERE user_id = $1 RETURNING *",
       [req.user]
@@ -108,6 +127,7 @@ router.delete("/", authorisation, async (req, res) => {
       res.json("Delete failed!");
     }
 
+    // return update success
     res.json(true);
   } catch (error) {
     console.error(error.message);
@@ -115,13 +135,16 @@ router.delete("/", authorisation, async (req, res) => {
   }
 });
 
+// display user credentials
 router.get("/", authorisation, async (req, res) => {
   try {
+    // retrieve user information from database
     const user = await pool.query(
       "SELECT user_firstname, user_lastname, user_email  FROM users WHERE user_id = $1",
       [req.user]
     );
 
+    // return user credentials
     res.json(user.rows[0]);
   } catch (error) {
     console.error(error.message);
