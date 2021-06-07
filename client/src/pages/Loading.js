@@ -1,4 +1,5 @@
-import { useEffect } from "react";
+import { useState } from "react";
+import { Redirect } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import CircularProgress from "@material-ui/core/CircularProgress";
@@ -13,14 +14,24 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Loading = ({ setIsInMain }) => {
+const Loading = ({ setAuth, setNotification }) => {
   const classes = useStyles();
 
-  useEffect(() => {
-    setIsInMain(false);
-  }, [setIsInMain]);
+  const [isTimeout, setIsTimeout] = useState(false);
 
-  return (
+  setTimeout(() => {
+    setIsTimeout(true);
+    setAuth(false);
+    setNotification({
+      open: true,
+      severity: "error",
+      message: "Server connection timeout",
+    });
+  }, 3000);
+
+  return isTimeout ? (
+    <Redirect to="/login" />
+  ) : (
     <>
       <Grid
         container
