@@ -1,12 +1,18 @@
 import { useState, useEffect } from "react";
+import { Switch, Route, Redirect } from "react-router-dom";
 
-import AppBar from "./AppBar";
-import SideBar from "./SideBar";
+import AppBar from "../components/Main/AppBar";
+import SideBar from "../components/Main/SideBar";
 
-const Main = ({ setAuth, setNotification, appBarTitle }) => {
+import Dashboard from "../components/Main/Contents/Dashboard";
+import Marketplace from "../components/Main/Contents/Marketplace";
+
+const Main = ({ match, setAuth, setNotification }) => {
   const [firstName, setFirstName] = useState("");
 
   const [sideBarOpen, setSideBarOpen] = useState(false);
+
+  const [appBarTitle, setAppBarTitle] = useState("");
 
   const handleSideBarOpen = () => {
     setSideBarOpen(true);
@@ -35,7 +41,7 @@ const Main = ({ setAuth, setNotification, appBarTitle }) => {
     getProfile();
   }, []);
 
-  const handleLogout = async (event) => {
+  const handleLogout = (event) => {
     event.preventDefault();
     try {
       setNotification({
@@ -64,9 +70,35 @@ const Main = ({ setAuth, setNotification, appBarTitle }) => {
         appBarTitle={appBarTitle}
       />
       <SideBar
+        match={match}
         sideBarOpen={sideBarOpen}
         handleSideBarClose={handleSideBarClose}
       />
+      <Switch>
+        <Route
+          exact
+          path={`${match.url}/`}
+          render={() => <Redirect to={`${match.url}/dashboard`} />}
+        />
+        <Route
+          path={`${match.url}/dashboard`}
+          render={() => (
+            <Dashboard
+              setNotification={setNotification}
+              setAppBarTitle={setAppBarTitle}
+            />
+          )}
+        />
+        <Route
+          path={`${match.url}/marketplace`}
+          render={() => (
+            <Marketplace
+              setNotification={setNotification}
+              setAppBarTitle={setAppBarTitle}
+            />
+          )}
+        />
+      </Switch>
     </>
   );
 };

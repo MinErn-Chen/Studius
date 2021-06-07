@@ -15,10 +15,7 @@ import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Profile from "./pages/Profile";
 import Loading from "./pages/Loading";
-import Dashboard from "./pages/Dashboard";
-import Marketplace from "./pages/Marketplace";
-
-import Main from "./components/Main/Main";
+import Main from "./pages/Main";
 
 const theme = createMuiTheme({
   palette: {
@@ -46,10 +43,6 @@ const App = () => {
     severity: "",
     message: "",
   });
-
-  const [appBarTitle, setAppBarTitle] = useState("");
-
-  const [isInMain, setIsInMain] = useState(false);
 
   const setAuth = (authBoolean) => {
     setUserState({
@@ -105,37 +98,23 @@ const App = () => {
     <>
       <MuiThemeProvider theme={theme}>
         <Router>
-          {isInMain ? (
-            <Main
-              setAuth={setAuth}
-              setNotification={setNotification}
-              appBarTitle={appBarTitle}
-            />
-          ) : null}
           <Switch>
-            <Route
-              exact
-              path="/"
-              render={() => <Home setIsInMain={setIsInMain} />}
-            />
-            <Route
-              exact
-              path="/loading"
-              render={() => <Loading setIsInMain={setIsInMain} />}
-            />
+            <Route exact path="/" render={() => <Home />} />
             <Route
               path="/register"
               render={(props) =>
                 userState.isAuthenticated ? (
-                  <Redirect to="/dashboard" />
+                  <Redirect to="/main" />
                 ) : userState.isLoading ? (
-                  <Redirect to="/loading" />
+                  <Loading
+                    setAuth={setAuth}
+                    setNotification={setNotification}
+                  />
                 ) : (
                   <Register
                     {...props}
                     setAuth={setAuth}
                     setNotification={setNotification}
-                    setIsInMain={setIsInMain}
                   />
                 )
               }
@@ -144,48 +123,35 @@ const App = () => {
               path="/login"
               render={(props) =>
                 userState.isAuthenticated ? (
-                  <Redirect to="/dashboard" />
+                  <Redirect to="/main" />
                 ) : userState.isLoading ? (
-                  <Redirect to="/loading" />
+                  <Loading
+                    setAuth={setAuth}
+                    setNotification={setNotification}
+                  />
                 ) : (
                   <Login
                     {...props}
                     setAuth={setAuth}
                     setNotification={setNotification}
-                    setIsInMain={setIsInMain}
                   />
                 )
               }
             />
             <Route
-              path="/dashboard"
+              path="/main"
               render={(props) =>
                 userState.isAuthenticated ? (
-                  <Dashboard
+                  <Main
                     {...props}
+                    setAuth={setAuth}
                     setNotification={setNotification}
-                    setIsInMain={setIsInMain}
-                    setAppBarTitle={setAppBarTitle}
                   />
                 ) : userState.isLoading ? (
-                  <Redirect to="/loading" />
-                ) : (
-                  <Redirect to="/login" />
-                )
-              }
-            />
-            <Route
-              path="/marketplace"
-              render={(props) =>
-                userState.isAuthenticated ? (
-                  <Marketplace
-                    {...props}
+                  <Loading
+                    setAuth={setAuth}
                     setNotification={setNotification}
-                    setIsInMain={setIsInMain}
-                    setAppBarTitle={setAppBarTitle}
                   />
-                ) : userState.isLoading ? (
-                  <Redirect to="/loading" />
                 ) : (
                   <Redirect to="/login" />
                 )
@@ -199,10 +165,12 @@ const App = () => {
                     {...props}
                     setAuth={setAuth}
                     setNotification={setNotification}
-                    setIsInMain={setIsInMain}
                   />
                 ) : userState.isLoading ? (
-                  <Redirect to="/loading" />
+                  <Loading
+                    setAuth={setAuth}
+                    setNotification={setNotification}
+                  />
                 ) : (
                   <Redirect to="/login" />
                 )

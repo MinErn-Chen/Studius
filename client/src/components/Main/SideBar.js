@@ -37,7 +37,7 @@ const routes = [
   },
 ];
 
-const SideBar = ({ sideBarOpen, handleSideBarClose }) => {
+const SideBar = ({ match, sideBarOpen, handleSideBarClose }) => {
   const classes = useStyles();
 
   const list = (
@@ -55,7 +55,7 @@ const SideBar = ({ sideBarOpen, handleSideBarClose }) => {
             key={route.title}
             onClick={handleSideBarClose}
             component={Link}
-            to={`/${route.path}`}
+            to={`${match.url}/${route.path}`}
           >
             <ListItemIcon>{route.icon}</ListItemIcon>
             <ListItemText primary={route.title} />

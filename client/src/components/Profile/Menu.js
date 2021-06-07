@@ -49,7 +49,7 @@ const Menu = ({ match }) => {
           </ListItemIcon>
           <ListItemText primary={"Advanced"} />
         </ListItem>
-        <ListItem button key={"Profile"} component={Link} to="/dashboard">
+        <ListItem button key={"Profile"} component={Link} to="/main/dashboard">
           <ListItemIcon>
             <ArrowBackIcon />
           </ListItemIcon>

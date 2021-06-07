@@ -1,10 +1,9 @@
 import { useEffect } from "react";
 
-const Dashboard = ({ setIsInMain, setNotification, setAppBarTitle }) => {
+const Dashboard = ({ setNotification, setAppBarTitle }) => {
   useEffect(() => {
-    setIsInMain(true);
     setAppBarTitle("Dashboard");
-  }, [setIsInMain, setAppBarTitle]);
+  }, [setAppBarTitle]);
 
   return <div></div>;
 };

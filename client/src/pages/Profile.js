@@ -7,12 +7,8 @@ import Content from "../components/Profile/Content";
 import Dialogue from "../components/Profile/Dialogue";
 import Menu from "../components/Profile/Menu";
 
-const Profile = ({ match, setAuth, setNotification, setIsInMain }) => {
+const Profile = ({ match, setAuth, setNotification }) => {
   let history = useHistory();
-
-  useEffect(() => {
-    setIsInMain(false);
-  }, [setIsInMain]);
 
   const [dialogue, setDialogue] = useState({
     open: false,

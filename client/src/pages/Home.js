@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import AppBar from "@material-ui/core/AppBar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -76,12 +75,8 @@ const footers = [
   },
 ];
 
-const Home = ({ setIsInMain }) => {
+const Home = () => {
   const classes = useStyles();
-
-  useEffect(() => {
-    setIsInMain(false);
-  }, [setIsInMain]);
 
   return (
     <>
