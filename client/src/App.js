@@ -20,7 +20,7 @@ import Loading from "./pages/Loading";
 const theme = createMuiTheme({
   palette: {
     primary: {
-      main: "#E33E7F",
+      main: "#34495E",
     },
     secondary: {
       main: "#000000",
