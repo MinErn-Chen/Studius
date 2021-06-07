@@ -1,4 +1,4 @@
-import React from "react";
+import { useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import CircularProgress from "@material-ui/core/CircularProgress";
@@ -13,8 +13,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function CircularIndeterminate() {
+const Loading = ({ setIsInMain }) => {
   const classes = useStyles();
+
+  useEffect(() => {
+    setIsInMain(false);
+  }, [setIsInMain]);
 
   return (
     <>
@@ -35,4 +39,6 @@ export default function CircularIndeterminate() {
       </Grid>
     </>
   );
-}
+};
+
+export default Loading;

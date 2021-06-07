@@ -1,4 +1,4 @@
-import React from "react";
+import { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Link } from "react-router-dom";
 import MaterialAppBar from "@material-ui/core/AppBar";
@@ -22,9 +22,15 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const AppBar = ({ firstName, handleLogout }) => {
+const AppBar = ({
+  firstName,
+  handleLogout,
+  handleSideBarOpen,
+  appBarTitle,
+}) => {
   const classes = useStyles();
-  const [anchorEl, setAnchorEl] = React.useState(null);
+
+  const [anchorEl, setAnchorEl] = useState(null);
 
   const isMenuOpen = Boolean(anchorEl);
 
@@ -36,14 +42,11 @@ const AppBar = ({ firstName, handleLogout }) => {
     setAnchorEl(null);
   };
 
-  const menuId = "primary-search-account-menu";
-
   const renderMenu = (
     <Menu
       anchorEl={anchorEl}
       anchorOrigin={{ vertical: "top", horizontal: "right" }}
       transformOrigin={{ vertical: "top", horizontal: "right" }}
-      id={menuId}
       keepMounted
       open={isMenuOpen}
       onClose={handleMenuClose}
@@ -63,11 +66,12 @@ const AppBar = ({ firstName, handleLogout }) => {
             edge="start"
             className={classes.menuButton}
             color="inherit"
+            onClick={handleSideBarOpen}
           >
             <MenuIcon />
           </IconButton>
           <Typography className={classes.title} variant="h6" noWrap>
-            {firstName}'s Dashboard
+            {firstName}'s {appBarTitle}
           </Typography>
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>

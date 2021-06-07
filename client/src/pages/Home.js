@@ -1,4 +1,4 @@
-import React from "react";
+import { useEffect } from "react";
 import AppBar from "@material-ui/core/AppBar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -76,11 +76,15 @@ const footers = [
   },
 ];
 
-export default function Pricing() {
+const Home = ({ setIsInMain }) => {
   const classes = useStyles();
 
+  useEffect(() => {
+    setIsInMain(false);
+  }, [setIsInMain]);
+
   return (
-    <React.Fragment>
+    <>
       <CssBaseline />
       <AppBar
         position="static"
@@ -169,6 +173,8 @@ export default function Pricing() {
         </Grid>
       </Container>
       {/* End footer */}
-    </React.Fragment>
+    </>
   );
-}
+};
+
+export default Home;

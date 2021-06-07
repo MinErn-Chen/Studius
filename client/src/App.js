@@ -13,9 +13,12 @@ import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 import Home from "./pages/Home";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
-import Dashboard from "./pages/Dashboard";
 import Profile from "./pages/Profile";
 import Loading from "./pages/Loading";
+import Dashboard from "./pages/Dashboard";
+import Marketplace from "./pages/Marketplace";
+
+import Main from "./components/Main/Main";
 
 const theme = createMuiTheme({
   palette: {
@@ -43,6 +46,10 @@ const App = () => {
     severity: "",
     message: "",
   });
+
+  const [appBarTitle, setAppBarTitle] = useState("");
+
+  const [isInMain, setIsInMain] = useState(false);
 
   const setAuth = (authBoolean) => {
     setUserState({
@@ -98,20 +105,37 @@ const App = () => {
     <>
       <MuiThemeProvider theme={theme}>
         <Router>
+          {isInMain ? (
+            <Main
+              setAuth={setAuth}
+              setNotification={setNotification}
+              appBarTitle={appBarTitle}
+            />
+          ) : null}
           <Switch>
-            <Route exact path="/" render={() => <Home />} />
+            <Route
+              exact
+              path="/"
+              render={() => <Home setIsInMain={setIsInMain} />}
+            />
+            <Route
+              exact
+              path="/loading"
+              render={() => <Loading setIsInMain={setIsInMain} />}
+            />
             <Route
               path="/register"
               render={(props) =>
                 userState.isAuthenticated ? (
                   <Redirect to="/dashboard" />
                 ) : userState.isLoading ? (
-                  <Loading />
+                  <Redirect to="/loading" />
                 ) : (
                   <Register
                     {...props}
                     setAuth={setAuth}
                     setNotification={setNotification}
+                    setIsInMain={setIsInMain}
                   />
                 )
               }
@@ -122,12 +146,13 @@ const App = () => {
                 userState.isAuthenticated ? (
                   <Redirect to="/dashboard" />
                 ) : userState.isLoading ? (
-                  <Loading />
+                  <Redirect to="/loading" />
                 ) : (
                   <Login
                     {...props}
                     setAuth={setAuth}
                     setNotification={setNotification}
+                    setIsInMain={setIsInMain}
                   />
                 )
               }
@@ -138,11 +163,29 @@ const App = () => {
                 userState.isAuthenticated ? (
                   <Dashboard
                     {...props}
-                    setAuth={setAuth}
                     setNotification={setNotification}
+                    setIsInMain={setIsInMain}
+                    setAppBarTitle={setAppBarTitle}
                   />
                 ) : userState.isLoading ? (
-                  <Loading />
+                  <Redirect to="/loading" />
+                ) : (
+                  <Redirect to="/login" />
+                )
+              }
+            />
+            <Route
+              path="/marketplace"
+              render={(props) =>
+                userState.isAuthenticated ? (
+                  <Marketplace
+                    {...props}
+                    setNotification={setNotification}
+                    setIsInMain={setIsInMain}
+                    setAppBarTitle={setAppBarTitle}
+                  />
+                ) : userState.isLoading ? (
+                  <Redirect to="/loading" />
                 ) : (
                   <Redirect to="/login" />
                 )
@@ -156,9 +199,10 @@ const App = () => {
                     {...props}
                     setAuth={setAuth}
                     setNotification={setNotification}
+                    setIsInMain={setIsInMain}
                   />
                 ) : userState.isLoading ? (
-                  <Loading />
+                  <Redirect to="/loading" />
                 ) : (
                   <Redirect to="/login" />
                 )

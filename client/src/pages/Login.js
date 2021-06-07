@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link as RouterLink } from "react-router-dom";
 import MaterialLink from "@material-ui/core/Link";
 import Avatar from "@material-ui/core/Avatar";
@@ -31,8 +31,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Login = ({ setAuth, setNotification }) => {
+const Login = ({ setAuth, setNotification, setIsInMain }) => {
   const classes = useStyles();
+
+  useEffect(() => {
+    setIsInMain(false);
+  }, [setIsInMain]);
 
   const [inputs, setInputs] = useState({
     email: "",
