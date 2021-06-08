@@ -6,8 +6,12 @@ import SideBar from "../components/Main/SideBar";
 
 import Dashboard from "../components/Main/Contents/Dashboard";
 import Marketplace from "../components/Main/Contents/Marketplace";
+import TutorProfile from "../components/Main/Contents/TutorProfile";
+import StudentProfile from "../components/Main/Contents/StudentProfile";
 
 const Main = ({ match, setAuth, setNotification }) => {
+  const [userType, setUserType] = useState("");
+
   const [firstName, setFirstName] = useState("");
 
   const [sideBarOpen, setSideBarOpen] = useState(false);
@@ -31,6 +35,7 @@ const Main = ({ match, setAuth, setNotification }) => {
 
       const parseRes = await response.json();
 
+      setUserType(parseRes.user_type);
       setFirstName(parseRes.user_firstname);
     } catch (error) {
       console.error(error.message);
@@ -73,11 +78,12 @@ const Main = ({ match, setAuth, setNotification }) => {
         match={match}
         sideBarOpen={sideBarOpen}
         handleSideBarClose={handleSideBarClose}
+        userType={userType}
       />
       <Switch>
         <Route
           exact
-          path={`${match.url}/`}
+          path={`${match.url}`}
           render={() => <Redirect to={`${match.url}/dashboard`} />}
         />
         <Route
@@ -97,6 +103,32 @@ const Main = ({ match, setAuth, setNotification }) => {
               setAppBarTitle={setAppBarTitle}
             />
           )}
+        />
+        <Route
+          path={`${match.url}/tutor-profile`}
+          render={() =>
+            userType === "Tutor" ? (
+              <TutorProfile
+                setNotification={setNotification}
+                setAppBarTitle={setAppBarTitle}
+              />
+            ) : (
+              <Redirect to={`${match.url}`} />
+            )
+          }
+        />
+        <Route
+          path={`${match.url}/student-profile`}
+          render={() =>
+            userType === "Student" ? (
+              <StudentProfile
+                setNotification={setNotification}
+                setAppBarTitle={setAppBarTitle}
+              />
+            ) : (
+              <Redirect to={`${match.url}`} />
+            )
+          }
         />
       </Switch>
     </>

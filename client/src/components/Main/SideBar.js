@@ -10,6 +10,7 @@ import ListItemText from "@material-ui/core/ListItemText";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import DashboardIcon from "@material-ui/icons/Dashboard";
 import RecentActorsIcon from "@material-ui/icons/RecentActors";
+import AssignmentIndIcon from "@material-ui/icons/AssignmentInd";
 
 const useStyles = makeStyles((theme) => ({
   list: {
@@ -26,18 +27,32 @@ const useStyles = makeStyles((theme) => ({
 
 const routes = [
   {
+    type: "Global",
     title: "Dashboard",
     path: "dashboard",
     icon: <DashboardIcon />,
   },
   {
+    type: "Global",
     title: "Marketplace",
     path: "marketplace",
     icon: <RecentActorsIcon />,
   },
+  {
+    type: "Tutor",
+    title: "Tutor profile",
+    path: "tutor-profile",
+    icon: <AssignmentIndIcon />,
+  },
+  {
+    type: "Student",
+    title: "Student profile",
+    path: "student-profile",
+    icon: <AssignmentIndIcon />,
+  },
 ];
 
-const SideBar = ({ match, sideBarOpen, handleSideBarClose }) => {
+const SideBar = ({ match, sideBarOpen, handleSideBarClose, userType }) => {
   const classes = useStyles();
 
   const list = (
@@ -49,18 +64,20 @@ const SideBar = ({ match, sideBarOpen, handleSideBarClose }) => {
       </div>
       <Divider />
       <List>
-        {routes.map((route, index) => (
-          <ListItem
-            button
-            key={route.title}
-            onClick={handleSideBarClose}
-            component={Link}
-            to={`${match.url}/${route.path}`}
-          >
-            <ListItemIcon>{route.icon}</ListItemIcon>
-            <ListItemText primary={route.title} />
-          </ListItem>
-        ))}
+        {routes
+          .filter((route) => route.type === "Global" || route.type === userType)
+          .map((route, index) => (
+            <ListItem
+              button
+              key={route.title}
+              onClick={handleSideBarClose}
+              component={Link}
+              to={`${match.url}/${route.path}`}
+            >
+              <ListItemIcon>{route.icon}</ListItemIcon>
+              <ListItemText primary={route.title} />
+            </ListItem>
+          ))}
       </List>
       <Divider />
     </div>
