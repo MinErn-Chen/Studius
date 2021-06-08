@@ -115,10 +115,7 @@ const App = () => {
                 userState.isAuthenticated ? (
                   <Redirect to="/main" />
                 ) : userState.isLoading ? (
-                  <Loading
-                    setAuth={setAuth}
-                    setNotification={setNotification}
-                  />
+                  <Loading />
                 ) : (
                   <Register
                     {...props}
@@ -134,10 +131,7 @@ const App = () => {
                 userState.isAuthenticated ? (
                   <Redirect to="/main" />
                 ) : userState.isLoading ? (
-                  <Loading
-                    setAuth={setAuth}
-                    setNotification={setNotification}
-                  />
+                  <Loading />
                 ) : (
                   <Login
                     {...props}
@@ -157,10 +151,7 @@ const App = () => {
                     setNotification={setNotification}
                   />
                 ) : userState.isLoading ? (
-                  <Loading
-                    setAuth={setAuth}
-                    setNotification={setNotification}
-                  />
+                  <Loading />
                 ) : (
                   <Redirect to="/login" />
                 )
@@ -176,10 +167,7 @@ const App = () => {
                     setNotification={setNotification}
                   />
                 ) : userState.isLoading ? (
-                  <Loading
-                    setAuth={setAuth}
-                    setNotification={setNotification}
-                  />
+                  <Loading />
                 ) : (
                   <Redirect to="/login" />
                 )
