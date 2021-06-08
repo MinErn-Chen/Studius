@@ -51,7 +51,7 @@ const App = () => {
     });
   };
 
-  const isAuth = async () => {
+  const handleAuth = async () => {
     try {
       const response = await fetch("http://localhost:3000/auth/verify", {
         method: "POST",
@@ -65,12 +65,21 @@ const App = () => {
         isAuthenticated: parseRes === true,
       });
     } catch (error) {
-      console.log(error.message);
+      setUserState({
+        isLoading: false,
+        isAuthenticated: false,
+      });
+
+      setNotification({
+        open: true,
+        severity: "error",
+        message: "Server connection timeout",
+      });
     }
   };
 
   useEffect(() => {
-    isAuth();
+    handleAuth();
   }, []);
 
   const handleNotification = (event, reason) => {
