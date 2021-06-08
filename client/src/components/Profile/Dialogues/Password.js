@@ -5,32 +5,38 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import Grid from "@material-ui/core/Grid";
 import TextField from "@material-ui/core/TextField";
 
-const FirstName = ({
-  accountInformation,
-  setNotification,
-  handleDialogueClose,
-}) => {
-  const [input, setInput] = useState("");
+const Password = ({ setNotification, handleDialogueClose }) => {
+  const [input, setInput] = useState({
+    newPassword: "",
+    confirmNewPassword: "",
+  });
+
+  const isSamePassword = input.newPassword === input.confirmNewPassword;
+
+  const passwordError = isSamePassword ? " " : "Passwords must match";
 
   const handleChange = (event) => {
     const inValid = /\s/;
     const value = event.target.value;
     if (!inValid.test(value)) {
-      setInput(event.target.value);
+      setInput({ ...input, [event.target.name]: event.target.value });
     }
   };
 
   const handleEnter = (event) => {
-    if (event.key === "Enter") {
+    if (event.key === "Enter" && event.target.value) {
       handleConfirm(event);
     }
   };
 
   const handleConfirm = async (event) => {
+    event.preventDefault();
+
     try {
-      const body = { password: input };
+      const body = { password: input.newPassword };
 
       const response = await fetch("http://localhost:3000/profile/password", {
         method: "PUT",
@@ -68,38 +74,55 @@ const FirstName = ({
   };
 
   return (
-    <>
+    <form onSubmit={handleConfirm}>
       <DialogTitle id="attribute-dialogue">Edit password</DialogTitle>
       <DialogContent>
         <DialogContentText>
-          <TextField
-            id="dialogue-textfield"
-            type="password"
-            label="New password"
-            placeholder="Enter new password"
-            fullWidth
-            variant="outlined"
-            value={input}
-            inputProps={{ spellCheck: "false" }}
-            onChange={handleChange}
-            onKeyPress={handleEnter}
-            autoFocus
-            onFocus={(e) =>
-              e.currentTarget.setSelectionRange(0, e.currentTarget.value.length)
-            }
-          />
+          <Grid container spacing={1}>
+            <Grid item xs={12}>
+              <TextField
+                required
+                variant="outlined"
+                fullWidth
+                name="newPassword"
+                label="New password"
+                type="password"
+                id="newPassword"
+                value={input.newPassword}
+                onChange={handleChange}
+                onKeyPress={handleEnter}
+                autoFocus
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                required
+                error={!isSamePassword}
+                variant="outlined"
+                fullWidth
+                name="confirmNewPassword"
+                label="Confirm new password"
+                type="password"
+                id="confirmNewPassword"
+                helperText={passwordError}
+                value={input.confirmNewPassword}
+                onChange={handleChange}
+                onKeyPress={handleEnter}
+              />
+            </Grid>
+          </Grid>
         </DialogContentText>
       </DialogContent>
       <DialogActions>
         <Button onClick={handleDialogueClose} color="primary">
           Cancel
         </Button>
-        <Button onClick={handleConfirm} color="primary">
+        <Button type="submit" color="primary">
           Confirm
         </Button>
       </DialogActions>
-    </>
+    </form>
   );
 };
 
-export default FirstName;
+export default Password;

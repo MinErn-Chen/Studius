@@ -15,20 +15,18 @@ const LastName = ({
   const [input, setInput] = useState(accountInformation.user_lastname);
 
   const handleChange = (event) => {
-    const inValid = /\s/;
-    const value = event.target.value;
-    if (!inValid.test(value)) {
-      setInput(event.target.value);
-    }
+    setInput(event.target.value);
   };
 
   const handleEnter = (event) => {
-    if (event.key === "Enter") {
+    if (event.key === "Enter" && event.target.value) {
       handleConfirm(event);
     }
   };
 
   const handleConfirm = async (event) => {
+    event.preventDefault();
+
     try {
       const body = { lastname: input };
 
@@ -68,15 +66,15 @@ const LastName = ({
   };
 
   return (
-    <>
+    <form onSubmit={handleConfirm}>
       <DialogTitle id="attribute-dialogue">Edit last name</DialogTitle>
       <DialogContent>
         <DialogContentText>
           <TextField
+            required
             id="dialogue-textfield"
             type="text"
             label="New last name"
-            placeholder="Enter new last name"
             fullWidth
             variant="outlined"
             value={input}
@@ -94,11 +92,11 @@ const LastName = ({
         <Button onClick={handleDialogueClose} color="primary">
           Cancel
         </Button>
-        <Button onClick={handleConfirm} color="primary">
+        <Button type="submit" color="primary">
           Confirm
         </Button>
       </DialogActions>
-    </>
+    </form>
   );
 };
 

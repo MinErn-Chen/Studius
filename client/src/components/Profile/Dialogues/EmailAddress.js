@@ -23,12 +23,14 @@ const EmailAddress = ({
   };
 
   const handleEnter = (event) => {
-    if (event.key === "Enter") {
+    if (event.key === "Enter" && event.target.value) {
       handleConfirm(event);
     }
   };
 
   const handleConfirm = async (event) => {
+    event.preventDefault();
+
     try {
       const body = { email: input };
 
@@ -68,15 +70,15 @@ const EmailAddress = ({
   };
 
   return (
-    <>
+    <form onSubmit={handleConfirm}>
       <DialogTitle id="attribute-dialogue">Edit email address</DialogTitle>
       <DialogContent>
         <DialogContentText>
           <TextField
+            required
             id="dialogue-textfield"
             type="text"
             label="New email address"
-            placeholder="Enter new email address"
             fullWidth
             variant="outlined"
             value={input}
@@ -94,11 +96,11 @@ const EmailAddress = ({
         <Button onClick={handleDialogueClose} color="primary">
           Cancel
         </Button>
-        <Button onClick={handleConfirm} color="primary">
+        <Button type="submit" color="primary">
           Confirm
         </Button>
       </DialogActions>
-    </>
+    </form>
   );
 };
 

@@ -27,11 +27,11 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.secondary.main,
   },
   form: {
-    width: "100%", // Fix IE 11 issue.
+    width: "100%",
     marginTop: theme.spacing(3),
   },
   submit: {
-    margin: theme.spacing(3, 0, 2),
+    margin: theme.spacing(1, 0, 2),
   },
 }));
 
@@ -44,19 +44,30 @@ const Register = ({ setAuth, setNotification }) => {
     lastName: "",
     email: "",
     password: "",
+    confirmPassword: "",
   });
 
-  const { type, firstname, lastname, email, password } = inputs;
+  const { type, firstname, lastname, email, password, confirmPassword } =
+    inputs;
 
   const handleInputs = (event) => {
     setInputs({ ...inputs, [event.target.name]: event.target.value });
   };
 
+  const isSamePassword = password === confirmPassword;
+
+  const passwordError = isSamePassword ? " " : "Passwords must match";
+
   const onSubmitForm = async (event) => {
     event.preventDefault();
 
     try {
+      if (!isSamePassword) {
+        return;
+      }
+
       const body = { type, firstname, lastname, email, password };
+
       const response = await fetch("http://localhost:3000/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -171,6 +182,21 @@ const Register = ({ setAuth, setNotification }) => {
                 type="password"
                 id="password"
                 value={password}
+                onChange={handleInputs}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                error={!isSamePassword}
+                variant="outlined"
+                required
+                fullWidth
+                name="confirmPassword"
+                label="Confirm password"
+                type="password"
+                id="confirmPassword"
+                helperText={passwordError}
+                value={confirmPassword}
                 onChange={handleInputs}
               />
             </Grid>
