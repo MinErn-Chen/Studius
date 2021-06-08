@@ -14,24 +14,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Loading = ({ setAuth, setNotification }) => {
+const Loading = () => {
   const classes = useStyles();
 
-  const [isTimeout, setIsTimeout] = useState(false);
-
-  setTimeout(() => {
-    setIsTimeout(true);
-    setAuth(false);
-    setNotification({
-      open: true,
-      severity: "error",
-      message: "Server connection timeout",
-    });
-  }, 3000);
-
-  return isTimeout ? (
-    <Redirect to="/login" />
-  ) : (
+  return (
     <>
       <Grid
         container
