@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { Switch, Route, Redirect } from "react-router-dom";
 
+import Loading from "./Loading";
+
 import AppBar from "../components/Main/AppBar";
 import SideBar from "../components/Main/SideBar";
 
@@ -107,26 +109,34 @@ const Main = ({ match, setAuth, setNotification }) => {
         <Route
           path={`${match.url}/tutor-profile`}
           render={() =>
-            userType === "Tutor" ? (
-              <TutorProfile
-                setNotification={setNotification}
-                setAppBarTitle={setAppBarTitle}
-              />
+            userType ? (
+              userType === "Tutor" ? (
+                <TutorProfile
+                  setNotification={setNotification}
+                  setAppBarTitle={setAppBarTitle}
+                />
+              ) : (
+                <Redirect to={`${match.url}`} />
+              )
             ) : (
-              <Redirect to={`${match.url}`} />
+              <Loading />
             )
           }
         />
         <Route
           path={`${match.url}/student-profile`}
           render={() =>
-            userType === "Student" ? (
-              <StudentProfile
-                setNotification={setNotification}
-                setAppBarTitle={setAppBarTitle}
-              />
+            userType ? (
+              userType === "Student" ? (
+                <StudentProfile
+                  setNotification={setNotification}
+                  setAppBarTitle={setAppBarTitle}
+                />
+              ) : (
+                <Redirect to={`${match.url}`} />
+              )
             ) : (
-              <Redirect to={`${match.url}`} />
+              <Loading />
             )
           }
         />
