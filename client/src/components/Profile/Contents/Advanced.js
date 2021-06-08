@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const AccountInformation = ({ handleOpen }) => {
+const AccountInformation = ({ handleDialogueOpen }) => {
   const classes = useStyles();
 
   return (
@@ -25,13 +25,13 @@ const AccountInformation = ({ handleOpen }) => {
         Advanced
       </Typography>
       <List className={classes.list}>
-        {["Delete account"].map((title, index) => (
+        {["Delete account"].map((type, index) => (
           <>
-            <ListItem alignItems="center" key={title}>
+            <ListItem alignItems="center" key={type}>
               <ListItemText
                 primary={
                   <Typography gutterBottom variant="h5">
-                    {title}
+                    {type}
                   </Typography>
                 }
                 secondary={
@@ -49,7 +49,7 @@ const AccountInformation = ({ handleOpen }) => {
               <Button
                 variant="contained"
                 color="primary"
-                onClick={handleOpen(title, "test")}
+                onClick={handleDialogueOpen(type)}
               >
                 Delete account
               </Button>

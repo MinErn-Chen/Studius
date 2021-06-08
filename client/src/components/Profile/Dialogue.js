@@ -1,73 +1,85 @@
-import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import TextField from "@material-ui/core/TextField";
+
+import FirstName from "./Dialogues/FirstName";
+import LastName from "./Dialogues/LastName";
+import EmailAddress from "./Dialogues/EmailAddress";
+import Password from "./Dialogues/Password";
+import DeleteAccount from "./Dialogues/DeleteAccount";
 
 const Dialogue = ({
   dialogue,
-  handleClose,
-  handleChange,
-  handleEnter,
-  handleConfirmEdit,
-  handleConfirmDelete,
+  setNotification,
+  setAuth,
+  accountInformation,
+  handleDialogueClose,
 }) => {
-  const handleConfirm =
-    dialogue.type === "Account information"
-      ? handleConfirmEdit
-      : handleConfirmDelete;
+  const dialogueContents = [
+    {
+      type: "First name",
+      content: (
+        <FirstName
+          accountInformation={accountInformation}
+          setNotification={setNotification}
+          handleDialogueClose={handleDialogueClose}
+        />
+      ),
+    },
+    {
+      type: "Last name",
+      content: (
+        <LastName
+          accountInformation={accountInformation}
+          setNotification={setNotification}
+          handleDialogueClose={handleDialogueClose}
+        />
+      ),
+    },
+    {
+      type: "Email address",
+      content: (
+        <EmailAddress
+          accountInformation={accountInformation}
+          setNotification={setNotification}
+          handleDialogueClose={handleDialogueClose}
+        />
+      ),
+    },
+    {
+      type: "Password",
+      content: (
+        <Password
+          setNotification={setNotification}
+          handleDialogueClose={handleDialogueClose}
+        />
+      ),
+    },
+    {
+      type: "Delete account",
+      content: (
+        <DeleteAccount
+          setAuth={setAuth}
+          setNotification={setNotification}
+          handleDialogueClose={handleDialogueClose}
+        />
+      ),
+    },
+  ];
+
+  const dialogueContent = dialogue.type
+    ? dialogueContents.find(
+        (dialogueContent) => dialogueContent.type === dialogue.type
+      ).content
+    : null;
 
   return (
     <Dialog
       open={dialogue.open}
-      onClose={handleClose}
+      onClose={handleDialogueClose}
       aria-labelledby="attribute-dialogue"
       maxWidth="xs"
       fullWidth
     >
-      <DialogTitle id="attribute-dialogue">
-        {dialogue.type === "Account information"
-          ? `Edit ${dialogue.title.toLowerCase()}`
-          : dialogue.title}
-      </DialogTitle>
-      <DialogContent>
-        <DialogContentText>
-          {dialogue.type === "Account information" ? (
-            <TextField
-              id="dialogue-textfield"
-              type={dialogue.title.toLowerCase()} // cheap solution :/
-              label={`New ${dialogue.title.toLowerCase()}`}
-              placeholder={`Enter new ${dialogue.title.toLowerCase()}`}
-              fullWidth
-              variant="outlined"
-              defaultValue={dialogue.description}
-              value={dialogue.input}
-              inputProps={{ spellCheck: "false" }}
-              onChange={handleChange}
-              onKeyPress={handleEnter}
-              autoFocus
-              onFocus={(e) =>
-                e.currentTarget.setSelectionRange(
-                  0,
-                  e.currentTarget.value.length
-                )
-              }
-            />
-          ) : (
-            "Are you sure you would like to delete this account? This action cannot be reversed."
-          )}
-        </DialogContentText>
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={handleClose} color="primary">
-          Cancel
-        </Button>
-        <Button onClick={handleConfirm} color="primary">
-          Confirm
-        </Button>
-      </DialogActions>
+      {dialogueContent}
     </Dialog>
   );
 };

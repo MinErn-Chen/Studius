@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const AccountInformation = ({ accountInformation, handleOpen }) => {
+const AccountInformation = ({ accountInformation, handleDialogueOpen }) => {
   const classes = useStyles();
 
   return (
@@ -26,13 +26,13 @@ const AccountInformation = ({ accountInformation, handleOpen }) => {
       </Typography>
       <List className={classes.list}>
         {["First name", "Last name", "Email address", "Password"].map(
-          (title, index) => (
+          (type, index) => (
             <>
-              <ListItem alignItems="center" key={title}>
+              <ListItem alignItems="center" key={type}>
                 <ListItemText
                   primary={
                     <Typography gutterBottom variant="h5">
-                      {title}
+                      {type}
                     </Typography>
                   }
                   secondary={
@@ -54,10 +54,7 @@ const AccountInformation = ({ accountInformation, handleOpen }) => {
                 <Button
                   variant="contained"
                   color="primary"
-                  onClick={handleOpen(
-                    title,
-                    accountInformation[Object.keys(accountInformation)[index]]
-                  )}
+                  onClick={handleDialogueOpen(type)}
                 >
                   Edit
                 </Button>
