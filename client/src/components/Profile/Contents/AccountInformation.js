@@ -63,7 +63,6 @@ const AccountInformation = ({ accountInformation, handleDialogueOpen }) => {
             </>
           )
         )}
-        <Divider component="li" />
       </List>
     </>
   );
