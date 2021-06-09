@@ -12,7 +12,7 @@ const EmailAddress = ({
   setNotification,
   handleDialogueClose,
 }) => {
-  const [input, setInput] = useState(accountInformation.user_email);
+  const [input, setInput] = useState(accountInformation.email);
 
   const handleChange = (event) => {
     const inValid = /\s/;

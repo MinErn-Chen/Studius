@@ -11,7 +11,7 @@ router.put("/firstname", authorisation, async (req, res) => {
 
     // update user first name and handle if user or attribute does not exist
     const updateAttributes = await pool.query(
-      "UPDATE users SET user_firstname = $1 where user_id = $2 RETURNING *",
+      "UPDATE users SET firstname = $1 where id = $2 RETURNING *",
       [firstname, req.user]
     );
 
@@ -35,7 +35,7 @@ router.put("/lastname", authorisation, async (req, res) => {
 
     // update user last name and handle if user or attribute does not exist
     const updateAttributes = await pool.query(
-      "UPDATE users SET user_lastname = $1 where user_id = $2 RETURNING *",
+      "UPDATE users SET lastname = $1 where id = $2 RETURNING *",
       [lastname, req.user]
     );
 
@@ -68,7 +68,7 @@ router.put("/email", authorisation, async (req, res) => {
 
     // update user email address and handle if user or attribute does not exist
     const updateAttributes = await pool.query(
-      "UPDATE users SET user_email = $1 where user_id = $2 RETURNING *",
+      "UPDATE users SET email = $1 where _id = $2 RETURNING *",
       [email, req.user]
     );
 
@@ -98,7 +98,7 @@ router.put("/password", authorisation, async (req, res) => {
 
     // update user password and handle if user or attribute does not exist
     const updateAttributes = await pool.query(
-      "UPDATE users SET user_password = $1 where user_id = $2 RETURNING *",
+      "UPDATE users SET password = $1 where id = $2 RETURNING *",
       [bcryptPassword, req.user]
     );
 
@@ -119,7 +119,7 @@ router.delete("/", authorisation, async (req, res) => {
   try {
     // delete user and handle if user does not exist
     const updateAttributes = await pool.query(
-      "DELETE FROM users WHERE user_id = $1 RETURNING *",
+      "DELETE FROM users WHERE id = $1 RETURNING *",
       [req.user]
     );
 
@@ -140,7 +140,7 @@ router.get("/", authorisation, async (req, res) => {
   try {
     // retrieve user information from database
     const user = await pool.query(
-      "SELECT user_firstname, user_lastname, user_email  FROM users WHERE user_id = $1",
+      "SELECT firstname, lastname, email  FROM users WHERE id = $1",
       [req.user]
     );
 

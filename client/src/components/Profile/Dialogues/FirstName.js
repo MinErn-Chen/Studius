@@ -12,7 +12,7 @@ const FirstName = ({
   setNotification,
   handleDialogueClose,
 }) => {
-  const [input, setInput] = useState(accountInformation.user_firstname);
+  const [input, setInput] = useState(accountInformation.firstname);
 
   const handleChange = (event) => {
     setInput(event.target.value);

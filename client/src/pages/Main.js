@@ -37,8 +37,8 @@ const Main = ({ match, setAuth, setNotification }) => {
 
       const parseRes = await response.json();
 
-      setUserType(parseRes.user_type);
-      setFirstName(parseRes.user_firstname);
+      setUserType(parseRes.type);
+      setFirstName(parseRes.firstname);
     } catch (error) {
       console.error(error.message);
     }

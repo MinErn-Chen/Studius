@@ -30,10 +30,10 @@ const Content = ({ match, ...props }) => {
   const classes = useStyles();
 
   const [accountInformation, setAccountInformation] = useState({
-    user_firstname: "",
-    user_lastname: "",
-    user_email: "",
-    user_password: "",
+    firstname: "",
+    lastname: "",
+    email: "",
+    password: "",
   });
 
   const getAccountInformation = async () => {
@@ -45,7 +45,7 @@ const Content = ({ match, ...props }) => {
 
       const parseRes = await response.json();
 
-      setAccountInformation({ ...parseRes, user_password: "" });
+      setAccountInformation({ ...parseRes, password: "" });
     } catch (error) {
       console.error(error.message);
     }

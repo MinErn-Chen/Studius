@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const AccountInformation = ({ handleDialogueOpen }) => {
+const Advanced = ({ handleDialogueOpen }) => {
   const classes = useStyles();
 
   return (
@@ -62,4 +62,4 @@ const AccountInformation = ({ handleDialogueOpen }) => {
   );
 };
 
-export default AccountInformation;
+export default Advanced;

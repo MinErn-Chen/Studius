@@ -12,7 +12,7 @@ router.post("/register", validInfo, async (req, res) => {
     const { type, firstname, lastname, email, password } = req.body;
 
     // check if user email exists then handle error accordingly
-    const user = await pool.query("SELECT * FROM users WHERE user_email = $1", [
+    const user = await pool.query("SELECT * FROM users WHERE email = $1", [
       email,
     ]);
 
@@ -28,12 +28,12 @@ router.post("/register", validInfo, async (req, res) => {
 
     // enter the new user inside the user database
     const newUser = await pool.query(
-      "INSERT INTO users (user_type, user_firstname, user_lastname, user_email, user_password) VALUES ($1, $2, $3, $4, $5) RETURNING *",
+      "INSERT INTO users (type, firstname, lastname, email, password) VALUES ($1, $2, $3, $4, $5) RETURNING *",
       [type, firstname, lastname, email, bcryptPassword]
     );
 
     // generate the jwt token
-    const token = jwtGenerator(newUser.rows[0].user_id);
+    const token = jwtGenerator(newUser.rows[0].id);
 
     res.json({ token });
   } catch (error) {
@@ -49,7 +49,7 @@ router.post("/login", validInfo, async (req, res) => {
     const { email, password } = req.body;
 
     // check if user email doesn't exist then handle error accordingly
-    const user = await pool.query("SELECT * FROM users WHERE user_email = $1", [
+    const user = await pool.query("SELECT * FROM users WHERE email = $1", [
       email,
     ]);
 
@@ -58,17 +58,14 @@ router.post("/login", validInfo, async (req, res) => {
     }
 
     // check if password matches with that in the user database
-    const validPassword = await bcrypt.compare(
-      password,
-      user.rows[0].user_password
-    );
+    const validPassword = await bcrypt.compare(password, user.rows[0].password);
 
     if (!validPassword) {
       return res.status(401).json("Email or password is incorrect");
     }
 
     // give the jwt token
-    const token = jwtGenerator(user.rows[0].user_id);
+    const token = jwtGenerator(user.rows[0].id);
 
     return res.json({ token });
   } catch (error) {
