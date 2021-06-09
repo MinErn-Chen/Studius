@@ -12,7 +12,7 @@ const tutorCredentialsStorage = multer.diskStorage({
   },
   // files to be stored as pdf with name of user id
   filename: (req, file, cb) => {
-    cb(null, `${req.user}.pdf`);
+    cb(null, `${req.user.id}.pdf`);
   },
 });
 
@@ -48,17 +48,17 @@ router.put(
       // determine whether file already exists and insert/update accordingly
       const filePresence = await pool.query(
         "SELECT * FROM tutor_credentials WHERE id = $1",
-        [req.user]
+        [req.user.id]
       );
       if (filePresence.rows.length === 0) {
         await pool.query(
           "INSERT INTO tutor_credentials VALUES ($1, $2, $3, $4, $5)",
-          [req.user, req.user, path, mimetype, size]
+          [req.user.id, req.user, path, mimetype, size]
         );
       } else {
         await pool.query(
           "UPDATE tutor_credentials SET filename = $1, filepath = $2, mimetype = $3, size = $4 WHERE id = $5",
-          [req.user, path, mimetype, size, req.user]
+          [req.user.id, path, mimetype, size, req.user]
         );
       }
 
@@ -75,7 +75,7 @@ router.get("/tutor_credentials", authorisation, async (req, res) => {
     // retrieve tutor credentials tied to user id and handle error accordingly
     const fileRetrieve = await pool.query(
       "SELECT * FROM tutor_credentials WHERE id = $1",
-      [req.user]
+      [req.user.id]
     );
 
     if (fileRetrieve.rows.length === 0) {

@@ -12,7 +12,7 @@ router.put("/firstname", authorisation, async (req, res) => {
     // update user first name and handle if user or attribute does not exist
     const updateAttributes = await pool.query(
       "UPDATE users SET firstname = $1 where id = $2 RETURNING *",
-      [firstname, req.user]
+      [firstname, req.user.id]
     );
 
     if (updateAttributes.rows.length === 0) {
@@ -36,7 +36,7 @@ router.put("/lastname", authorisation, async (req, res) => {
     // update user last name and handle if user or attribute does not exist
     const updateAttributes = await pool.query(
       "UPDATE users SET lastname = $1 where id = $2 RETURNING *",
-      [lastname, req.user]
+      [lastname, req.user.id]
     );
 
     if (updateAttributes.rows.length === 0) {
@@ -69,7 +69,7 @@ router.put("/email", authorisation, async (req, res) => {
     // update user email address and handle if user or attribute does not exist
     const updateAttributes = await pool.query(
       "UPDATE users SET email = $1 where _id = $2 RETURNING *",
-      [email, req.user]
+      [email, req.user.id]
     );
 
     if (updateAttributes.rows.length === 0) {
@@ -99,7 +99,7 @@ router.put("/password", authorisation, async (req, res) => {
     // update user password and handle if user or attribute does not exist
     const updateAttributes = await pool.query(
       "UPDATE users SET password = $1 where id = $2 RETURNING *",
-      [bcryptPassword, req.user]
+      [bcryptPassword, req.user.id]
     );
 
     if (updateAttributes.rows.length === 0) {
@@ -120,7 +120,7 @@ router.delete("/", authorisation, async (req, res) => {
     // delete user and handle if user does not exist
     const updateAttributes = await pool.query(
       "DELETE FROM users WHERE id = $1 RETURNING *",
-      [req.user]
+      [req.user.id]
     );
 
     if (updateAttributes.rows.length === 0) {
@@ -140,8 +140,8 @@ router.get("/", authorisation, async (req, res) => {
   try {
     // retrieve user information from database
     const user = await pool.query(
-      "SELECT firstname, lastname, email  FROM users WHERE id = $1",
-      [req.user]
+      "SELECT firstname, lastname, email FROM users WHERE id = $1",
+      [req.user.id]
     );
 
     // return user credentials
