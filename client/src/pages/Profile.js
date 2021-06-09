@@ -16,10 +16,10 @@ const Profile = ({ setAuth, setNotification, ...props }) => {
           justify="center"
           style={{ minHeight: "100vh" }}
         >
-          <Grid item md={3}>
+          <Grid item xs={3}>
             <Menu {...props} />
           </Grid>
-          <Grid item md={9}>
+          <Grid item xs={9}>
             <Content
               {...props}
               setAuth={setAuth}
