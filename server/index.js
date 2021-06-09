@@ -14,13 +14,16 @@ app.use(morgan("dev"));
 // register and login routes
 app.use("/auth", require("./routes/jwtAuth"));
 
-// dashboard routes
-app.use("/dashboard", require("./routes/dashboard"));
+// main route
+app.use("/main", require("./routes/main"));
 
-// profile routes
+// marketplace route
+app.use("/marketplace", require("./routes/marketplace"));
+
+// profile route
 app.use("/profile", require("./routes/profile"));
 
-// file routes
+// file route
 app.use("/files", require("./routes/fileUpload"));
 
 app.listen(port, () => {
