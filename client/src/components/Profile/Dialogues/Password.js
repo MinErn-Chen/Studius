@@ -36,6 +36,10 @@ const Password = ({ setNotification, handleDialogueClose }) => {
     event.preventDefault();
 
     try {
+      if (!isSamePassword) {
+        return;
+      }
+
       const body = { password: input.newPassword };
 
       const response = await fetch("http://localhost:3000/profile/password", {
