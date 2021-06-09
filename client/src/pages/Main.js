@@ -12,9 +12,10 @@ import TutorProfile from "../components/Main/Contents/TutorProfile";
 import StudentProfile from "../components/Main/Contents/StudentProfile";
 
 const Main = ({ match, setAuth, setNotification }) => {
-  const [userType, setUserType] = useState("");
-
-  const [firstName, setFirstName] = useState("");
+  const [userProfile, setUserProfile] = useState({
+    type: "",
+    firstName: "",
+  });
 
   const [sideBarOpen, setSideBarOpen] = useState(false);
 
@@ -30,15 +31,17 @@ const Main = ({ match, setAuth, setNotification }) => {
 
   const getProfile = async () => {
     try {
-      const response = await fetch("http://localhost:3000/dashboard/", {
+      const response = await fetch("http://localhost:3000/main/", {
         method: "GET",
         headers: { token: localStorage.token },
       });
 
       const parseRes = await response.json();
 
-      setUserType(parseRes.type);
-      setFirstName(parseRes.firstname);
+      setUserProfile({
+        type: parseRes.type,
+        firstName: parseRes.firstname,
+      });
     } catch (error) {
       console.error(error.message);
     }
@@ -71,16 +74,16 @@ const Main = ({ match, setAuth, setNotification }) => {
   return (
     <>
       <AppBar
-        firstName={firstName}
         handleLogout={handleLogout}
         handleSideBarOpen={handleSideBarOpen}
         appBarTitle={appBarTitle}
+        userFirstName={userProfile.firstName}
       />
       <SideBar
         match={match}
         sideBarOpen={sideBarOpen}
         handleSideBarClose={handleSideBarClose}
-        userType={userType}
+        userType={userProfile.type}
       />
       <Switch>
         <Route
@@ -109,8 +112,8 @@ const Main = ({ match, setAuth, setNotification }) => {
         <Route
           path={`${match.url}/tutor-profile`}
           render={() =>
-            userType ? (
-              userType === "Tutor" ? (
+            userProfile.type ? (
+              userProfile.type === "Tutor" ? (
                 <TutorProfile
                   setNotification={setNotification}
                   setAppBarTitle={setAppBarTitle}
@@ -126,8 +129,8 @@ const Main = ({ match, setAuth, setNotification }) => {
         <Route
           path={`${match.url}/student-profile`}
           render={() =>
-            userType ? (
-              userType === "Student" ? (
+            userProfile.type ? (
+              userProfile.type === "Student" ? (
                 <StudentProfile
                   setNotification={setNotification}
                   setAppBarTitle={setAppBarTitle}

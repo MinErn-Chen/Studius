@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const AppBar = ({
-  firstName,
+  userFirstName,
   handleLogout,
   handleSideBarOpen,
   appBarTitle,
@@ -71,7 +71,7 @@ const AppBar = ({
             <MenuIcon />
           </IconButton>
           <Typography className={classes.title} variant="h6" noWrap>
-            {firstName}'s {appBarTitle}
+            {userFirstName}'s {appBarTitle}
           </Typography>
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
