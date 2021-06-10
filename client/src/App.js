@@ -9,6 +9,8 @@ import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert from "@material-ui/lab/Alert";
 import "./App.css";
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
+import { MuiPickersUtilsProvider } from "@material-ui/pickers";
+import MomentUtils from "@date-io/moment";
 
 import Home from "./pages/Home";
 import Register from "./pages/Register";
@@ -106,76 +108,78 @@ const App = () => {
   return (
     <>
       <MuiThemeProvider theme={theme}>
-        <Router>
-          <Switch>
-            <Route exact path="/" render={() => <Home />} />
-            <Route
-              path="/register"
-              render={(props) =>
-                userState.isAuthenticated ? (
-                  <Redirect to="/main" />
-                ) : userState.isLoading ? (
-                  <Loading />
-                ) : (
-                  <Register
-                    {...props}
-                    setAuth={setAuth}
-                    setNotification={setNotification}
-                  />
-                )
-              }
-            />
-            <Route
-              path="/login"
-              render={(props) =>
-                userState.isAuthenticated ? (
-                  <Redirect to="/main" />
-                ) : userState.isLoading ? (
-                  <Loading />
-                ) : (
-                  <Login
-                    {...props}
-                    setAuth={setAuth}
-                    setNotification={setNotification}
-                  />
-                )
-              }
-            />
-            <Route
-              path="/main"
-              render={(props) =>
-                userState.isAuthenticated ? (
-                  <Main
-                    {...props}
-                    setAuth={setAuth}
-                    setNotification={setNotification}
-                  />
-                ) : userState.isLoading ? (
-                  <Loading />
-                ) : (
-                  <Redirect to="/login" />
-                )
-              }
-            />
-            <Route
-              path="/profile"
-              render={(props) =>
-                userState.isAuthenticated ? (
-                  <Profile
-                    {...props}
-                    setAuth={setAuth}
-                    setNotification={setNotification}
-                  />
-                ) : userState.isLoading ? (
-                  <Loading />
-                ) : (
-                  <Redirect to="/login" />
-                )
-              }
-            />
-          </Switch>
-        </Router>
-        {renderSnackbar}
+        <MuiPickersUtilsProvider utils={MomentUtils}>
+          <Router>
+            <Switch>
+              <Route exact path="/" render={() => <Home />} />
+              <Route
+                path="/register"
+                render={(props) =>
+                  userState.isAuthenticated ? (
+                    <Redirect to="/main" />
+                  ) : userState.isLoading ? (
+                    <Loading />
+                  ) : (
+                    <Register
+                      {...props}
+                      setAuth={setAuth}
+                      setNotification={setNotification}
+                    />
+                  )
+                }
+              />
+              <Route
+                path="/login"
+                render={(props) =>
+                  userState.isAuthenticated ? (
+                    <Redirect to="/main" />
+                  ) : userState.isLoading ? (
+                    <Loading />
+                  ) : (
+                    <Login
+                      {...props}
+                      setAuth={setAuth}
+                      setNotification={setNotification}
+                    />
+                  )
+                }
+              />
+              <Route
+                path="/main"
+                render={(props) =>
+                  userState.isAuthenticated ? (
+                    <Main
+                      {...props}
+                      setAuth={setAuth}
+                      setNotification={setNotification}
+                    />
+                  ) : userState.isLoading ? (
+                    <Loading />
+                  ) : (
+                    <Redirect to="/login" />
+                  )
+                }
+              />
+              <Route
+                path="/profile"
+                render={(props) =>
+                  userState.isAuthenticated ? (
+                    <Profile
+                      {...props}
+                      setAuth={setAuth}
+                      setNotification={setNotification}
+                    />
+                  ) : userState.isLoading ? (
+                    <Loading />
+                  ) : (
+                    <Redirect to="/login" />
+                  )
+                }
+              />
+            </Switch>
+          </Router>
+          {renderSnackbar}
+        </MuiPickersUtilsProvider>
       </MuiThemeProvider>
     </>
   );

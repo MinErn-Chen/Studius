@@ -48,12 +48,15 @@ const Profiles = ({ profiles }) => {
                 {Object.keys(profile)
                   .filter(
                     (detail) =>
-                      detail !== "firstname" &&
-                      detail !== "lastname" &&
-                      detail !== "id"
+                      !(
+                        detail === "firstname" ||
+                        detail === "lastname" ||
+                        detail === "id" ||
+                        detail === "description"
+                      )
                   )
                   .map((detail, index) => {
-                    return profile[detail] ? (
+                    return (
                       <Box
                         key={detail}
                         className={classes.profileDetail}
@@ -62,7 +65,7 @@ const Profiles = ({ profiles }) => {
                         <Typography variant="h6">{stylised[detail]}</Typography>
                         <Typography>{profile[detail]}</Typography>
                       </Box>
-                    ) : null;
+                    );
                   })}
               </CardContent>
               <CardActions>
