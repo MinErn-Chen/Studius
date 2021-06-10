@@ -7,6 +7,7 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 --create user table
 CREATE TABLE users(
   id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+  type VARCHAR(255) NOT NULL,
   firstname VARCHAR(255) NOT NULL,
   lastname VARCHAR(255) NOT NULL,
   email VARCHAR(255) NOT NULL,
@@ -15,7 +16,7 @@ CREATE TABLE users(
 
 --create tutor table
 CREATE TABLE tutors(
-  subjects VARCHAR(255)[],
+  subjects VARCHAR(255)[], --array size and depth ignored during run-time
   rate VARCHAR(255),
   times VARCHAR(255),
   education VARCHAR(255),
@@ -24,7 +25,7 @@ CREATE TABLE tutors(
 
 --create student table
 CREATE TABLE students(
-  subjects VARCHAR(255)[][],
+  subjects VARCHAR(255)[][2], --array size and depth ignored during run-time
   rate VARCHAR(255),
   times VARCHAR(255),
   description VARCHAR(255)
@@ -40,4 +41,4 @@ CREATE TABLE tutor_credentials(
 );
 
 --insert sample user
-INSERT INTO students (firstName, lastName, email, password) VALUES ('John', 'Doe', 'johndoe@email.com', 'password');
+INSERT INTO students (type, firstName, lastName, email, password, subjects) VALUES ('Tutor', 'John', 'Doe', 'johndoe@email.com', 'password', '{{1, 2, 3}}');
