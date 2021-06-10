@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-import Profile from "./StudentProfile/Profile";
+import Profile from "./TutorProfile/Profile";
 
 const TutorProfile = ({ setNotification, setAppBarTitle }) => {
   useEffect(() => {
