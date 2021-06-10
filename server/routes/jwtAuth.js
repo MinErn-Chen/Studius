@@ -27,18 +27,10 @@ router.post("/register", validInfo, async (req, res) => {
     const bcryptPassword = await bcrypt.hash(password, salt);
 
     // enter the new user inside the user database
-    const newUser =
-      type === "Tutor"
-        ? await pool.query(
-            "INSERT INTO tutors (firstname, lastname, email, password) VALUES ($1, $2, $3, $4) RETURNING *",
-            [firstname, lastname, email, bcryptPassword]
-          )
-        : type === "Student"
-        ? await pool.query(
-            "INSERT INTO students (firstname, lastname, email, password) VALUES ($1, $2, $3, $4) RETURNING *",
-            [firstname, lastname, email, bcryptPassword]
-          )
-        : null;
+    const newUser = await pool.query(
+      `INSERT INTO ${type.toLowerCase()}s (type, firstname, lastname, email, password) VALUES ($1, $2, $3, $4, $5) RETURNING *`,
+      [type, firstname, lastname, email, bcryptPassword]
+    );
 
     // generate the jwt token
     const token = jwtGenerator(newUser.rows[0].id, type);
@@ -65,30 +57,15 @@ router.post("/login", validInfo, async (req, res) => {
       return res.status(401).json("Email or password is incorrect");
     }
 
-    // check the type of the user
-    const userStudent = await pool.query(
-      "SELECT * FROM students WHERE email = $1",
-      [email]
-    );
-
-    const userTutor = await pool.query(
-      "SELECT * FROM tutors WHERE email = $1",
-      [email]
-    );
-
-    const userType =
-      userStudent.rows.length === 0
-        ? "Tutor"
-        : userTutor.rows.length === 0
-        ? "Student"
-        : null;
-
     // check if password matches with that in the user database
     const validPassword = await bcrypt.compare(password, user.rows[0].password);
 
     if (!validPassword) {
       return res.status(401).json("Email or password is incorrect");
     }
+
+    // assign the type of the user
+    const userType = user.rows[0].type;
 
     // give the jwt token
     const token = jwtGenerator(user.rows[0].id, userType);
