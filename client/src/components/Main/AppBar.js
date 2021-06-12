@@ -51,8 +51,8 @@ const AppBar = ({
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem component={Link} to="/profile">
-        Profile
+      <MenuItem component={Link} to="/account">
+        Account
       </MenuItem>
       <MenuItem onClick={handleLogout}>Log out</MenuItem>
     </Menu>

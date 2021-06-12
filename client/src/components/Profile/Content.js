@@ -38,7 +38,7 @@ const Content = ({ match, ...props }) => {
 
   const getAccountInformation = async () => {
     try {
-      const response = await fetch("http://localhost:3000/profile/", {
+      const response = await fetch("http://localhost:3000/account/", {
         method: "GET",
         headers: { token: localStorage.token },
       });

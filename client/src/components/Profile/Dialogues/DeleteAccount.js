@@ -12,7 +12,7 @@ const DeleteAccount = ({ setAuth, setNotification, handleDialogueClose }) => {
 
   const handleConfirm = async (event) => {
     try {
-      const response = await fetch(`http://localhost:3000/profile/`, {
+      const response = await fetch(`http://localhost:3000/account/`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",

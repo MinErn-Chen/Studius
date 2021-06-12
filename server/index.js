@@ -23,6 +23,9 @@ app.use("/marketplace", require("./routes/marketplace"));
 // profile route
 app.use("/profile", require("./routes/profile"));
 
+// account route
+app.use("/account", require("./routes/account"));
+
 // file route
 app.use("/files", require("./routes/fileUpload"));
 

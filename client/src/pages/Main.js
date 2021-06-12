@@ -12,7 +12,7 @@ import TutorProfile from "../components/Main/Contents/TutorProfile";
 import StudentProfile from "../components/Main/Contents/StudentProfile";
 
 const Main = ({ match, setAuth, setNotification }) => {
-  const [userProfile, setUserProfile] = useState({
+  const [userInformation, setUserInformation] = useState({
     type: "",
     firstName: "",
   });
@@ -38,7 +38,7 @@ const Main = ({ match, setAuth, setNotification }) => {
 
       const parseRes = await response.json();
 
-      setUserProfile({
+      setUserInformation({
         type: parseRes.type,
         firstName: parseRes.firstname,
       });
@@ -77,13 +77,13 @@ const Main = ({ match, setAuth, setNotification }) => {
         handleLogout={handleLogout}
         handleSideBarOpen={handleSideBarOpen}
         appBarTitle={appBarTitle}
-        userFirstName={userProfile.firstName}
+        userFirstName={userInformation.firstName}
       />
       <SideBar
         match={match}
         sideBarOpen={sideBarOpen}
         handleSideBarClose={handleSideBarClose}
-        userType={userProfile.type}
+        userType={userInformation.type}
       />
       <Switch>
         <Route
@@ -112,8 +112,8 @@ const Main = ({ match, setAuth, setNotification }) => {
         <Route
           path={`${match.url}/tutor-profile`}
           render={() =>
-            userProfile.type ? (
-              userProfile.type === "Tutor" ? (
+            userInformation.type ? (
+              userInformation.type === "Tutor" ? (
                 <TutorProfile
                   setNotification={setNotification}
                   setAppBarTitle={setAppBarTitle}
@@ -129,8 +129,8 @@ const Main = ({ match, setAuth, setNotification }) => {
         <Route
           path={`${match.url}/student-profile`}
           render={() =>
-            userProfile.type ? (
-              userProfile.type === "Student" ? (
+            userInformation.type ? (
+              userInformation.type === "Student" ? (
                 <StudentProfile
                   setNotification={setNotification}
                   setAppBarTitle={setAppBarTitle}

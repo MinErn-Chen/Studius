@@ -15,7 +15,7 @@ import MomentUtils from "@date-io/moment";
 import Home from "./pages/Home";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
-import Profile from "./pages/Profile";
+import Account from "./pages/Account";
 import Loading from "./pages/Loading";
 import Main from "./pages/Main";
 
@@ -161,10 +161,10 @@ const App = () => {
                 }
               />
               <Route
-                path="/profile"
+                path="/account"
                 render={(props) =>
                   userState.isAuthenticated ? (
-                    <Profile
+                    <Account
                       {...props}
                       setAuth={setAuth}
                       setNotification={setNotification}

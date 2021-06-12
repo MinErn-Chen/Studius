@@ -30,7 +30,7 @@ const LastName = ({
     try {
       const body = { lastname: input };
 
-      const response = await fetch("http://localhost:3000/profile/lastname", {
+      const response = await fetch("http://localhost:3000/account/lastname", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

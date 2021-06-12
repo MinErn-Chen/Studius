@@ -42,7 +42,7 @@ const Password = ({ setNotification, handleDialogueClose }) => {
 
       const body = { password: input.newPassword };
 
-      const response = await fetch("http://localhost:3000/profile/password", {
+      const response = await fetch("http://localhost:3000/account/password", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
