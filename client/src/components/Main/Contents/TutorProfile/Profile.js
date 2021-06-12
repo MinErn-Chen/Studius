@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 // import { useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
@@ -11,6 +11,7 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import { TimePicker } from "@material-ui/pickers";
+import moment from "moment";
 
 const useStyles = makeStyles((theme) => ({
   layout: {
@@ -50,30 +51,6 @@ const useStyles = makeStyles((theme) => ({
 const Profile = () => {
   const classes = useStyles();
 
-  const [fromTime, setFromTime] = useState(new Date(2021, 5, 15, 0, 0));
-
-  const [toTime, setToTime] = useState(new Date(2021, 5, 15, 0, 0));
-
-  const handleFromTime = (time) => {
-    setFromTime(time);
-
-    if (toTime < time) {
-      setToTime(time);
-    }
-  };
-
-  const handleToTime = (time) => {
-    setToTime(time);
-
-    if (time < fromTime) {
-      setToTime(fromTime);
-    }
-
-    console.log(toTime.format("hh:mm a"));
-  };
-
-  const [institution, setInstitution] = useState(null);
-
   const [inputInstitution, setInputInstitution] = useState("");
 
   const [listOfInstitutions, setListOfInstitutions] = useState([]);
@@ -90,7 +67,92 @@ const Profile = () => {
 
     const parseRes = await response.json();
 
-    setListOfInstitutions(parseRes);
+    setListOfInstitutions(parseRes.map((institution) => institution.name));
+  };
+
+  const [inputs, setInputs] = useState({
+    subject: "",
+    rate: "",
+    fromTime: moment("2021-06-15 00:00:00"),
+    toTime: moment("2021-06-15 00:00:00"),
+    institution: "",
+    description: "",
+  });
+
+  const getProfile = async () => {
+    try {
+      const response = await fetch("http://localhost:3000/profile/", {
+        method: "GET",
+        headers: { token: localStorage.token },
+      });
+
+      const parseRes = await response.json();
+
+      const { subjects, rate, times, education, description } = parseRes;
+
+      setInputs({
+        subject: subjects[0] || "",
+        rate: rate || "",
+        fromTime: times[0]
+          ? moment(`2021-06-15 ${times[0]}:00`)
+          : moment("2021-06-15 00:00:00"),
+        toTime: times[1]
+          ? moment(`2021-06-15 ${times[1]}:00`)
+          : moment("2021-06-15 00:00:00"),
+        institution: education || "",
+        description: description || "",
+      });
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
+
+  useEffect(() => {
+    getProfile();
+  }, []);
+
+  const handleInputs = (event) => {
+    setInputs({ ...inputs, [event.target.name]: event.target.value });
+  };
+
+  const handleFromTime = (time) => {
+    setInputs({ ...inputs, fromTime: time });
+  };
+
+  const handleToTime = (time) => {
+    setInputs({ ...inputs, toTime: time });
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    const { subject, rate, fromTime, toTime, institution, description } =
+      inputs;
+
+    const body = {
+      subjects: [subject],
+      rate: rate,
+      times: [fromTime.format("HH:mm"), toTime.format("HH:mm")],
+      education: institution,
+      description: description,
+    };
+
+    try {
+      const response = await fetch("http://localhost:3000/profile/", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          token: localStorage.token,
+        },
+        body: JSON.stringify(body),
+      });
+
+      const parseRes = await response.json();
+
+      console.log(parseRes);
+    } catch (error) {
+      console.error(error.message);
+    }
   };
 
   return (
@@ -104,29 +166,22 @@ const Profile = () => {
            Description
           </Typography> */}
           <Grid container spacing={2}>
-            <Grid item xs={12} sm={8}>
+            <Grid item xs={12}>
               <TextField
                 required
-                id="subject-1"
+                id="subject"
                 label="Subject"
                 variant="outlined"
-                name="subject-1"
+                name="subject"
+                onChange={handleInputs}
+                value={inputs.subject}
                 fullWidth
               />
             </Grid>
             <Grid item xs={12} sm={4}>
               <TextField
                 required
-                id="level-1"
-                label="Level"
-                variant="outlined"
-                name="level-1"
-                fullWidth
-              />
-            </Grid>
-            <Grid item xs={12} sm={4}>
-              <TextField
-                required
+                type="number"
                 id="rate"
                 label="Rate"
                 variant="outlined"
@@ -135,7 +190,12 @@ const Profile = () => {
                   endAdornment: (
                     <InputAdornment position="end">/ hr</InputAdornment>
                   ),
+                  startAdornment: (
+                    <InputAdornment position="start">$</InputAdornment>
+                  ),
                 }}
+                onChange={handleInputs}
+                value={inputs.rate}
                 fullWidth
               />
             </Grid>
@@ -143,7 +203,8 @@ const Profile = () => {
               <TimePicker
                 label="from"
                 inputVariant="outlined"
-                value={fromTime}
+                name="fromTime"
+                value={inputs.fromTime}
                 minutesStep={5}
                 onChange={handleFromTime}
                 fullWidth
@@ -153,7 +214,8 @@ const Profile = () => {
               <TimePicker
                 label="to"
                 inputVariant="outlined"
-                value={toTime}
+                name="toTime"
+                value={inputs.toTime}
                 minutesStep={5}
                 onChange={handleToTime}
                 fullWidth
@@ -164,14 +226,11 @@ const Profile = () => {
                 id="education"
                 variant="outlined"
                 name="education"
-                value={institution}
+                value={inputs.institution}
                 options={listOfInstitutions}
-                getOptionLabel={(institution) => institution.name}
-                getOptionSelected={(option, value) =>
-                  option.name === value.name
-                }
+                getOptionLabel={(institution) => institution}
                 onChange={(event, institution) => {
-                  setInstitution(institution);
+                  setInputs({ ...inputs, institution: institution });
                 }}
                 onInputChange={(event, institution) => {
                   handleListOfInstitutions(institution);
@@ -194,8 +253,10 @@ const Profile = () => {
                 label="Description"
                 variant="outlined"
                 name="description"
+                value={inputs.description}
                 rows={10}
                 multiline
+                onChange={handleInputs}
                 fullWidth
               />
             </Grid>
@@ -214,6 +275,7 @@ const Profile = () => {
               variant="contained"
               color="primary"
               className={classes.button}
+              onClick={handleSubmit}
             >
               Preview
             </Button>
