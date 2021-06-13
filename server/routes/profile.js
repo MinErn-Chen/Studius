@@ -9,7 +9,7 @@ router.get("/", authorisation, async (req, res) => {
     const user =
       req.user.type === "Tutor"
         ? await pool.query(
-            "SELECT subjects, rate, times, education, description FROM tutors WHERE id = $1",
+            "SELECT subjects, rate, times, education, description, ispublic FROM tutors WHERE id = $1",
             [req.user.id]
           )
         : req.user.type === "Student"
@@ -26,15 +26,16 @@ router.get("/", authorisation, async (req, res) => {
   }
 });
 
-// post user information
+// update user information
 router.put("/", [authorisation, validProfile], async (req, res) => {
   try {
-    const { subjects, rate, times, education, description } = req.body;
+    const { subjects, rate, times, education, description, ispublic } =
+      req.body;
 
     if (req.user.type === "Tutor") {
       await pool.query(
-        "UPDATE tutors SET subjects = $1, rate = $2, times = $3, education = $4, description = $5 WHERE id = $6",
-        [subjects, rate, times, education, description, req.user.id]
+        "UPDATE tutors SET subjects = $1, rate = $2, times = $3, education = $4, description = $5, ispublic = $6 WHERE id = $7",
+        [subjects, rate, times, education, description, ispublic, req.user.id]
       );
     } else if (req.user.type === "Student") {
       await pool.query(
@@ -43,7 +44,7 @@ router.put("/", [authorisation, validProfile], async (req, res) => {
       );
     }
 
-    res.json("Profile successfully submitted!");
+    res.json(true);
   } catch (error) {
     console.error(error.message);
     res.status(500).json("Server error");

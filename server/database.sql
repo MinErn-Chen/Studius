@@ -20,7 +20,8 @@ CREATE TABLE tutors(
   rate VARCHAR(255),
   times VARCHAR(255)[],
   education VARCHAR(255),
-  description VARCHAR(255)
+  description VARCHAR(255),
+  ispublic boolean
 ) INHERITS (users);
 
 --create student table

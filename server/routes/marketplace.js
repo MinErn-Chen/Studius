@@ -13,7 +13,7 @@ router.get("/", authorisation, async (req, res) => {
           )
         : req.user.type === "Student"
         ? await pool.query(
-            "SELECT id, firstname, lastname, subjects, rate, times, education, description FROM tutors"
+            "SELECT id, firstname, lastname, subjects, rate, times, education, description FROM tutors WHERE ispublic = TRUE"
           )
         : null;
 
