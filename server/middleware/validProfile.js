@@ -10,7 +10,7 @@ const validProfile = (req, res, next) => {
         Boolean
       )
     ) {
-      return res.status(401).json("Missing information");
+      return res.status(400).json("Missing information");
     }
   } else if (req.user.type === "Student") {
     if (![subjects[0], rate, times[0], times[1], description].every(Boolean)) {
