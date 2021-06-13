@@ -7,6 +7,7 @@ import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 import { makeStyles } from "@material-ui/core/styles";
+import moment from "moment";
 
 const useStyles = makeStyles((theme) => ({
   cardGrid: {
@@ -17,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const stylised = {
+const stylisedTitles = {
   subjects: "Subjects",
   rate: "Rate",
   times: "Available times",
@@ -62,8 +63,24 @@ const Profiles = ({ profiles }) => {
                         className={classes.profileDetail}
                         gutterBottom
                       >
-                        <Typography variant="h6">{stylised[detail]}</Typography>
-                        <Typography>{profile[detail]}</Typography>
+                        <Typography variant="h6">
+                          {stylisedTitles[detail]}
+                        </Typography>
+                        {detail === "subjects" ? (
+                          <Typography>{profile[detail].join(", ")}</Typography>
+                        ) : detail === "rate" ? (
+                          <Typography>{`$ ${profile[detail]} / hr`}</Typography>
+                        ) : detail === "times" ? (
+                          <Typography>
+                            {`${moment(profile[detail][0], "HH:mm").format(
+                              "hh:mm a"
+                            )} — ${moment(profile[detail][1], "HH:mm").format(
+                              "hh:mm a"
+                            )}`}
+                          </Typography>
+                        ) : detail === "education" ? (
+                          <Typography>{profile[detail]}</Typography>
+                        ) : null}
                       </Box>
                     );
                   })}

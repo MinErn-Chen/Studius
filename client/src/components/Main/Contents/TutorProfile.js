@@ -7,7 +7,7 @@ const TutorProfile = ({ setNotification, setAppBarTitle }) => {
     setAppBarTitle("Tutor Profile");
   }, [setAppBarTitle]);
 
-  return <Profile />;
+  return <Profile setNotification={setNotification} />;
 };
 
 export default TutorProfile;

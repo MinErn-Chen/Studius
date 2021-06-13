@@ -48,7 +48,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Profile = () => {
+const Profile = ({ setNotification }) => {
   const classes = useStyles();
 
   const [inputInstitution, setInputInstitution] = useState("");
@@ -73,10 +73,11 @@ const Profile = () => {
   const [inputs, setInputs] = useState({
     subject: "",
     rate: "",
-    fromTime: moment("2021-06-15 00:00:00"),
-    toTime: moment("2021-06-15 00:00:00"),
+    fromTime: moment("00:00", "HH:mm"),
+    toTime: moment("00:00", "HH:mm"),
     institution: "",
     description: "",
+    ispublic: null,
   });
 
   const getProfile = async () => {
@@ -88,19 +89,19 @@ const Profile = () => {
 
       const parseRes = await response.json();
 
-      const { subjects, rate, times, education, description } = parseRes;
+      const { subjects, rate, times, education, description, ispublic } =
+        parseRes;
 
       setInputs({
         subject: subjects[0] || "",
         rate: rate || "",
         fromTime: times[0]
-          ? moment(`2021-06-15 ${times[0]}:00`)
-          : moment("2021-06-15 00:00:00"),
-        toTime: times[1]
-          ? moment(`2021-06-15 ${times[1]}:00`)
-          : moment("2021-06-15 00:00:00"),
+          ? moment(times[0], "HH:mm")
+          : moment("00:00", "HH:mm"),
+        toTime: times[1] ? moment(times[1], "HH:mm") : moment("00:00", "HH:mm"),
         institution: education || "",
         description: description || "",
+        ispublic: ispublic || false,
       });
     } catch (error) {
       console.error(error.message);
@@ -123,11 +124,22 @@ const Profile = () => {
     setInputs({ ...inputs, toTime: time });
   };
 
+  const handleCheckbox = (event) => {
+    setInputs({ ...inputs, [event.target.name]: event.target.checked });
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    const { subject, rate, fromTime, toTime, institution, description } =
-      inputs;
+    const {
+      subject,
+      rate,
+      fromTime,
+      toTime,
+      institution,
+      description,
+      ispublic,
+    } = inputs;
 
     const body = {
       subjects: [subject],
@@ -135,6 +147,7 @@ const Profile = () => {
       times: [fromTime.format("HH:mm"), toTime.format("HH:mm")],
       education: institution,
       description: description,
+      ispublic: ispublic,
     };
 
     try {
@@ -149,7 +162,19 @@ const Profile = () => {
 
       const parseRes = await response.json();
 
-      console.log(parseRes);
+      if (parseRes === true) {
+        setNotification({
+          open: true,
+          severity: "success",
+          message: "Profile successfully submitted!",
+        });
+      } else {
+        setNotification({
+          open: true,
+          severity: "error",
+          message: parseRes,
+        });
+      }
     } catch (error) {
       console.error(error.message);
     }
@@ -263,9 +288,14 @@ const Profile = () => {
             <Grid item xs={12}>
               <FormControlLabel
                 control={
-                  <Checkbox color="secondary" name="saveAddress" value="yes" />
+                  <Checkbox
+                    color="primary"
+                    name="ispublic"
+                    checked={inputs.ispublic}
+                    onChange={handleCheckbox}
+                  />
                 }
-                label="Publish this profile to the marketplace"
+                label="Make profile public"
               />
             </Grid>
           </Grid>
@@ -277,7 +307,7 @@ const Profile = () => {
               className={classes.button}
               onClick={handleSubmit}
             >
-              Preview
+              Submit
             </Button>
           </div>
         </Paper>
