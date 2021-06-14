@@ -14,7 +14,7 @@ router.get("/", authorisation, async (req, res) => {
           )
         : req.user.type === "Student"
         ? await pool.query(
-            "SELECT subjects, rate, times, description FROM students WHERE id = $1",
+            "SELECT subjects, rate, times, description, ispublic FROM students WHERE id = $1",
             [req.user.id]
           )
         : null;
