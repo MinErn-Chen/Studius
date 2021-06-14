@@ -8,6 +8,9 @@ import TextField from "@material-ui/core/TextField";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
 import InputAdornment from "@material-ui/core/InputAdornment";
+import IconButton from "@material-ui/core/IconButton";
+import AddIcon from "@material-ui/icons/Add";
+import RemoveIcon from "@material-ui/icons/Remove";
 import { TimePicker } from "@material-ui/pickers";
 import moment from "moment";
 
@@ -50,10 +53,10 @@ const Profile = ({ setNotification }) => {
   const classes = useStyles();
 
   const [inputs, setInputs] = useState({
-    subject: "",
+    subjects: { 0: ["", ""] },
     rate: "",
-    fromTime: moment("00:00", "HH:mm"),
-    toTime: moment("00:00", "HH:mm"),
+    fromTime: null,
+    toTime: null,
     description: "",
     ispublic: null,
   });
@@ -70,12 +73,15 @@ const Profile = ({ setNotification }) => {
       const { subjects, rate, times, description, ispublic } = parseRes;
 
       setInputs({
-        subject: subjects[0] || "",
+        subjects: subjects
+          ? subjects.reduce((acc, cur, i) => {
+              acc[i] = cur;
+              return acc;
+            }, {})
+          : { 0: ["", ""] },
         rate: rate || "",
-        fromTime: times[0]
-          ? moment(times[0], "HH:mm")
-          : moment("00:00", "HH:mm"),
-        toTime: times[1] ? moment(times[1], "HH:mm") : moment("00:00", "HH:mm"),
+        fromTime: times ? moment(times[0], "HH:mm") : moment("00:00", "HH:mm"),
+        toTime: times ? moment(times[1], "HH:mm") : moment("00:00", "HH:mm"),
         description: description || "",
         ispublic: ispublic || false,
       });
@@ -90,6 +96,56 @@ const Profile = ({ setNotification }) => {
 
   const handleInputs = (event) => {
     setInputs({ ...inputs, [event.target.name]: event.target.value });
+  };
+
+  const handleSubjects = (event) => {
+    setInputs({
+      ...inputs,
+      subjects: {
+        ...inputs.subjects,
+        [event.target.name]: [
+          event.target.value,
+          inputs.subjects[event.target.name][1],
+        ],
+      },
+    });
+  };
+
+  const handleLevels = (event) => {
+    setInputs({
+      ...inputs,
+      subjects: {
+        ...inputs.subjects,
+        [event.target.name]: [
+          inputs.subjects[event.target.name][0],
+          event.target.value,
+        ],
+      },
+    });
+  };
+
+  const handleAdd = () => {
+    setInputs({
+      ...inputs,
+      subjects: {
+        ...inputs.subjects,
+        [Object.keys(inputs.subjects).length]: ["", ""],
+      },
+    });
+  };
+
+  const handleRemove = (index) => () => {
+    const tempInputs = {};
+    Object.assign(tempInputs, inputs);
+    delete tempInputs.subjects[index];
+
+    setInputs({
+      ...tempInputs,
+      subjects: Object.values(tempInputs.subjects).reduce((acc, cur, i) => {
+        acc[i] = cur;
+        return acc;
+      }, {}),
+    });
   };
 
   const handleFromTime = (time) => {
@@ -107,10 +163,10 @@ const Profile = ({ setNotification }) => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    const { subject, rate, fromTime, toTime, description, ispublic } = inputs;
+    const { subjects, rate, fromTime, toTime, description, ispublic } = inputs;
 
     const body = {
-      subjects: [subject],
+      subjects: Object.values(subjects),
       rate: rate,
       times: [fromTime.format("HH:mm"), toTime.format("HH:mm")],
       description: description,
@@ -158,7 +214,78 @@ const Profile = ({ setNotification }) => {
            Description
           </Typography> */}
           <Grid container spacing={2}>
+            {Object.keys(inputs.subjects).map((subject, index) => {
+              return Object.keys(inputs.subjects).length === 1 ? (
+                <>
+                  <Grid item xs={6} key={`subject-${index}`}>
+                    <TextField
+                      required
+                      id={`subject-${index}`}
+                      label={`Subject`}
+                      variant="outlined"
+                      name={index}
+                      onChange={handleSubjects}
+                      value={inputs.subjects[subject][0]}
+                      fullWidth
+                    />
+                  </Grid>
+                  <Grid item xs={6} key={`level-${index}`}>
+                    <TextField
+                      required
+                      id={`level-${index}`}
+                      label={`Level`}
+                      variant="outlined"
+                      name={index}
+                      onChange={handleLevels}
+                      value={inputs.subjects[subject][1]}
+                      fullWidth
+                    />
+                  </Grid>
+                </>
+              ) : (
+                <>
+                  <Grid item xs={5} key={`subject-${index}`}>
+                    <TextField
+                      required
+                      id={`subject-${index}`}
+                      label={`Subject`}
+                      variant="outlined"
+                      name={index}
+                      onChange={handleSubjects}
+                      value={inputs.subjects[subject][0]}
+                      fullWidth
+                    />
+                  </Grid>
+                  <Grid item xs={5} key={`level-${index}`}>
+                    <TextField
+                      required
+                      id={`level-${index}`}
+                      label={`Level`}
+                      variant="outlined"
+                      name={index}
+                      onChange={handleLevels}
+                      value={inputs.subjects[subject][1]}
+                      fullWidth
+                    />
+                  </Grid>
+                  <Grid item xs={1} key={`remove-${index}`}>
+                    <IconButton
+                      className={classes.margin}
+                      onClick={handleRemove(index)}
+                      size="small"
+                    >
+                      <RemoveIcon />
+                    </IconButton>
+                  </Grid>
+                </>
+              );
+            })}
             <Grid item xs={12}>
+              <IconButton className={classes.margin} onClick={handleAdd}>
+                <AddIcon />
+              </IconButton>
+            </Grid>
+            {/* <Grid item xs={12}>
               <TextField
                 required
                 id="subject"
@@ -169,7 +296,7 @@ const Profile = ({ setNotification }) => {
                 value={inputs.subject}
                 fullWidth
               />
-            </Grid>
+            </Grid> */}
             <Grid item xs={12} sm={4}>
               <TextField
                 required

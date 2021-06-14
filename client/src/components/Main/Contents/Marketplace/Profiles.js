@@ -67,7 +67,15 @@ const Profiles = ({ profiles }) => {
                           {stylisedTitles[detail]}
                         </Typography>
                         {detail === "subjects" ? (
-                          <Typography>{profile[detail].join(", ")}</Typography>
+                          <Typography>
+                            {profile[detail]
+                              .map((subject) =>
+                                Array.isArray(subject)
+                                  ? subject.join(" ")
+                                  : subject
+                              )
+                              .join(", ")}
+                          </Typography>
                         ) : detail === "rate" ? (
                           <Typography>{`$ ${profile[detail]} / hr`}</Typography>
                         ) : detail === "times" ? (

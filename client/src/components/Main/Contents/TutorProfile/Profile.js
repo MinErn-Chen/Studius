@@ -73,10 +73,10 @@ const Profile = ({ setNotification }) => {
   };
 
   const [inputs, setInputs] = useState({
-    subjects: { 0: null },
+    subjects: { 0: "" },
     rate: "",
-    fromTime: moment("00:00", "HH:mm"),
-    toTime: moment("00:00", "HH:mm"),
+    fromTime: null,
+    toTime: null,
     institution: "",
     description: "",
     ispublic: false,

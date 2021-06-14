@@ -20,7 +20,17 @@ const validProfile = (req, res, next) => {
       return res.status(400).json("Missing information");
     }
   } else if (req.user.type === "Student") {
-    if (![subjects, rate, times[0], times[1], description].every(Boolean)) {
+    if (
+      ![
+        subjects.reduce((acc, cur) => {
+          return acc && cur[0] && cur[1];
+        }, subjects.length !== 0),
+        rate,
+        times[0],
+        times[1],
+        description,
+      ].every(Boolean)
+    ) {
       return res.status(501).json("Missing information");
     }
   }
