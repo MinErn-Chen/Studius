@@ -73,9 +73,9 @@ const Profiles = ({ profiles }) => {
                         ) : detail === "times" ? (
                           <Typography>
                             {`${moment(profile[detail][0], "HH:mm").format(
-                              "hh:mm a"
+                              "hh:mm A"
                             )} — ${moment(profile[detail][1], "HH:mm").format(
-                              "hh:mm a"
+                              "hh:mm A"
                             )}`}
                           </Typography>
                         ) : detail === "education" ? (
