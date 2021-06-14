@@ -20,7 +20,7 @@ CREATE TABLE tutors(
   rate VARCHAR(255),
   times VARCHAR(255)[],
   education VARCHAR(255),
-  description VARCHAR(255),
+  description TEXT,
   ispublic boolean
 ) INHERITS (users);
 
@@ -29,7 +29,7 @@ CREATE TABLE students(
   subjects VARCHAR(255)[][], --array size and depth ignored during run-time
   rate VARCHAR(255),
   times VARCHAR(255)[],
-  description VARCHAR(255),
+  description TEXT,
   ispublic boolean
 ) INHERITS (users);
 
