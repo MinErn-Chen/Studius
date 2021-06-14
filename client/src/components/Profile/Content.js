@@ -45,7 +45,7 @@ const Content = ({ match, ...props }) => {
 
       const parseRes = await response.json();
 
-      setAccountInformation({ ...parseRes, password: "" });
+      setAccountInformation({ ...parseRes, password: "********" });
     } catch (error) {
       console.error(error.message);
     }
