@@ -6,14 +6,21 @@ const validProfile = (req, res, next) => {
   // confirm validity of input user profile and handle errors accordingly
   if (req.user.type === "Tutor") {
     if (
-      ![subjects[0], rate, times[0], times[1], education, description].every(
-        Boolean
-      )
+      ![
+        subjects.reduce((acc, cur) => {
+          return acc && cur;
+        }, subjects.length !== 0),
+        rate,
+        times[0],
+        times[1],
+        education,
+        description,
+      ].every(Boolean)
     ) {
       return res.status(400).json("Missing information");
     }
   } else if (req.user.type === "Student") {
-    if (![subjects[0], rate, times[0], times[1], description].every(Boolean)) {
+    if (![subjects, rate, times[0], times[1], description].every(Boolean)) {
       return res.status(501).json("Missing information");
     }
   }

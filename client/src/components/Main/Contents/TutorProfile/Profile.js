@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-// import { useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import Button from "@material-ui/core/Button";
@@ -10,6 +9,9 @@ import Autocomplete from "@material-ui/lab/Autocomplete";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
 import InputAdornment from "@material-ui/core/InputAdornment";
+import IconButton from "@material-ui/core/IconButton";
+import AddIcon from "@material-ui/icons/Add";
+import RemoveIcon from "@material-ui/icons/Remove";
 import { TimePicker } from "@material-ui/pickers";
 import moment from "moment";
 
@@ -71,13 +73,13 @@ const Profile = ({ setNotification }) => {
   };
 
   const [inputs, setInputs] = useState({
-    subject: "",
+    subjects: { 0: null },
     rate: "",
     fromTime: moment("00:00", "HH:mm"),
     toTime: moment("00:00", "HH:mm"),
     institution: "",
     description: "",
-    ispublic: null,
+    ispublic: false,
   });
 
   const getProfile = async () => {
@@ -93,12 +95,15 @@ const Profile = ({ setNotification }) => {
         parseRes;
 
       setInputs({
-        subject: subjects[0] || "",
+        subjects: subjects
+          ? subjects.reduce((acc, cur, i) => {
+              acc[i] = cur;
+              return acc;
+            }, {})
+          : { 0: "" },
         rate: rate || "",
-        fromTime: times[0]
-          ? moment(times[0], "HH:mm")
-          : moment("00:00", "HH:mm"),
-        toTime: times[1] ? moment(times[1], "HH:mm") : moment("00:00", "HH:mm"),
+        fromTime: times ? moment(times[0], "HH:mm") : moment("00:00", "HH:mm"),
+        toTime: times ? moment(times[1], "HH:mm") : moment("00:00", "HH:mm"),
         institution: education || "",
         description: description || "",
         ispublic: ispublic || false,
@@ -114,6 +119,37 @@ const Profile = ({ setNotification }) => {
 
   const handleInputs = (event) => {
     setInputs({ ...inputs, [event.target.name]: event.target.value });
+  };
+
+  const handleSubjects = (event) => {
+    setInputs({
+      ...inputs,
+      subjects: { ...inputs.subjects, [event.target.name]: event.target.value },
+    });
+  };
+
+  const handleAdd = () => {
+    setInputs({
+      ...inputs,
+      subjects: {
+        ...inputs.subjects,
+        [Object.keys(inputs.subjects).length]: "",
+      },
+    });
+  };
+
+  const handleRemove = (index) => () => {
+    const tempInputs = {};
+    Object.assign(tempInputs, inputs);
+    delete tempInputs.subjects[index];
+
+    setInputs({
+      ...tempInputs,
+      subjects: Object.values(tempInputs.subjects).reduce((acc, cur, i) => {
+        acc[i] = cur;
+        return acc;
+      }, {}),
+    });
   };
 
   const handleFromTime = (time) => {
@@ -132,7 +168,7 @@ const Profile = ({ setNotification }) => {
     event.preventDefault();
 
     const {
-      subject,
+      subjects,
       rate,
       fromTime,
       toTime,
@@ -142,7 +178,7 @@ const Profile = ({ setNotification }) => {
     } = inputs;
 
     const body = {
-      subjects: [subject],
+      subjects: Object.values(subjects),
       rate: rate,
       times: [fromTime.format("HH:mm"), toTime.format("HH:mm")],
       education: institution,
@@ -166,7 +202,7 @@ const Profile = ({ setNotification }) => {
         setNotification({
           open: true,
           severity: "success",
-          message: "Profile successfully submitted!",
+          message: "Profile successfully saved!",
         });
       } else {
         setNotification({
@@ -190,18 +226,57 @@ const Profile = ({ setNotification }) => {
           {/* <Typography variant="h6" gutterBottom>
            Description
           </Typography> */}
-          <Grid container spacing={2}>
+          <Grid
+            container
+            spacing={2}
+            justify="center"
+            alignItems="center"
+            direction="row"
+          >
+            {Object.keys(inputs.subjects).map((subject, index) => {
+              return Object.keys(inputs.subjects).length === 1 ? (
+                <Grid item xs={12} key={`subject-${index}`}>
+                  <TextField
+                    required
+                    id={`subject-${index}`}
+                    label={`Subject`}
+                    variant="outlined"
+                    name={index}
+                    onChange={handleSubjects}
+                    value={inputs.subjects[subject]}
+                    fullWidth
+                  />
+                </Grid>
+              ) : (
+                <>
+                  <Grid item xs={11} key={`subject-${index}`}>
+                    <TextField
+                      required
+                      id={`subject-${index}`}
+                      label={`Subject`}
+                      variant="outlined"
+                      name={index}
+                      onChange={handleSubjects}
+                      value={inputs.subjects[subject]}
+                      fullWidth
+                    />
+                  </Grid>
+                  <Grid item xs={1} key={`remove-${index}`}>
+                    <IconButton
+                      className={classes.margin}
+                      onClick={handleRemove(index)}
+                      size="small"
+                    >
+                      <RemoveIcon />
+                    </IconButton>
+                  </Grid>
+                </>
+              );
+            })}
             <Grid item xs={12}>
-              <TextField
-                required
-                id="subject"
-                label="Subject"
-                variant="outlined"
-                name="subject"
-                onChange={handleInputs}
-                value={inputs.subject}
-                fullWidth
-              />
+              <IconButton className={classes.margin} onClick={handleAdd}>
+                <AddIcon />
+              </IconButton>
             </Grid>
             <Grid item xs={12} sm={4}>
               <TextField
@@ -307,7 +382,7 @@ const Profile = ({ setNotification }) => {
               className={classes.button}
               onClick={handleSubmit}
             >
-              Submit
+              Save
             </Button>
           </div>
         </Paper>
