@@ -39,8 +39,8 @@ router.put("/", [authorisation, validProfile], async (req, res) => {
       );
     } else if (req.user.type === "Student") {
       await pool.query(
-        "UPDATE students SET subjects = $1, rate = $2, times = $3, description = $4 WHERE id = $5",
-        [subjects, rate, times, description, req.user.id]
+        "UPDATE students SET subjects = $1, rate = $2, times = $3, description = $4, ispublic = $5 WHERE id = $6",
+        [subjects, rate, times, description, ispublic, req.user.id]
       );
     }
 

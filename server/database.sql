@@ -26,10 +26,11 @@ CREATE TABLE tutors(
 
 --create student table
 CREATE TABLE students(
-  subjects VARCHAR(255)[][2], --array size and depth ignored during run-time
+  subjects VARCHAR(255)[][], --array size and depth ignored during run-time
   rate VARCHAR(255),
   times VARCHAR(255)[],
-  description VARCHAR(255)
+  description VARCHAR(255),
+  ispublic boolean
 ) INHERITS (users);
 
 --create tutor_credentials table
