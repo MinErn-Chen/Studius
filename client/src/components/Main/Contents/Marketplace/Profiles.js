@@ -13,6 +13,9 @@ const useStyles = makeStyles((theme) => ({
   cardGrid: {
     paddingTop: theme.spacing(8),
   },
+  card: {
+    padding: theme.spacing(1),
+  },
   profileDetail: {
     paddingTop: theme.spacing(1),
   },
@@ -25,7 +28,7 @@ const stylisedTitles = {
   education: "Education",
 };
 
-const Profiles = ({ profiles }) => {
+const Profiles = ({ profiles, handleProfileViewOpen, setDescription }) => {
   const classes = useStyles();
 
   return (
@@ -94,8 +97,12 @@ const Profiles = ({ profiles }) => {
                   })}
               </CardContent>
               <CardActions>
-                <Button size="small" color="primary">
-                  Read more
+                <Button
+                  size="small"
+                  color="primary"
+                  onClick={handleProfileViewOpen(profile.description)}
+                >
+                  View
                 </Button>
               </CardActions>
             </Card>

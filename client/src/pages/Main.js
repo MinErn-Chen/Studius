@@ -106,6 +106,7 @@ const Main = ({ match, setAuth, setNotification }) => {
             <Marketplace
               setNotification={setNotification}
               setAppBarTitle={setAppBarTitle}
+              userInformation={userInformation}
             />
           )}
         />
