@@ -93,17 +93,19 @@ const App = () => {
     setNotification({ ...notification, open: false });
   };
 
-  const renderSnackbar = (
-    <Snackbar
-      open={notification.open}
-      autoHideDuration={4000}
-      onClose={handleNotification}
-    >
-      <Alert onClose={handleNotification} severity={notification.severity}>
-        {notification.message}
-      </Alert>
-    </Snackbar>
-  );
+  const Notification = () => {
+    return (
+      <Snackbar
+        open={notification.open}
+        autoHideDuration={4000}
+        onClose={handleNotification}
+      >
+        <Alert onClose={handleNotification} severity={notification.severity}>
+          {notification.message}
+        </Alert>
+      </Snackbar>
+    );
+  };
 
   return (
     <>
@@ -178,7 +180,7 @@ const App = () => {
               />
             </Switch>
           </Router>
-          {renderSnackbar}
+          <Notification />
         </MuiPickersUtilsProvider>
       </MuiThemeProvider>
     </>
