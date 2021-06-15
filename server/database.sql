@@ -20,7 +20,7 @@ CREATE TABLE tutors(
   rate VARCHAR(255),
   times VARCHAR(255)[],
   education VARCHAR(255),
-  description TEXT,
+  description VARCHAR,
   ispublic boolean
 ) INHERITS (users);
 
@@ -29,16 +29,16 @@ CREATE TABLE students(
   subjects VARCHAR(255)[][], --array size and depth ignored during run-time
   rate VARCHAR(255),
   times VARCHAR(255)[],
-  description TEXT,
+  description VARCHAR,
   ispublic boolean
 ) INHERITS (users);
 
---create tutor_credentials table
-CREATE TABLE tutor_credentials(
+--create credentials table
+CREATE TABLE credentials(
     id uuid PRIMARY KEY,
-    filename TEXT UNIQUE NOT NULL,
-    filepath TEXT NOT NULL,
-    mimetype TEXT NOT NULL,
+    filename VARCHAR UNIQUE NOT NULL,
+    filepath VARCHAR NOT NULL,
+    mimetype VARCHAR NOT NULL,
     size BIGINT NOT NULL
 );
 
