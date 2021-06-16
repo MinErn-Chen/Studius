@@ -7,17 +7,17 @@ import {
 } from "react-router-dom";
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert from "@material-ui/lab/Alert";
-import "./App.css";
+import "./App/App.css";
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 import { MuiPickersUtilsProvider } from "@material-ui/pickers";
 import MomentUtils from "@date-io/moment";
 
-import Home from "./pages/Home";
-import Register from "./pages/Register";
-import Login from "./pages/Login";
-import Account from "./pages/Account";
-import Loading from "./pages/Loading";
-import Main from "./pages/Main";
+import Home from "./App/Home";
+import Register from "./App/Register";
+import Login from "./App/Login";
+import Account from "./App/Account";
+import Loading from "./shared/Loading";
+import Main from "./App/Main";
 
 const theme = createMuiTheme({
   palette: {

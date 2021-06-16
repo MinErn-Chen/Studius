@@ -1,10 +1,10 @@
 import Dialog from "@material-ui/core/Dialog";
 
-import FirstName from "./Dialogues/FirstName";
-import LastName from "./Dialogues/LastName";
-import EmailAddress from "./Dialogues/EmailAddress";
-import Password from "./Dialogues/Password";
-import DeleteAccount from "./Dialogues/DeleteAccount";
+import FirstName from "./Dialogue/FirstName";
+import LastName from "./Dialogue/LastName";
+import EmailAddress from "./Dialogue/EmailAddress";
+import Password from "./Dialogue/Password";
+import DeleteAccount from "./Dialogue/DeleteAccount";
 
 const Dialogue = ({
   dialogue,

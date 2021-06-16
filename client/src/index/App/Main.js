@@ -1,15 +1,15 @@
 import { useState, useEffect } from "react";
 import { Switch, Route, Redirect } from "react-router-dom";
 
-import Loading from "./Loading";
+import Loading from "../shared/Loading";
 
-import AppBar from "../components/Main/AppBar";
-import SideBar from "../components/Main/SideBar";
+import AppBar from "./Main/AppBar";
+import SideBar from "./Main/SideBar";
 
-import Dashboard from "../components/Main/Contents/Dashboard";
-import Marketplace from "../components/Main/Contents/Marketplace";
-import TutorProfile from "../components/Main/Contents/TutorProfile";
-import StudentProfile from "../components/Main/Contents/StudentProfile";
+import Dashboard from "./Main/Dashboard";
+import Marketplace from "./Main/Marketplace";
+import TutorProfile from "./Main/TutorProfile";
+import StudentProfile from "./Main/StudentProfile";
 
 const Main = ({ match, setAuth, setNotification }) => {
   const [userInformation, setUserInformation] = useState({

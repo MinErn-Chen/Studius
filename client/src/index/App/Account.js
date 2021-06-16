@@ -1,8 +1,8 @@
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 
-import Content from "../components/Profile/Content";
-import Menu from "../components/Profile/Menu";
+import Content from "./Account/Content";
+import Menu from "./Account/Menu";
 
 const Account = ({ setAuth, setNotification, ...props }) => {
   return (

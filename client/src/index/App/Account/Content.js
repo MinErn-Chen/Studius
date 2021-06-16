@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 import { Route, Redirect, Switch } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
-import Dialogue from "./Dialogue";
+import Dialogue from "./Content/Dialogue";
 import Paper from "@material-ui/core/Paper";
 
-import AccountInformation from "./Contents/AccountInformation";
-import Advanced from "./Contents/Advanced";
+import AccountInformation from "./Content/AccountInformation";
+import Advanced from "./Content/Advanced";
 
 const useStyles = makeStyles((theme) => ({
   attributes: {
