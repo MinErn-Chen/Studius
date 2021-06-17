@@ -28,7 +28,7 @@ const stylisedTitles = {
   education: "Education",
 };
 
-const Profiles = ({ profiles, handleProfileViewOpen, setDescription }) => {
+const Profiles = ({ profiles, handleProfileViewOpen }) => {
   const classes = useStyles();
 
   return (
