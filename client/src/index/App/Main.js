@@ -97,6 +97,8 @@ const Main = ({ match, setAuth, setNotification }) => {
             <Dashboard
               setNotification={setNotification}
               setAppBarTitle={setAppBarTitle}
+              userInformation={userInformation}
+              match={match}
             />
           )}
         />
