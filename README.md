@@ -30,7 +30,7 @@ Edit the user credentials in `/server/db.js` to match that of the local PostgreS
 
 ### Starting server and client
 
-Run `yarn start` in both `/server` and `/client` to boot up server and client (duh). Confirm connection to client via `http://localhost:3000/` in a modern web browser.
+Run `yarn start` in both `/server` and `/client` to boot up server and client (duh). Confirm connection to client via `http://localhost:4000/` in a modern web browser.
 
 ## Testing
 
