@@ -52,6 +52,7 @@ const Marketplace = ({ setNotification, setAppBarTitle, userInformation }) => {
         <Dialog
           open={profileViewOpen}
           onClose={handleProfileViewClose}
+          disableBackdropClick
           maxWidth="sm"
           fullWidth
         >
