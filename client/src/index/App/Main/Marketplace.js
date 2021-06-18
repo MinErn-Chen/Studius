@@ -6,10 +6,20 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Typography from "@material-ui/core/Typography";
+import { makeStyles } from "@material-ui/core/styles";
 
 import Profiles from "./Marketplace/Profiles";
 
+const useStyles = makeStyles((theme) => ({
+  title: {
+    display: "flex",
+    justifyContent: "space-between",
+  },
+}));
+
 const Marketplace = ({ setNotification, setAppBarTitle, userInformation }) => {
+  const classes = useStyles();
+
   const [profiles, setProfiles] = useState([]);
 
   const getProfiles = async () => {
@@ -39,7 +49,6 @@ const Marketplace = ({ setNotification, setAppBarTitle, userInformation }) => {
   const handleProfileViewOpen = (profileDescription) => () => {
     setDescription(profileDescription);
     setProfileViewOpen(true);
-    console.log(profileDescription);
   };
 
   const handleProfileViewClose = () => {
@@ -56,13 +65,20 @@ const Marketplace = ({ setNotification, setAppBarTitle, userInformation }) => {
           maxWidth="sm"
           fullWidth
         >
-          <DialogTitle id="profile-view-title">{`Detailed ${
-            userInformation.type === "Tutor"
-              ? "student"
-              : userInformation.type === "Student"
-              ? "tutor"
-              : ""
-          } profile`}</DialogTitle>
+          <DialogTitle id="profile-view-title">
+            {userInformation.type === "Tutor" ? (
+              <div>Detailed student profile</div>
+            ) : userInformation.type === "Student" ? (
+              <div className={classes.title}>
+                <div>Detailed tutor profile</div>
+                <Button variant="outlined" color="primary" disabled={false}>
+                  View credentials
+                </Button>
+              </div>
+            ) : (
+              ""
+            )}
+          </DialogTitle>
           <DialogContent>
             <DialogContentText id="profile-view-description">
               <Typography style={{ whiteSpace: "pre-line" }}>
@@ -88,7 +104,6 @@ const Marketplace = ({ setNotification, setAppBarTitle, userInformation }) => {
       <Profiles
         profiles={profiles}
         handleProfileViewOpen={handleProfileViewOpen}
-        setDescription={setDescription}
       />
       <ProfileView />
     </>
