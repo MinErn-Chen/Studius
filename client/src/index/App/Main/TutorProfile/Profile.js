@@ -12,6 +12,7 @@ import InputAdornment from "@material-ui/core/InputAdornment";
 import IconButton from "@material-ui/core/IconButton";
 import AddIcon from "@material-ui/icons/Add";
 import RemoveIcon from "@material-ui/icons/Remove";
+import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import { TimePicker } from "@material-ui/pickers";
 import moment from "moment";
 
@@ -47,6 +48,9 @@ const useStyles = makeStyles((theme) => ({
   title: {
     marginBottom: theme.spacing(4),
     marginTop: theme.spacing(1),
+  },
+  fileUpload: {
+    display: "none",
   },
 }));
 
@@ -159,6 +163,49 @@ const Profile = ({ setNotification }) => {
   const handleToTime = (time) => {
     setInputs({ ...inputs, toTime: time });
   };
+
+  const handleFileUpload = async (event) => {
+    const formData = new FormData();
+
+    formData.append("credential", event.target.files[0]);
+
+    try {
+      const response = await fetch("http://localhost:3000/files/credentials/", {
+        method: "PUT",
+        headers: { token: localStorage.token },
+        body: formData,
+      });
+
+      const parseRes = await response.json();
+
+      const { severity, message } = parseRes;
+
+      setNotification({
+        open: true,
+        severity: severity,
+        message: message,
+      });
+    } catch (error) {
+      setNotification({
+        open: true,
+        severity: "error",
+        message: error,
+      });
+    }
+  };
+
+  // const handleFileView = async () => {
+  //   try {
+  //     const response = await fetch("http://localhost:3000/files/credentials/", {
+  //       method: "GET",
+  //       headers: { token: localStorage.token },
+  //     });
+
+  //     const parseRes = await response;
+
+  //     console.log(parseRes);
+  //   } catch (error) {}
+  // };
 
   const handleCheckbox = (event) => {
     setInputs({ ...inputs, [event.target.name]: event.target.checked });
@@ -359,6 +406,32 @@ const Profile = ({ setNotification }) => {
                 onChange={handleInputs}
                 fullWidth
               />
+            </Grid>
+            <Grid item xs={12}>
+              <input
+                accept="application/pdf"
+                className={classes.fileUpload}
+                id="file-upload"
+                type="file"
+                onChange={handleFileUpload}
+              />
+              <label htmlFor="file-upload">
+                <Button
+                  variant="contained"
+                  color="default"
+                  startIcon={<CloudUploadIcon />}
+                  component="span"
+                >
+                  Upload credentials
+                </Button>
+              </label>
+              {/* <Button
+                variant="outlined"
+                color="primary"
+                onClick={handleFileView}
+              >
+                View credentials
+              </Button> */}
             </Grid>
             <Grid item xs={12}>
               <FormControlLabel

@@ -40,8 +40,13 @@ router.put(
     try {
       // check if file type is correct
       if (req.fileValidationError) {
-        return res.json(req.fileValidationError);
+        return res.json({
+          severity: "error",
+          message: req.fileValidationError,
+        });
       }
+
+      console.log(req.file);
 
       // destructure the req.file (mimetype, size, path)
       const { mimetype, size, path } = req.file;
@@ -63,10 +68,10 @@ router.put(
         );
       }
 
-      res.json("Upload successful!");
+      res.json({ severity: "success", message: "Upload successful!" });
     } catch (error) {
       console.error(error);
-      res.status(500).json("Server error");
+      res.status(500).json({ severity: "error", message: "Server error" });
     }
   }
 );
