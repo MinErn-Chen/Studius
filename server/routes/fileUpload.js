@@ -86,7 +86,7 @@ router.get("/credentials", authorisation, async (req, res) => {
     );
 
     if (fileRetrieve.rows.length === 0) {
-      return res.status(404).json("No file to retrieve");
+      return res.status(404).json(false);
     }
 
     // return the file stored at the location specified in the database
@@ -112,21 +112,33 @@ router.delete("/credentials", authorisation, async (req, res) => {
     );
 
     if (fileDelete.rows.length === 0) {
-      return res.status(404).json("No file to delete");
+      return res.status(404).json({
+        severity: "error",
+        message: "No file to delete!",
+      });
     }
 
     fs.unlink(`./files/credentials/${req.user.id}.pdf`, (error) => {
       if (error) {
         console.error(`Failed to delete credential: ${error}`);
-        return res.status(400).json(`Failed to delete credential: ${error}`);
+        return res.status(400).json({
+          severity: "error",
+          message: `Failed to delete credential: ${error}`,
+        });
       } else {
         console.log("Successfully deleted credential!");
-        return res.json("Successfully deleted credential!");
+        return res.json({
+          severity: "success",
+          message: "Successfully deleted credential!",
+        });
       }
     });
   } catch (error) {
     console.error(`Failed to delete credential: ${error}`);
-    return res.status(400).json(`Failed to delete credential: ${error}`);
+    return res.status(400).json({
+      severity: "error",
+      message: `Failed to delete credential: ${error}`,
+    });
   }
 });
 
