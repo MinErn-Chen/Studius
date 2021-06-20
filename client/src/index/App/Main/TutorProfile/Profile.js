@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import Button from "@material-ui/core/Button";
+import ButtonGroup from "@material-ui/core/ButtonGroup";
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
 import TextField from "@material-ui/core/TextField";
@@ -86,17 +87,19 @@ const Profile = ({ setNotification }) => {
     ispublic: false,
   });
 
+  const [hasCredentialFile, setHasCredentialFile] = useState(false);
+
   const getProfile = async () => {
     try {
-      const response = await fetch("http://localhost:3000/profile/", {
+      const responseProfile = await fetch("http://localhost:3000/profile/", {
         method: "GET",
         headers: { token: localStorage.token },
       });
 
-      const parseRes = await response.json();
+      const parseResProf = await responseProfile.json();
 
       const { subjects, rate, times, education, description, ispublic } =
-        parseRes;
+        parseResProf;
 
       setInputs({
         subjects: subjects
@@ -112,6 +115,14 @@ const Profile = ({ setNotification }) => {
         description: description || "",
         ispublic: ispublic || false,
       });
+
+      const responseCredential = await fetch(
+        "http://localhost:3000/files/credentials/",
+        {
+          method: "GET",
+          headers: { token: localStorage.token },
+        }
+      );
     } catch (error) {
       console.error(error.message);
     }
@@ -194,18 +205,50 @@ const Profile = ({ setNotification }) => {
     }
   };
 
-  // const handleFileView = async () => {
-  //   try {
-  //     const response = await fetch("http://localhost:3000/files/credentials/", {
-  //       method: "GET",
-  //       headers: { token: localStorage.token },
-  //     });
+  const handleFileView = async () => {
+    try {
+      const response = await fetch("http://localhost:3000/files/credentials/", {
+        method: "GET",
+        headers: { token: localStorage.token },
+        responseType: "blob",
+      });
 
-  //     const parseRes = await response;
+      const blobRes = await response.blob();
 
-  //     console.log(parseRes);
-  //   } catch (error) {}
-  // };
+      const file = new Blob([blobRes], { type: "application/pdf" });
+
+      const fileURL = URL.createObjectURL(file);
+
+      window.open(fileURL);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleFileRemove = async () => {
+    try {
+      const response = await fetch("http://localhost:3000/files/credentials/", {
+        method: "DELETE",
+        headers: { token: localStorage.token },
+      });
+
+      const parseRes = await response.json();
+
+      const { severity, message } = parseRes;
+
+      setNotification({
+        open: true,
+        severity: severity,
+        message: message,
+      });
+    } catch (error) {
+      setNotification({
+        open: true,
+        severity: "error",
+        message: error,
+      });
+    }
+  };
 
   const handleCheckbox = (event) => {
     setInputs({ ...inputs, [event.target.name]: event.target.checked });
@@ -425,13 +468,22 @@ const Profile = ({ setNotification }) => {
                   Upload credentials
                 </Button>
               </label>
-              {/* <Button
-                variant="outlined"
-                color="primary"
-                onClick={handleFileView}
-              >
-                View credentials
-              </Button> */}
+              <ButtonGroup aria-label="outlined secondary button group">
+                <Button
+                  variant="outlined"
+                  color="primary"
+                  onClick={handleFileView}
+                >
+                  View credentials
+                </Button>
+                <Button
+                  variant="outlined"
+                  color="secondary"
+                  onClick={handleFileRemove}
+                >
+                  Remove credentials
+                </Button>
+              </ButtonGroup>
             </Grid>
             <Grid item xs={12}>
               <FormControlLabel
