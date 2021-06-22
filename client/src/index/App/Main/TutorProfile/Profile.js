@@ -116,13 +116,22 @@ const Profile = ({ setNotification }) => {
         ispublic: ispublic || false,
       });
 
-      const responseCredential = await fetch(
-        "http://localhost:3000/files/credentials/",
-        {
-          method: "GET",
-          headers: { token: localStorage.token },
+      // probably the nastiest piece of code i've ever written
+      try {
+        const responseCredential = await fetch(
+          "http://localhost:3000/files/credentials/",
+          {
+            method: "GET",
+            headers: { token: localStorage.token },
+          }
+        );
+
+        if ((await responseCredential.json()) === false) {
+          setHasCredentialFile(false);
         }
-      );
+      } catch (error) {
+        setHasCredentialFile(true);
+      }
     } catch (error) {
       console.error(error.message);
     }
@@ -196,6 +205,7 @@ const Profile = ({ setNotification }) => {
         severity: severity,
         message: message,
       });
+      setHasCredentialFile(true);
     } catch (error) {
       setNotification({
         open: true,
@@ -241,6 +251,7 @@ const Profile = ({ setNotification }) => {
         severity: severity,
         message: message,
       });
+      setHasCredentialFile(false);
     } catch (error) {
       setNotification({
         open: true,
@@ -451,39 +462,44 @@ const Profile = ({ setNotification }) => {
               />
             </Grid>
             <Grid item xs={12}>
-              <input
-                accept="application/pdf"
-                className={classes.fileUpload}
-                id="file-upload"
-                type="file"
-                onChange={handleFileUpload}
-              />
-              <label htmlFor="file-upload">
-                <Button
-                  variant="contained"
-                  color="default"
-                  startIcon={<CloudUploadIcon />}
-                  component="span"
-                >
-                  Upload credentials
-                </Button>
-              </label>
-              <ButtonGroup aria-label="outlined secondary button group">
-                <Button
-                  variant="outlined"
-                  color="primary"
-                  onClick={handleFileView}
-                >
-                  View credentials
-                </Button>
-                <Button
-                  variant="outlined"
-                  color="secondary"
-                  onClick={handleFileRemove}
-                >
-                  Remove credentials
-                </Button>
-              </ButtonGroup>
+              {hasCredentialFile ? (
+                <ButtonGroup aria-label="outlined secondary button group">
+                  <Button
+                    variant="outlined"
+                    color="primary"
+                    onClick={handleFileView}
+                  >
+                    View credentials
+                  </Button>
+                  <Button
+                    variant="outlined"
+                    color="secondary"
+                    onClick={handleFileRemove}
+                  >
+                    Remove credentials
+                  </Button>
+                </ButtonGroup>
+              ) : (
+                <>
+                  <input
+                    accept="application/pdf"
+                    className={classes.fileUpload}
+                    id="file-upload"
+                    type="file"
+                    onChange={handleFileUpload}
+                  />
+                  <label htmlFor="file-upload">
+                    <Button
+                      variant="contained"
+                      color="default"
+                      startIcon={<CloudUploadIcon />}
+                      component="span"
+                    >
+                      Upload credentials
+                    </Button>
+                  </label>
+                </>
+              )}
             </Grid>
             <Grid item xs={12}>
               <FormControlLabel
