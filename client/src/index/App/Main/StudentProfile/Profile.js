@@ -160,6 +160,17 @@ const Profile = ({ setNotification }) => {
     setInputs({ ...inputs, [event.target.name]: event.target.checked });
   };
 
+  const handleReset = () => {
+    setInputs({
+      subjects: { 0: ["", ""] },
+      rate: "",
+      fromTime: moment("00:00", "HH:mm"),
+      toTime: moment("00:00", "HH:mm"),
+      description: "",
+      ispublic: null,
+    });
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -369,7 +380,9 @@ const Profile = ({ setNotification }) => {
             </Grid>
           </Grid>
           <div className={classes.buttons}>
-            <Button className={classes.button}>Reset</Button>
+            <Button className={classes.button} onClick={handleReset}>
+              Reset
+            </Button>
             <Button
               variant="contained"
               color="primary"
