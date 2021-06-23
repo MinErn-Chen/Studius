@@ -225,7 +225,7 @@ const Profile = ({ setNotification }) => {
 
       const blobRes = await response.blob();
 
-      const file = new Blob([blobRes], { type: "application/pdf" });
+      const file = new Blob([blobRes], { type: blobRes.type });
 
       const fileURL = URL.createObjectURL(file);
 
