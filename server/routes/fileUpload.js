@@ -79,10 +79,12 @@ router.put(
 // get tutor credentials
 router.get("/credentials", authorisation, async (req, res) => {
   try {
+    const credentialsId = req.header("credentialsId") || req.user.id;
+
     // retrieve tutor credentials tied to user id and handle error accordingly
     const fileRetrieve = await pool.query(
       "SELECT * FROM credentials WHERE id = $1",
-      [req.user.id]
+      [credentialsId]
     );
 
     if (fileRetrieve.rows.length === 0) {
