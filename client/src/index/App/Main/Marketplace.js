@@ -46,56 +46,91 @@ const Marketplace = ({ setNotification, setAppBarTitle, userInformation }) => {
 
   const [description, setDescription] = useState("");
 
-  const handleProfileViewOpen = (profileDescription) => () => {
-    setDescription(profileDescription);
+  const handleProfileViewOpen = (profile) => () => {
+    setDescription(profile.description);
+    handleInitialiseCredentials(profile.id);
     setProfileViewOpen(true);
   };
 
+  const [credentialsURL, setCredentialsURL] = useState("");
+
+  const handleInitialiseCredentials = async (tutorProfileId) => {
+    try {
+      const response = await fetch("http://localhost:3000/files/credentials/", {
+        method: "GET",
+        headers: { token: localStorage.token, credentialsId: tutorProfileId },
+        responseType: "blob",
+      });
+
+      const blobRes = await response.blob();
+
+      if (blobRes.type === "application/pdf") {
+        const file = new Blob([blobRes], { type: blobRes.type });
+
+        const fileURL = URL.createObjectURL(file);
+
+        setCredentialsURL(fileURL);
+      }
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
+
+  const handleViewCredentials = () => {
+    window.open(credentialsURL);
+  };
+
   const handleProfileViewClose = () => {
+    setCredentialsURL("");
     setProfileViewOpen(false);
   };
 
   const ProfileView = () => {
     return (
-      <>
-        <Dialog
-          open={profileViewOpen}
-          onClose={handleProfileViewClose}
-          disableBackdropClick
-          maxWidth="sm"
-          fullWidth
-        >
-          <DialogTitle id="profile-view-title">
-            {userInformation.type === "Tutor" ? (
-              <div>Detailed student profile</div>
-            ) : userInformation.type === "Student" ? (
-              <div className={classes.title}>
-                <div>Detailed tutor profile</div>
-                <Button variant="outlined" color="primary" disabled={false}>
-                  View credentials
-                </Button>
-              </div>
-            ) : (
-              ""
-            )}
-          </DialogTitle>
-          <DialogContent>
-            <DialogContentText id="profile-view-description">
-              <Typography style={{ whiteSpace: "pre-line" }}>
-                {description}
-              </Typography>
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleProfileViewClose} color="primary">
-              Close
-            </Button>
-            <Button onClick={handleProfileViewClose} color="primary" autoFocus>
-              Confirm
-            </Button>
-          </DialogActions>
-        </Dialog>
-      </>
+      <Dialog
+        open={profileViewOpen}
+        onClose={handleProfileViewClose}
+        disableBackdropClick
+        maxWidth="sm"
+        fullWidth
+      >
+        <DialogTitle id="profile-view-title">
+          {userInformation.type === "Tutor" ? (
+            <div>Detailed student profile</div>
+          ) : userInformation.type === "Student" ? (
+            <div className={classes.title}>
+              <div>Detailed tutor profile</div>
+              <Button
+                variant="outlined"
+                color="primary"
+                onClick={handleViewCredentials}
+                disabled={!Boolean(credentialsURL)}
+              >
+                {Boolean(credentialsURL)
+                  ? "View credentials"
+                  : "No credentials"}
+              </Button>
+            </div>
+          ) : (
+            ""
+          )}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="profile-view-description">
+            <Typography style={{ whiteSpace: "pre-line" }}>
+              {description}
+            </Typography>
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleProfileViewClose} color="primary">
+            Close
+          </Button>
+          <Button onClick={handleProfileViewClose} color="primary" autoFocus>
+            Confirm
+          </Button>
+        </DialogActions>
+      </Dialog>
     );
   };
 

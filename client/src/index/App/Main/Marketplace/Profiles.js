@@ -100,7 +100,7 @@ const Profiles = ({ profiles, handleProfileViewOpen }) => {
                 <Button
                   size="small"
                   color="primary"
-                  onClick={handleProfileViewOpen(profile.description)}
+                  onClick={handleProfileViewOpen(profile)}
                 >
                   View
                 </Button>
