@@ -52,8 +52,8 @@ const DeleteAccount = ({ setAuth, setNotification, handleDialogueClose }) => {
       <DialogTitle id="attribute-dialogue">Edit email address</DialogTitle>
       <DialogContent>
         <DialogContentText>
-          "Are you sure you would like to delete this account? This action
-          cannot be reversed."
+          Are you sure you would like to delete this account? This action cannot
+          be reversed.
         </DialogContentText>
       </DialogContent>
       <DialogActions>
