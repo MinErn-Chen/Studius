@@ -17,6 +17,7 @@ CREATE TABLE users(
 --create tutor table
 CREATE TABLE tutors(
   subjects VARCHAR(255)[], --array size and depth ignored during run-time
+  engaged VARCHAR(255)[][], --[subject, level, student_name, student_id]
   rate VARCHAR(255),
   times VARCHAR(255)[],
   education VARCHAR(255),
@@ -27,11 +28,19 @@ CREATE TABLE tutors(
 --create student table
 CREATE TABLE students(
   subjects VARCHAR(255)[][], --array size and depth ignored during run-time
+  engaged VARCHAR(255)[][], --[subject, level, tutor_name, tutor_id]
   rate VARCHAR(255),
   times VARCHAR(255)[],
   description VARCHAR,
   ispublic boolean
 ) INHERITS (users);
+
+--create forum
+CREATE TABLE forums(
+  id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+  tutor_id uuid REFERENCES tutors(id) NOT NULL,
+  student_id uuid REFERENCES students(id) NOT NULL
+)
 
 --create credentials table
 CREATE TABLE credentials(
