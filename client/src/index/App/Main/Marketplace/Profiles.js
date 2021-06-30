@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
@@ -28,7 +29,7 @@ const stylisedTitles = {
   education: "Education",
 };
 
-const Profiles = ({ profiles, handleProfileViewOpen }) => {
+const Profiles = ({ profiles, handleProfileOpen, match }) => {
   const classes = useStyles();
 
   return (
@@ -100,7 +101,9 @@ const Profiles = ({ profiles, handleProfileViewOpen }) => {
                 <Button
                   size="small"
                   color="primary"
-                  onClick={handleProfileViewOpen(profile)}
+                  onClick={handleProfileOpen(profile)}
+                  component={Link}
+                  to={`${match.url}/view`}
                 >
                   View
                 </Button>

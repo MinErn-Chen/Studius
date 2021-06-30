@@ -1,25 +1,15 @@
 import { useState, useEffect } from "react";
-import Button from "@material-ui/core/Button";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import Typography from "@material-ui/core/Typography";
-import { makeStyles } from "@material-ui/core/styles";
+import { Switch, Route, Redirect } from "react-router-dom";
 
 import Profiles from "./Marketplace/Profiles";
+import ProfileView from "./Marketplace/ProfileView";
 
-const useStyles = makeStyles((theme) => ({
-  title: {
-    display: "flex",
-    justifyContent: "space-between",
-  },
-}));
-
-const Marketplace = ({ setNotification, setAppBarTitle, userInformation }) => {
-  const classes = useStyles();
-
+const Marketplace = ({
+  match,
+  setNotification,
+  setAppBarTitle,
+  userInformation,
+}) => {
   const [profiles, setProfiles] = useState([]);
 
   const getProfiles = async () => {
@@ -42,14 +32,37 @@ const Marketplace = ({ setNotification, setAppBarTitle, userInformation }) => {
     getProfiles();
   }, [setAppBarTitle]);
 
-  const [profileViewOpen, setProfileViewOpen] = useState(false);
+  const [profile, setProfile] = useState({
+    isSet: false,
+    firstname: "",
+    lastname: "",
+    subjects: [],
+    rate: "",
+    times: [],
+    description: "",
+  });
 
-  const [description, setDescription] = useState("");
-
-  const handleProfileViewOpen = (profile) => () => {
-    setDescription(profile.description);
+  const handleProfileOpen = (profile) => () => {
+    const {
+      firstname,
+      lastname,
+      subjects,
+      rate,
+      times,
+      education,
+      description,
+    } = profile;
+    setProfile({
+      isSet: true,
+      firstname: firstname,
+      lastname: lastname,
+      subjects: subjects,
+      rate: rate,
+      times: times,
+      education: education,
+      description: description,
+    });
     handleInitialiseCredentials(profile.id);
-    setProfileViewOpen(true);
   };
 
   const [credentialsURL, setCredentialsURL] = useState("");
@@ -76,71 +89,38 @@ const Marketplace = ({ setNotification, setAppBarTitle, userInformation }) => {
     }
   };
 
-  const handleViewCredentials = () => {
-    window.open(credentialsURL);
-  };
-
-  const handleProfileViewClose = () => {
-    setCredentialsURL("");
-    setProfileViewOpen(false);
-  };
-
-  const ProfileView = () => {
-    return (
-      <Dialog
-        open={profileViewOpen}
-        onClose={handleProfileViewClose}
-        disableBackdropClick
-        maxWidth="sm"
-        fullWidth
-      >
-        <DialogTitle id="profile-view-title">
-          {userInformation.type === "Tutor" ? (
-            <div>Detailed student profile</div>
-          ) : userInformation.type === "Student" ? (
-            <div className={classes.title}>
-              <div>Detailed tutor profile</div>
-              <Button
-                variant="outlined"
-                color="primary"
-                onClick={handleViewCredentials}
-                disabled={!Boolean(credentialsURL)}
-              >
-                {Boolean(credentialsURL)
-                  ? "View credentials"
-                  : "No credentials"}
-              </Button>
-            </div>
-          ) : (
-            ""
-          )}
-        </DialogTitle>
-        <DialogContent>
-          <DialogContentText id="profile-view-description">
-            <Typography style={{ whiteSpace: "pre-line" }}>
-              {description}
-            </Typography>
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleProfileViewClose} color="primary">
-            Close
-          </Button>
-          <Button onClick={handleProfileViewClose} color="primary" autoFocus>
-            Confirm
-          </Button>
-        </DialogActions>
-      </Dialog>
-    );
-  };
-
   return (
     <>
-      <Profiles
-        profiles={profiles}
-        handleProfileViewOpen={handleProfileViewOpen}
-      />
-      <ProfileView />
+      <Switch>
+        <Route
+          exact
+          path={`${match.url}`}
+          render={(props) => (
+            <Profiles
+              {...props}
+              profiles={profiles}
+              handleProfileOpen={handleProfileOpen}
+            />
+          )}
+        />
+        <Route
+          path={`${match.url}/view`}
+          render={(props) =>
+            profile.isSet ? (
+              <ProfileView
+                {...props}
+                userInformation={userInformation}
+                profile={profile}
+                setProfile={setProfile}
+                credentialsURL={credentialsURL}
+                setCredentialsURL={setCredentialsURL}
+              />
+            ) : (
+              <Redirect to={match.url} />
+            )
+          }
+        />
+      </Switch>
     </>
   );
 };
