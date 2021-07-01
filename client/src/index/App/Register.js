@@ -116,12 +116,7 @@ const Register = ({ setAuth, setNotification }) => {
         <form className={classes.form} onSubmit={onSubmitForm}>
           <Grid container spacing={1}>
             <Grid item xs={12}>
-              <FormControl
-                variant="outlined"
-                className={classes.formControl}
-                fullWidth
-                required
-              >
+              <FormControl variant="outlined" fullWidth required>
                 <InputLabel id="type">I am a...</InputLabel>
                 <Select
                   labelId="type"
