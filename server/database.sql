@@ -17,7 +17,7 @@ CREATE TABLE users(
 --create tutor table
 CREATE TABLE tutors(
   subjects VARCHAR(255)[], --array size and depth ignored during run-time
-  engaged VARCHAR(255)[][], --[subject, level, student_name, student_id]
+  engaged VARCHAR(255)[][], --[subject, student_name, student_id]
   rate VARCHAR(255),
   times VARCHAR(255)[],
   education VARCHAR(255),
@@ -28,7 +28,7 @@ CREATE TABLE tutors(
 --create student table
 CREATE TABLE students(
   subjects VARCHAR(255)[][], --array size and depth ignored during run-time
-  engaged VARCHAR(255)[][], --[subject, level, tutor_name, tutor_id]
+  engaged VARCHAR(255)[][], --[subject, tutor_name, tutor_id]
   rate VARCHAR(255),
   times VARCHAR(255)[],
   description VARCHAR,
