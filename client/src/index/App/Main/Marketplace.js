@@ -83,6 +83,8 @@ const Marketplace = ({
         const fileURL = URL.createObjectURL(file);
 
         setCredentialsURL(fileURL);
+      } else {
+        setCredentialsURL("");
       }
     } catch (error) {
       console.error(error.message);
@@ -114,6 +116,7 @@ const Marketplace = ({
                 setProfile={setProfile}
                 credentialsURL={credentialsURL}
                 setCredentialsURL={setCredentialsURL}
+                contractSubjects={profile.subjects}
               />
             ) : (
               <Redirect to={match.url} />
