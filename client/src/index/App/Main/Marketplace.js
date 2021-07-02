@@ -44,6 +44,7 @@ const Marketplace = ({
 
   const handleProfileOpen = (profile) => () => {
     const {
+      id,
       firstname,
       lastname,
       subjects,
@@ -54,6 +55,7 @@ const Marketplace = ({
     } = profile;
     setProfile({
       isSet: true,
+      id: id,
       firstname: firstname,
       lastname: lastname,
       subjects: subjects,
@@ -62,7 +64,7 @@ const Marketplace = ({
       education: education,
       description: description,
     });
-    handleInitialiseCredentials(profile.id);
+    handleInitialiseCredentials(id);
   };
 
   const [credentialsURL, setCredentialsURL] = useState("");
@@ -116,7 +118,6 @@ const Marketplace = ({
                 setProfile={setProfile}
                 credentialsURL={credentialsURL}
                 setCredentialsURL={setCredentialsURL}
-                contractSubjects={profile.subjects}
               />
             ) : (
               <Redirect to={match.url} />
