@@ -29,6 +29,9 @@ app.use("/account", require("./routes/account"));
 // file route
 app.use("/files", require("./routes/fileUpload"));
 
+// forum route
+app.use("/forum", require("./routes/forum"));
+
 app.listen(port, () => {
   console.log(`Server is running on port ${port}.`);
 });
