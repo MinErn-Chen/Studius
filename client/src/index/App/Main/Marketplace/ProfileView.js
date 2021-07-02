@@ -64,7 +64,6 @@ const ProfileView = ({
   match,
   credentialsURL,
   setCredentialsURL,
-  contractSubjects,
 }) => {
   const classes = useStyles();
 
@@ -91,7 +90,27 @@ const ProfileView = ({
 
   const handleContractConfirm = async (event) => {
     event.preventDefault();
+    console.log(profile);
     console.log(contractSubject);
+
+    try {
+      const body = { OUID: profile.id, subject: contractSubject };
+
+      const response = await fetch("http://localhost:3000/forum/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          token: localStorage.token,
+        },
+        body: JSON.stringify(body),
+      });
+
+      const parseRes = await response.json();
+
+      console.log(parseRes);
+    } catch (error) {
+      console.error(error.message);
+    }
   };
 
   const handleContractChange = (event) => {
@@ -124,12 +143,14 @@ const ProfileView = ({
                 getContentAnchorEl: null,
               }}
             >
-              {contractSubjects
+              {profile.subjects
                 .map((subject) =>
-                  Array.isArray(subject) ? subject.join(" ") : subject
+                  Array.isArray(subject)
+                    ? [subject[0], subject.join(" ")]
+                    : [subject, subject]
                 )
                 .map((subject) => (
-                  <MenuItem value={subject}>{subject}</MenuItem>
+                  <MenuItem value={subject[0]}>{subject[1]}</MenuItem>
                 ))}
             </Select>
           </FormControl>
