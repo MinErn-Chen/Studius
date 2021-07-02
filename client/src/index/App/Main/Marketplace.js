@@ -118,6 +118,7 @@ const Marketplace = ({
                 setProfile={setProfile}
                 credentialsURL={credentialsURL}
                 setCredentialsURL={setCredentialsURL}
+                setNotification={setNotification}
               />
             ) : (
               <Redirect to={match.url} />

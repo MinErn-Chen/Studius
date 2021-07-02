@@ -64,6 +64,7 @@ const ProfileView = ({
   match,
   credentialsURL,
   setCredentialsURL,
+  setNotification,
 }) => {
   const classes = useStyles();
 
@@ -107,8 +108,17 @@ const ProfileView = ({
 
       const parseRes = await response.json();
 
-      console.log(parseRes);
+      setNotification({
+        open: true,
+        severity: "success",
+        message: parseRes,
+      });
     } catch (error) {
+      setNotification({
+        open: true,
+        severity: "error",
+        message: error.message,
+      });
       console.error(error.message);
     }
   };
