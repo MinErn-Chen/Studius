@@ -1,39 +1,42 @@
 import { useEffect } from "react";
-import { Link as RouterLink } from "react-router-dom";
-import { makeStyles } from "@material-ui/core/styles";
-import MaterialLink from "@material-ui/core/Link";
-import Typography from "@material-ui/core/Typography";
-
-const useStyles = makeStyles((theme) => ({
-  noData: {
-    paddingTop: theme.spacing(50),
-  },
-}));
+import { Switch, Route, Redirect } from "react-router-dom";
+import React from "react";
+import Forum from "./Forum/Forum";
+import Engaged from "./Dashboard/Engaged";
 
 const Dashboard = ({
+  match,
+  userInformation,
   setNotification,
   setAppBarTitle,
-  userInformation,
-  match,
 }) => {
-  const classes = useStyles();
-
   useEffect(() => {
     setAppBarTitle("Dashboard");
   }, [setAppBarTitle]);
 
   return (
-    <Typography align="center" className={classes.noData} variant="h5">
-      <MaterialLink component={RouterLink} to={`${match.url}/marketplace`}>
-        Meet a{" "}
-        {userInformation.type === "Tutor"
-          ? "student"
-          : userInformation.type === "Student"
-          ? "tutor"
-          : ""}
-      </MaterialLink>{" "}
-      to get started!
-    </Typography>
+    <>
+      <Switch>
+        <Route
+          exact
+          path={`${match.url}`}
+          render={() => (
+            <Engaged match={match} userInformation={userInformation} />
+          )}
+        />
+        <Route
+          path={`${match.url}/forum/:forumid/:subject`}
+          render={(props) => (
+            <Forum
+              {...props}
+              setNotification={setNotification}
+              setAppBarTitle={setAppBarTitle}
+              userInformation={userInformation}
+            />
+          )}
+        />
+      </Switch>
+    </>
   );
 };
 
