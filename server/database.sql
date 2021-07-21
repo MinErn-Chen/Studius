@@ -17,7 +17,7 @@ CREATE TABLE users(
 --create tutor table
 CREATE TABLE tutors(
   subjects VARCHAR(255)[], --array size and depth ignored during run-time
-  engaged VARCHAR(255)[][], --[subject, student_id]
+  engaged VARCHAR[][], --[subject, student_id, student_name, forumid]
   rate VARCHAR(255),
   times VARCHAR(255)[],
   education VARCHAR(255),
@@ -28,7 +28,7 @@ CREATE TABLE tutors(
 --create student table
 CREATE TABLE students(
   subjects VARCHAR(255)[][], --array size and depth ignored during run-time
-  engaged VARCHAR(255)[][], --[subject, tutor_id]
+  engaged VARCHAR[][], --[subject, tutor_id, tutor_name, forumid]
   rate VARCHAR(255),
   times VARCHAR(255)[],
   description VARCHAR,
@@ -38,9 +38,7 @@ CREATE TABLE students(
 --create forum
 CREATE TABLE forums(
   id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
-  --tutor_id uuid REFERENCES tutors(id) NOT NULL,
   tutor_id uuid NOT NULL,
-  --student_id uuid REFERENCES students(id) NOT NULL
   student_id uuid NOT NULL
 );
 
@@ -51,6 +49,41 @@ CREATE TABLE credentials(
     filepath VARCHAR NOT NULL,
     mimetype VARCHAR NOT NULL,
     size BIGINT NOT NULL
+);
+
+CREATE TABLE annoucements(
+    forumid uuid REFERENCES forums(id), 
+    title TEXT, 
+    body TEXT, 
+    date VARCHAR(500)
+);
+
+CREATE TABLE qna(
+    forumid uuid REFERENCES forums(id),  
+    question TEXT,
+    answer TEXT, 
+    dateAsked VARCHAR(500), 
+    dateResponded VARCHAR(500)
+);
+
+-- renamed to match credentials table for consistency 
+CREATE TABLE assignments(
+    forumid uuid REFERENCES forums(id),
+    datePosted VARCHAR(500),
+    filename VARCHAR UNIQUE NOT NULL,
+    filepath VARCHAR NOT NULL,
+    mimetype VARCHAR NOT NULL,
+    size BIGINT NOT NULL,
+    file BYTEA
+);
+
+CREATE TABLE files(
+    forumid uuid REFERENCES forums(id),  
+    datePosted VARCHAR(500), 
+    filename VARCHAR,
+    filepath VARCHAR,
+    mimetype VARCHAR,
+    size BIGINT 
 );
 
 --insert sample user
