@@ -10,10 +10,19 @@ const fs = require("fs");
 router.put("/", authorisation, async (req, res) => {
   try {
     // destructure the req.body (OUID, subject)
-    const { OUID, subject, OUname, selfname } = req.body;
+    const { OUID, subject } = req.body;
 
     // insert into forums table
     if (req.user.type === "Tutor") {
+      // do stuff in other tables
+      const selfname = await pool.query(
+        "SELECT concat(firstname, lastname) AS name FROM tutors WHERE id=$1",
+        [req.user.id]
+      );
+      const OUname = await pool.query(
+        "SELECT concat(firstname, lastname) AS name FROM students WHERE id=$1",
+        [OUID]
+      );
       const forumid = await pool.query(
         "INSERT INTO forums (tutor_id, student_id) VALUES ($1, $2) RETURNING *",
         [req.user.id, OUID]
@@ -22,15 +31,26 @@ router.put("/", authorisation, async (req, res) => {
       // update self table
       await pool.query(
         "UPDATE tutors SET engaged = array_append(engaged, $1)  WHERE id = $2",
-        [[subject, OUID, OUname, forumid.rows[0].id], req.user.id]
+        [[subject, OUID, OUname.rows[0].name, forumid.rows[0].id], req.user.id]
       );
 
       // update opposing user table
       await pool.query(
         "UPDATE students SET engaged = array_append(engaged, $1)  WHERE id = $2",
-        [[subject, req.user.id, selfname, forumid.rows[0].id], OUID]
+        [
+          [subject, req.user.id, selfname.rows[0].name, forumid.rows[0].id],
+          OUID,
+        ]
       );
     } else if (req.user.type === "Student") {
+      const selfname = await pool.query(
+        "SELECT concat(firstname, lastname) AS name FROM students WHERE id=$1 RETURNING *",
+        [req.user.id]
+      );
+      const OUname = await pool.query(
+        "SELECT concat(firstname, lastname) AS name FROM tutors WHERE id=$1 RETURNING *",
+        [OUID]
+      );
       const forumid = await pool.query(
         "INSERT INTO forums (tutor_id, student_id) VALUES ($1, $2) RETURNING *",
         [OUID, req.user.id]
@@ -38,12 +58,15 @@ router.put("/", authorisation, async (req, res) => {
 
       await pool.query(
         "UPDATE students SET engaged = array_append(engaged, $1) WHERE id = $2",
-        [[subject, OUID, OUname, forumid.rows[0].id], req.user.id]
+        [[subject, OUID, OUname.rows[0].name, forumid.rows[0].id], req.user.id]
       );
 
       await pool.query(
         "UPDATE tutors SET engaged = array_append(engaged, $1)  WHERE id = $2",
-        [[subject, req.user.id, selfname, forumid.rows[0].id], OUID]
+        [
+          [subject, req.user.id, selfname.rows[0].name, forumid.rows[0].id],
+          OUID,
+        ]
       );
     }
 
@@ -308,7 +331,7 @@ router.post("/files", authorisation, async (req, res) => {
       return res.status(404).json(false);
     }
 
-    //bug here 
+    //bug here
     fs.readFile(path, (error, data) => {
       if (error) {
         res.status(500).json(error);
@@ -340,14 +363,10 @@ router.post(
       const { mimetype, size, path, filename } = req.file;
       const { forumid, date } = req.body;
 
-      await pool.query("INSERT INTO assignments VALUES ($1, $2, $3, $4, $5, $6)", [
-        forumid,
-        date,
-        filename,
-        path,
-        mimetype,
-        size,
-      ]);
+      await pool.query(
+        "INSERT INTO assignments VALUES ($1, $2, $3, $4, $5, $6)",
+        [forumid, date, filename, path, mimetype, size]
+      );
 
       res.json(true);
     } catch (error) {
@@ -362,15 +381,16 @@ router.post("/assignments", authorisation, async (req, res) => {
   try {
     const { forumid } = req.body;
 
-    const assns = await pool.query("SELECT * FROM assignments WHERE forumid = $1", [
-      forumid,
-    ]);
+    const assns = await pool.query(
+      "SELECT * FROM assignments WHERE forumid = $1",
+      [forumid]
+    );
 
     if (assns.rows.length === 0) {
       return res.status(404).json(false);
     }
 
-    //bug here 
+    //bug here
     fs.readFile(path, (error, data) => {
       if (error) {
         res.status(500).json(error);
