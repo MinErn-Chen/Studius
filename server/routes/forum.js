@@ -44,11 +44,11 @@ router.put("/", authorisation, async (req, res) => {
       );
     } else if (req.user.type === "Student") {
       const selfname = await pool.query(
-        "SELECT concat(firstname,' ', lastname) AS name FROM students WHERE id=$1 RETURNING *",
+        "SELECT concat(firstname,' ', lastname) AS name FROM students WHERE id=$1",
         [req.user.id]
       );
       const OUname = await pool.query(
-        "SELECT concat(firstname,' ', lastname) AS name FROM tutors WHERE id=$1 RETURNING *",
+        "SELECT concat(firstname,' ', lastname) AS name FROM tutors WHERE id=$1",
         [OUID]
       );
       const forumid = await pool.query(
