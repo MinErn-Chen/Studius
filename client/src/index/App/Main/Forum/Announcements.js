@@ -52,7 +52,7 @@ const Annoucements = ({ userInformation, setNotification, forumid }) => {
     handleClose();
 
     try {
-      const response = await fetch("http://localhost:3000/forum/annoucement", {
+      const response = await fetch("http://localhost:3000/forum/announcement", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -72,7 +72,7 @@ const Annoucements = ({ userInformation, setNotification, forumid }) => {
         setNotification({
           open: true,
           severity: "success",
-          message: `Annoucement posted`,
+          message: `Announcement posted`,
         });
       } else {
         setNotification({
@@ -90,14 +90,17 @@ const Annoucements = ({ userInformation, setNotification, forumid }) => {
   // both users
   const displayAnnoucements = async () => {
     try {
-      const response = await fetch("http://localhost:3000/forum/annoucements", {
-        method: "POST",
-        headers: {
-          token: localStorage.token,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ forumid: forumid }),
-      });
+      const response = await fetch(
+        "http://localhost:3000/forum/announcements",
+        {
+          method: "POST",
+          headers: {
+            token: localStorage.token,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ forumid: forumid }),
+        }
+      );
 
       const parseRes = await response.json();
 
@@ -117,18 +120,21 @@ const Annoucements = ({ userInformation, setNotification, forumid }) => {
   const deleteAnnoucement = (title, body) => async () => {
     try {
       console.log(title, body);
-      const response = await fetch(`http://localhost:3000/forum/annoucements`, {
-        method: "DELETE",
-        headers: {
-          token: localStorage.token,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          title: title,
-          body: body,
-          forumid: forumid,
-        }),
-      });
+      const response = await fetch(
+        `http://localhost:3000/forum/announcements`,
+        {
+          method: "DELETE",
+          headers: {
+            token: localStorage.token,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            title: title,
+            body: body,
+            forumid: forumid,
+          }),
+        }
+      );
 
       const parseRes = await response.json();
 
@@ -217,7 +223,7 @@ const Annoucements = ({ userInformation, setNotification, forumid }) => {
       <div>
         {anncs.length === 0 ? (
           <Box display="flex" justifyContent="center" m={2}>
-            <Typography variant="h4"> No annoucements yet!</Typography>
+            <Typography variant="h4"> No announcements yet!</Typography>
           </Box>
         ) : (
           anncs
