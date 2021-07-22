@@ -24,17 +24,6 @@ const Dashboard = ({
             <Engaged match={match} userInformation={userInformation} />
           )}
         />
-        <Route
-          path={`${match.url}/forum/:forumid/:subject`}
-          render={(props) => (
-            <Forum
-              {...props}
-              setNotification={setNotification}
-              setAppBarTitle={setAppBarTitle}
-              userInformation={userInformation}
-            />
-          )}
-        />
       </Switch>
     </>
   );

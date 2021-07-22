@@ -6,6 +6,7 @@ import Loading from "../shared/Loading";
 import AppBar from "./Main/AppBar";
 import SideBar from "./Main/SideBar";
 
+import Forum from "./Main/Forum/Forum";
 import Dashboard from "./Main/Dashboard";
 import Marketplace from "./Main/Marketplace";
 import TutorProfile from "./Main/TutorProfile";
@@ -93,12 +94,23 @@ const Main = ({ match, setAuth, setNotification }) => {
         />
         <Route
           path={`${match.url}/dashboard`}
-          render={() => (
+          render={(props) => (
             <Dashboard
               setNotification={setNotification}
               setAppBarTitle={setAppBarTitle}
               userInformation={userInformation}
-              match={match}
+              {...props}
+            />
+          )}
+        />
+        <Route
+          path={`${match.url}/forum/:forumid/:subject`}
+          render={(props) => (
+            <Forum
+              {...props}
+              setNotification={setNotification}
+              setAppBarTitle={setAppBarTitle}
+              userInformation={userInformation}
             />
           )}
         />
