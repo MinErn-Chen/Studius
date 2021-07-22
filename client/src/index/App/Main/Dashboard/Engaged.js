@@ -7,33 +7,28 @@ import CardActionArea from "@material-ui/core/CardActionArea";
 import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
 import { Link as RouterLink } from "react-router-dom";
+import { Grid } from "@material-ui/core";
+import Box from "@material-ui/core/Box";
 
 const useStyles = makeStyles((theme) => ({
   noData: {
     paddingTop: theme.spacing(50),
   },
   root: {
-    maxWidth: 275,
-    minHeight: 120,
-    display: "flex-center",
-    flexWrap: "wrap",
-    justifyContent: "space-around",
-    overflow: "hidden",
-    paddingTop: theme.spacing(1),
+    flexGrow: 1,
   },
-  bullet: {
-    display: "inline-block",
-    margin: "0 1px",
-    transform: "scale(1)",
+  paper: {
+    padding: theme.spacing(1),
+    textAlign: "center",
+    color: theme.palette.text.secondary,
   },
-  title: {
-    fontSize: 14,
-  },
-  content: {
-    textDecoration: "none",
-  },
-
 }));
+
+const defaultProps = {
+  bgcolor: "background.paper",
+  borderColor:"grey.500",
+  border: 1,
+};
 
 const Engaged = ({ match, userInformation }) => {
   const classes = useStyles();
@@ -57,7 +52,6 @@ const Engaged = ({ match, userInformation }) => {
     getEngaged();
   }, []);
 
-
   const items =
     window.items === undefined
       ? []
@@ -78,29 +72,41 @@ const Engaged = ({ match, userInformation }) => {
       to get started!
     </Typography>
   ) : (
-    items.map((item) => (
-      <Card variant="outlined" className={classes.root}>
-        <CardActionArea
-          className={classes.root}
-          component={RouterLink}
-          to={`${match.url}/forum/${item.split('"')[7]}/${
-            userInformation.type === "Student"
-              ? item.split('"')[1]
-              : item.split('"')[5]
-          }`}
-        >
-          <CardContent>
-            <Typography variant="h5" component="h2">
-              {item.split('"')[1]}
-            </Typography>
-            <Typography className={classes.pos} color="textSecondary">
-              {userInformation.type === "Student" ? "Tutor's " : "Student's"}{" "}
-              name: {item.split('"')[5]}
-            </Typography>
-          </CardContent>
-        </CardActionArea>
-      </Card>
-    ))
+    <>
+      <Box display="flex" m={1}>
+        <Grid direction="rows" container spacing={2}>
+          {items.map((item) => (
+            <Grid item xs={8} sm={3}>
+              <Box borderRadius={5} {...defaultProps}>
+                <Card variant="contained" className={classes.root}>
+                  <CardActionArea
+                    className={classes.root}
+                    component={RouterLink}
+                    to={`${match.url}/forum/${item.split('"')[7]}/${
+                      userInformation.type === "Student"
+                        ? item.split('"')[1]
+                        : item.split('"')[5]
+                    }`}
+                  >
+                    <CardContent>
+                      <Typography variant="h5" component="h2">
+                        {item.split('"')[1]}
+                      </Typography>
+                      <Typography className={classes.pos} color="textSecondary">
+                        {userInformation.type === "Student"
+                          ? "Tutor's "
+                          : "Student's"}{" "}
+                        name: {item.split('"')[5]}
+                      </Typography>
+                    </CardContent>
+                  </CardActionArea>
+                </Card>
+              </Box>
+            </Grid>
+          ))}
+        </Grid>
+      </Box>
+    </>
   );
 };
 
