@@ -11,6 +11,7 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import { Grid } from "@material-ui/core";
 
 const useStyles = makeStyles({
   root: {
@@ -199,28 +200,31 @@ const Annoucements = ({ userInformation, setNotification, forumid }) => {
       <div>
         {userInformation.type === "Tutor" ? (
           <div>
-            <Button
-              variant="outlined"
-              color="primary"
-              onClick={handleClickOpen}
-            >
-              + Add Annoucement
-            </Button>
+            <Box display="flex" m={1} justifyContent="center">
+              <Button
+                variant="contained"
+                color="secondary"
+                onClick={handleClickOpen}
+              >
+                + Add Annoucement
+              </Button>
+            </Box>
             {anncDialog}
           </div>
         ) : null}
       </div>
 
       <div>
-        <br />
         {anncs.length === 0 ? (
-          <Typography variant="h5"> No annoucements yet!</Typography>
+          <Box display="flex" justifyContent="center" m={2}>
+            <Typography variant="h4"> No annoucements yet!</Typography>
+          </Box>
         ) : (
           anncs
             .map((element) => Object.values(element))
             .map((element) => (
               <>
-                <Card className={classes.root} variant="outlined">
+                <Card className={classes.root} variant="contained">
                   <CardContent>
                     <Typography
                       className={classes.title}
@@ -229,14 +233,18 @@ const Annoucements = ({ userInformation, setNotification, forumid }) => {
                     >
                       {element[2]}
                     </Typography>
-                    <Typography variant="h5" component="h2">
-                      {element[0]}
-                    </Typography>
-                    <Typography variant="body2" component="p">
-                      {element[1]}
-                    </Typography>
+                    <Grid container wrap="nowrap" spacing={0}>
+                      <Typography variant="h5" component="h2">
+                        {element[0]}
+                      </Typography>
+                    </Grid>
+                    <Grid container wrap="nowrap" spacing={0}>
+                      <Typography variant="body2" component="p">
+                        {element[1]}
+                      </Typography>
+                    </Grid>
                   </CardContent>
-                  {userInformation.type === "Tutor" ? ( // can include more icon menu later: remove flex box
+                  {userInformation.type === "Tutor" ? (
                     <Box display="flex" flexDirection="row-reverse">
                       <CardActions>
                         <Button
@@ -251,6 +259,7 @@ const Annoucements = ({ userInformation, setNotification, forumid }) => {
                     </Box>
                   ) : null}
                 </Card>
+
                 <br />
               </>
             ))
