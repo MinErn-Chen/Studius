@@ -34,4 +34,4 @@ Run `yarn start` in both `/server` and `/client` to boot up server and client (d
 
 ## Testing
 
-To be updated :O
+User testing may be performed in the deployed client of this build.
