@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { Switch, Route, Redirect } from "react-router-dom";
 import React from "react";
-import Forum from "./Forum/Forum";
+import Forum from "../shared/Forum";
 import Engaged from "./Dashboard/Engaged";
 
 const Dashboard = ({

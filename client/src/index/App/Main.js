@@ -6,7 +6,7 @@ import Loading from "../shared/Loading";
 import AppBar from "./Main/AppBar";
 import SideBar from "./Main/SideBar";
 
-import Forum from "./Main/Forum/Forum";
+import Forum from "./shared/Forum";
 import Dashboard from "./Main/Dashboard";
 import Marketplace from "./Main/Marketplace";
 import TutorProfile from "./Main/TutorProfile";
