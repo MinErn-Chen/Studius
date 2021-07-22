@@ -3,7 +3,7 @@ import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import { Route, Switch, useParams } from "react-router-dom";
 import Menu from "./Menu";
-import Annoucements from "./Contents/Annoucements";
+import Announcements from "./Contents/Announcements";
 import Assignments from "./Contents/Assignments";
 import Files from "./Contents/Files";
 import QnA from "./Contents/QnA";
@@ -57,9 +57,9 @@ const Forum = ({
             <Switch>
               <Route
                 exact
-                path={`${match.url}/annoucements`}
+                path={`${match.url}/announcements`}
                 render={(props) => (
-                  <Annoucements
+                  <Announcements
                     {...props}
                     setNotification={setNotification}
                     userInformation={userInformation}

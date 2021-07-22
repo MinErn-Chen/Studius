@@ -40,11 +40,11 @@ export default function Menu({ match }) {
         className={classes.tabs}
       >
         <Tab
-          label="Annoucements"
-          key={"Annoucements"}
+          label="Announcements"
+          key={"Announcements"}
           icon={<AnnouncementIcon />}
           component={Link}
-          to={`${match.url}/annoucements`}
+          to={`${match.url}/announcements`}
         />
 
         <Tab
