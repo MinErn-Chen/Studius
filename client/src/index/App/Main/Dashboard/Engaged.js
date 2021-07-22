@@ -81,7 +81,7 @@ const Engaged = ({ match, userInformation }) => {
                       userInformation.type === "Student"
                         ? item.split('"')[1]
                         : item.split('"')[5]
-                    }`}
+                    }/announcements`}
                   >
                     <CardContent>
                       <Typography variant="h5" component="h2">
