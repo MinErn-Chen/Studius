@@ -98,7 +98,7 @@ const ProfileView = ({
       const body = { OUID: profile.id, subject: contractSubject };
 
       const response = await fetch("http://localhost:3000/forum/", {
-        method: "POST",
+        method: "PUT",
         headers: {
           "Content-Type": "application/json",
           token: localStorage.token,
