@@ -67,6 +67,7 @@ const Assignments = ({ match, setNotification, forumid }) => {
 
   return (
     <>
+    <Box display="flex" m={3} justifyContent="center">
       <input
         className={classes.upload}
         id="upload"
@@ -74,7 +75,7 @@ const Assignments = ({ match, setNotification, forumid }) => {
         onChange={fileChangeHandler}
       />
       <label htmlFor="upload">
-        <Button variant="contained" color="primary" component="span">
+        <Button variant="contained" color="secondary" component="span">
           <PublishIcon />
           Select File
         </Button>
@@ -94,10 +95,14 @@ const Assignments = ({ match, setNotification, forumid }) => {
           Upload File
         </Button>
       </form>
+      </Box>
+      <br />
 
       <div>
         {files.length === 0 ? (
-          <Typography variant="h5"> No files yet!</Typography>
+          <Box display="flex" justifyContent="center" alignItems="center">
+            <Typography variant="h4"> No assignments yet!</Typography>
+          </Box>
         ) : null}
       </div>
     </>
