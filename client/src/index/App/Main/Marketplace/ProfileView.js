@@ -174,7 +174,11 @@ const ProfileView = ({
           <Button onClick={handleContractClose} color="primary">
             Cancel
           </Button>
-          <Button onClick={handleContractConfirm} color="primary" autoFocus>
+          <Button
+            onClick={contractSubject && handleContractConfirm}
+            color="primary"
+            autoFocus
+          >
             Confirm
           </Button>
         </DialogActions>
