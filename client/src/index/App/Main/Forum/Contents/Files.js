@@ -65,40 +65,44 @@ const Files = ({ match, setNotification, forumid }) => {
   const files =
     window.files === undefined ? [] : window.files === null ? [] : window.files;
 
- 
   return (
     <>
-      <input
-        className={classes.upload}
-        id="upload"
-        type="file"
-        onChange={fileChangeHandler}
-      />
-      <label htmlFor="upload">
-        <Button variant="contained" color="primary" component="span">
-          <PublishIcon />
-          Select File
-        </Button>
-      </label>
-      <Box component="span" m={1}>
-        {fileData === undefined ? null : fileData.name}
+      <Box display="flex" m={3} justifyContent="center">
+        <input
+          className={classes.upload}
+          id="upload"
+          type="file"
+          onChange={fileChangeHandler}
+        />
+        <label htmlFor="upload">
+          <Button variant="contained" color="secondary" component="span">
+            <PublishIcon />
+            Select File
+          </Button>
+        </label>
+        <Box component="span" m={1}>
+          {fileData === undefined ? null : fileData.name}
+        </Box>
+
+        <form enctype="multipart/form-data">
+          <Button
+            type="submit"
+            variant="outlined"
+            color="primary"
+            onClick={uploadFile}
+          >
+            Upload File
+          </Button>
+        </form>
       </Box>
+
       <br />
-      <br />
-      <form enctype="multipart/form-data">
-        <Button
-          type="submit"
-          variant="outlined"
-          color="primary"
-          onClick={uploadFile}
-        >
-          Upload File
-        </Button>
-      </form>
 
       <div>
         {files.length === 0 ? (
-          <Typography variant="h5"> No files yet!</Typography>
+          <Box display="flex" justifyContent="center" alignItems="center">
+            <Typography variant="h4"> No files yet!</Typography>
+          </Box>
         ) : null}
       </div>
     </>
