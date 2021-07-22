@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import MaterialLink from "@material-ui/core/Link";
 import React from "react";
@@ -26,12 +26,14 @@ const useStyles = makeStyles((theme) => ({
 
 const defaultProps = {
   bgcolor: "background.paper",
-  borderColor:"grey.500",
+  borderColor: "grey.500",
   border: 1,
 };
 
 const Engaged = ({ match, userInformation }) => {
   const classes = useStyles();
+
+  const [engaged, setEngaged] = useState([]);
 
   // get the forums
   const getEngaged = async () => {
@@ -42,7 +44,7 @@ const Engaged = ({ match, userInformation }) => {
       });
 
       const parseRes = await response.json();
-      window.items = parseRes;
+      return setEngaged(parseRes.engaged || []);
     } catch (error) {
       console.error(error.message);
     }
@@ -52,14 +54,7 @@ const Engaged = ({ match, userInformation }) => {
     getEngaged();
   }, []);
 
-  const items =
-    window.items === undefined
-      ? []
-      : window.items.engaged === null
-      ? []
-      : window.items.engaged;
-
-  return items.length === 0 ? (
+  return engaged.length === 0 ? (
     <Typography align="center" className={classes.noData} variant="h5">
       <MaterialLink component={RouterLink} to={`/main/marketplace`}>
         Meet a{" "}
@@ -75,14 +70,14 @@ const Engaged = ({ match, userInformation }) => {
     <>
       <Box display="flex" m={1}>
         <Grid direction="rows" container spacing={2}>
-          {items.map((item) => (
+          {engaged.map((item) => (
             <Grid item xs={8} sm={3}>
               <Box borderRadius={5} {...defaultProps}>
                 <Card variant="contained" className={classes.root}>
                   <CardActionArea
                     className={classes.root}
                     component={RouterLink}
-                    to={`${match.url}/forum/${item.split('"')[7]}/${
+                    to={`forum/${item.split('"')[7]}/${
                       userInformation.type === "Student"
                         ? item.split('"')[1]
                         : item.split('"')[5]
