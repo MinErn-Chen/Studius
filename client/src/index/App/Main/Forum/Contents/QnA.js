@@ -215,7 +215,7 @@ const QnA = ({ userInformation, setNotification, forumid }) => {
         <div>
           {userInformation.type === "Student" ? (
             <div>
-              <Box display="flex" m={2} justifyContent="center">
+              <Box display="flex" m={3} justifyContent="center">
                 <Button
                   variant="contained"
                   color="secondary"
@@ -267,7 +267,6 @@ const QnA = ({ userInformation, setNotification, forumid }) => {
               .map((element) => Object.values(element))
               .map((element) => (
                 <>
-                
                   <Card className={classes.root} variant="elevation">
                     <CardContent>
                       <Typography
@@ -321,20 +320,20 @@ const QnA = ({ userInformation, setNotification, forumid }) => {
                     ) : (
                       <>
                         <Box display="flex" flexDirection="row-reverse">
-                        <CardActions>
-                          <Button
-                            variant="contained"
-                            colour="primary"
-                            onClick={handleAnsDiagOpen(element[0])}
-                          >
-                            {element[1] === null ? "answer" : "edit"}
-                          </Button>
+                          <CardActions>
+                            <Button
+                              variant="contained"
+                              colour="primary"
+                              onClick={handleAnsDiagOpen(element[0])}
+                            >
+                              {element[1] === null ? "answer" : "edit"}
+                            </Button>
                           </CardActions>
                         </Box>
                       </>
                     )}
                   </Card>
-                 
+
                   <br />
                 </>
               ))

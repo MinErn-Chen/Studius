@@ -200,7 +200,7 @@ const Annoucements = ({ userInformation, setNotification, forumid }) => {
       <div>
         {userInformation.type === "Tutor" ? (
           <div>
-            <Box display="flex" m={1} justifyContent="center">
+            <Box display="flex" m={3} justifyContent="center">
               <Button
                 variant="contained"
                 color="secondary"
