@@ -38,6 +38,7 @@ CREATE TABLE students(
 --create forum
 CREATE TABLE forums(
   id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+  subject VARCHAR(255) NOT NULL,
   tutor_id uuid NOT NULL,
   student_id uuid NOT NULL
 );
@@ -51,7 +52,7 @@ CREATE TABLE credentials(
     size BIGINT NOT NULL
 );
 
-CREATE TABLE annoucements(
+CREATE TABLE announcements(
     forumid uuid REFERENCES forums(id), 
     title TEXT, 
     body TEXT, 

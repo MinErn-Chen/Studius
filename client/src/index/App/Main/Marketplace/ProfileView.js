@@ -109,9 +109,8 @@ const ProfileView = ({
       const parseRes = await response.json();
 
       setNotification({
+        ...parseRes,
         open: true,
-        severity: "success",
-        message: parseRes,
       });
     } catch (error) {
       setNotification({

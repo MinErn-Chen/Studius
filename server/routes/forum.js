@@ -14,6 +14,18 @@ router.put("/", authorisation, async (req, res) => {
 
     // insert into forums table
     if (req.user.type === "Tutor") {
+      const forum = await pool.query(
+        "SELECT * FROM forums WHERE subject = $1 AND tutor_id = $2 AND student_id = $3",
+        [subject, req.user.id, OUID]
+      );
+
+      if (forum.rows[0]) {
+        return res.json({
+          severity: "error",
+          message: "Tuition already engaged!",
+        });
+      }
+
       // do stuff in other tables
       const selfname = await pool.query(
         "SELECT concat(firstname, ' ',lastname) AS name FROM tutors WHERE id=$1",
@@ -24,8 +36,8 @@ router.put("/", authorisation, async (req, res) => {
         [OUID]
       );
       const forumid = await pool.query(
-        "INSERT INTO forums (tutor_id, student_id) VALUES ($1, $2) RETURNING *",
-        [req.user.id, OUID]
+        "INSERT INTO forums (subject, tutor_id, student_id) VALUES ($1, $2, $3) RETURNING *",
+        [subject, req.user.id, OUID]
       );
 
       // update self table
@@ -43,6 +55,18 @@ router.put("/", authorisation, async (req, res) => {
         ]
       );
     } else if (req.user.type === "Student") {
+      const forum = await pool.query(
+        "SELECT * FROM forums WHERE subject = $1 AND tutor_id = $2 AND student_id = $3",
+        [subject, OUID, req.user.id]
+      );
+
+      if (forum.rows[0]) {
+        return res.json({
+          severity: "error",
+          message: "Tuition already engaged!",
+        });
+      }
+
       const selfname = await pool.query(
         "SELECT concat(firstname,' ', lastname) AS name FROM students WHERE id=$1",
         [req.user.id]
@@ -52,8 +76,8 @@ router.put("/", authorisation, async (req, res) => {
         [OUID]
       );
       const forumid = await pool.query(
-        "INSERT INTO forums (tutor_id, student_id) VALUES ($1, $2) RETURNING *",
-        [OUID, req.user.id]
+        "INSERT INTO forums (subject, tutor_id, student_id) VALUES ($1, $2, $3) RETURNING *",
+        [subject, OUID, req.user.id]
       );
 
       await pool.query(
@@ -70,10 +94,16 @@ router.put("/", authorisation, async (req, res) => {
       );
     }
 
-    res.json("Tuition successfully engaged!");
+    res.json({
+      severity: "success",
+      message: "Tuition successfully engaged!",
+    });
   } catch (error) {
     console.error(error.message);
-    res.status(500).json("Server error");
+    res.status(500).json({
+      severity: "error",
+      message: "Server error",
+    });
   }
 });
 
@@ -100,38 +130,38 @@ router.post("/id", authorisation, async (req, res) => {
   }
 });
 
-//ANNOUCMENTS
+//ANNOUNCMENTS
 //get announcements :
-router.post("/annoucements", authorisation, async (req, res) => {
+router.post("/announcements", authorisation, async (req, res) => {
   try {
     const { forumid } = req.body;
-    const annoucements = await pool.query(
-      "SELECT title, body, date FROM annoucements WHERE forumid = $1 ORDER BY date DESC",
+    const announcements = await pool.query(
+      "SELECT title, body, date FROM announcements WHERE forumid = $1 ORDER BY date DESC",
       [forumid]
     );
 
-    res.json(annoucements.rows);
+    res.json(announcements.rows);
   } catch (error) {
     console.error(error.message);
     res.status(500).json("Server error");
   }
 });
 
-// post annoucement: tutor only
+// post announcement: tutor only
 /* note: do not allow static (same annc) edit for immutability purposes 
  ie: for every EDIT, router.delete and router.post will be called
  to avoid use of router.put */
-router.post("/annoucement", authorisation, async (req, res) => {
+router.post("/announcement", authorisation, async (req, res) => {
   try {
     const { forumid, title, body, date } = req.body;
 
-    const annoucement = await pool.query(
-      "INSERT INTO annoucements VALUES ($1, $2, $3, $4) RETURNING *",
+    const announcement = await pool.query(
+      "INSERT INTO announcements VALUES ($1, $2, $3, $4) RETURNING *",
       [forumid, title, body, date]
     );
 
-    if (annoucement.rows.length === 0) {
-      res.json("Failed to post annoucement");
+    if (announcement.rows.length === 0) {
+      res.json("Failed to post announcement");
     }
 
     res.json(true);
@@ -141,22 +171,22 @@ router.post("/annoucement", authorisation, async (req, res) => {
   }
 });
 
-// delete annoucements
-router.delete("/annoucements", authorisation, async (req, res) => {
+// delete announcements
+router.delete("/announcements", authorisation, async (req, res) => {
   try {
     const { title, body, forumid } = req.body;
 
     //cannnot delete based on forum_id bc each S-T can have mutliple objects between them and tf f_id is not unique
     // student_id required since each tutor can post the same annc title/body to multiple students
-    const annoucement = await pool.query(
-      "DELETE FROM annoucements WHERE title = $1 AND body= $2 AND forumid = $3 RETURNING *",
+    const announcement = await pool.query(
+      "DELETE FROM announcements WHERE title = $1 AND body= $2 AND forumid = $3 RETURNING *",
       [title, body, forumid]
     );
 
-    console.log(annoucement);
+    console.log(announcement);
 
-    if (annoucement.rows.length === 0) {
-      res.json("Failed to delete annoucement");
+    if (announcement.rows.length === 0) {
+      res.json("Failed to delete announcement");
     } else {
       res.json(true);
     }
