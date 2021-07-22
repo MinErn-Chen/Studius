@@ -31,13 +31,13 @@ const Forum = ({
   props,
 }) => {
   const { forumid, subject } = useParams();
+
   const classes = useStyles();
 
   useEffect(() => {
     setAppBarTitle(`Forum : ${subject} `);
   }, [setAppBarTitle]);
 
-  console.log(match.url);
   return (
     <>
       <Container maxWidth="lg">
