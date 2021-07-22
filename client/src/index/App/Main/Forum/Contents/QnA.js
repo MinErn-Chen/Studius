@@ -11,6 +11,7 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import { Grid } from "@material-ui/core";
 
 const useStyles = makeStyles({
   root: {
@@ -24,8 +25,13 @@ const useStyles = makeStyles({
   title: {
     fontSize: 14,
   },
-  pos: {
-    marginBottom: 12,
+  date: {
+    fontSize: 12,
+    paddingTop: "10px",
+  },
+  footer: {
+    fontSize: 16,
+    paddingTop: "5px",
   },
 });
 
@@ -47,7 +53,7 @@ const QnA = ({ userInformation, setNotification, forumid }) => {
     setDialogOpen(true);
   };
 
-  const handleAnsDiagOpen = question => () => {
+  const handleAnsDiagOpen = (question) => () => {
     setAnsDialogOpen({ open: true, question: question });
   };
 
@@ -209,17 +215,21 @@ const QnA = ({ userInformation, setNotification, forumid }) => {
         <div>
           {userInformation.type === "Student" ? (
             <div>
-              <Button
-                variant="outlined"
-                color="primary"
-                onClick={handleClickOpen}
-              >
-                + Ask a question
-              </Button>
+              <Box display="flex" m={2} justifyContent="center">
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  onClick={handleClickOpen}
+                >
+                  + Ask a question
+                </Button>
+              </Box>
+
               <Dialog
                 open={dialogOpen}
                 onClose={handleClose}
                 aria-labelledby="qn-dialog-title"
+                fullWidth
               >
                 <DialogTitle id="qn-dialog-title">New Question</DialogTitle>
                 <DialogContent>
@@ -249,12 +259,15 @@ const QnA = ({ userInformation, setNotification, forumid }) => {
 
         <div>
           {qnas.length === 0 ? (
-            <Typography variant="h5"> No questions yet!</Typography>
+            <Box display="flex" justifyContent="center" m={2}>
+              <Typography variant="h4"> No questions yet!</Typography>
+            </Box>
           ) : (
             qnas
               .map((element) => Object.values(element))
               .map((element) => (
                 <>
+                
                   <Card className={classes.root} variant="elevation">
                     <CardContent>
                       <Typography
@@ -264,16 +277,26 @@ const QnA = ({ userInformation, setNotification, forumid }) => {
                       >
                         {element[2] /*dateAsked*/}
                       </Typography>
-                      <Typography variant="h6" component="h2">
-                        {element[0] /*question*/}
-                      </Typography>
-                      <Typography variant="h7" component="p">
-                        {element[1] /*answer*/}
-                      </Typography>
+
+                      <Grid container wrap="nowrap" spacing={0}>
+                        <Typography variant="h6" component="h2">
+                          {element[0] /*question*/}
+                        </Typography>
+                      </Grid>
+                      <Grid container wrap="nowrap" spacing={0}>
+                        <Typography
+                          variant="h7"
+                          component="p"
+                          className={classes.footer}
+                        >
+                          {element[1] /*answer*/}
+                        </Typography>
+                      </Grid>
+
                       <Typography
                         color="textSecondary"
                         gutterBottom
-                        className={classes.title}
+                        className={classes.date}
                       >
                         {element[3] /*dateResponded*/}
                       </Typography>
@@ -298,17 +321,20 @@ const QnA = ({ userInformation, setNotification, forumid }) => {
                     ) : (
                       <>
                         <Box display="flex" flexDirection="row-reverse">
+                        <CardActions>
                           <Button
                             variant="contained"
-                            colour="inherit"
+                            colour="primary"
                             onClick={handleAnsDiagOpen(element[0])}
                           >
                             {element[1] === null ? "answer" : "edit"}
                           </Button>
+                          </CardActions>
                         </Box>
                       </>
                     )}
                   </Card>
+                 
                   <br />
                 </>
               ))
