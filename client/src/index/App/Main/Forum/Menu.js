@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
     backgroundColor: theme.palette.background.paper,
     display: "flex",
-    height: 100,
+    height: 300,
   },
   tabs: {
     border: `3px solid ${theme.palette.divider}`,
@@ -34,7 +34,7 @@ export default function Menu({ match }) {
   return (
     <div className={classes.root}>
       <Tabs
-        orientation="horizontal"
+        orientation="vertical"
         value={value}
         onChange={handleChange}
         className={classes.tabs}
