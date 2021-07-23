@@ -39,6 +39,7 @@ const Annoucements = ({ userInformation, setNotification, forumid }) => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
+  const [announcements, setAnnouncements] = useState([]);
 
   const handleClickOpen = () => {
     setDialogOpen(true);
@@ -52,36 +53,43 @@ const Annoucements = ({ userInformation, setNotification, forumid }) => {
     handleClose();
 
     try {
-      const response = await fetch("http://localhost:3000/forum/announcement", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          token: localStorage.token,
-        },
-        body: JSON.stringify({
-          forumid: forumid,
-          title: title,
-          body: body,
-          date: annoucementDate,
-        }),
-      });
+      const announcementData = {
+        title,
+        body,
+        date: annoucementDate,
+      };
+
+      const response = await fetch(
+        "http://localhost:3000/forum/announcements",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            token: localStorage.token,
+          },
+          body: JSON.stringify({
+            ...announcementData,
+            forumid,
+          }),
+        }
+      );
 
       const parseRes = await response.json();
 
-      if (parseRes === true) {
+      if (parseRes.status === true) {
+        setAnnouncements([...announcements, announcementData]);
         setNotification({
           open: true,
           severity: "success",
-          message: `Announcement posted`,
+          message: parseRes.message,
         });
       } else {
         setNotification({
           open: true,
           severity: "error",
-          message: parseRes,
+          message: parseRes.message,
         });
       }
-      window.location.reload();
     } catch (error) {
       console.error(error.message);
     }
@@ -93,18 +101,18 @@ const Annoucements = ({ userInformation, setNotification, forumid }) => {
       const response = await fetch(
         "http://localhost:3000/forum/announcements",
         {
-          method: "POST",
+          method: "GET",
           headers: {
             token: localStorage.token,
             "Content-Type": "application/json",
+            forumid: forumid,
           },
-          body: JSON.stringify({ forumid: forumid }),
         }
       );
 
       const parseRes = await response.json();
 
-      window.anncs = parseRes;
+      return setAnnouncements(parseRes || []);
     } catch (error) {
       console.error(error.message);
     }
@@ -114,10 +122,7 @@ const Annoucements = ({ userInformation, setNotification, forumid }) => {
     displayAnnoucements();
   }, []);
 
-  const anncs =
-    window.anncs === undefined ? [] : window.anncs === null ? [] : window.anncs;
-
-  const deleteAnnoucement = (title, body) => async () => {
+  const deleteAnnoucement = (id) => async () => {
     try {
       console.log(title, body);
       const response = await fetch(
@@ -127,31 +132,29 @@ const Annoucements = ({ userInformation, setNotification, forumid }) => {
           headers: {
             token: localStorage.token,
             "Content-Type": "application/json",
+            id,
           },
-          body: JSON.stringify({
-            title: title,
-            body: body,
-            forumid: forumid,
-          }),
         }
       );
 
       const parseRes = await response.json();
 
-      if (parseRes === true) {
+      if (parseRes.status === true) {
+        setAnnouncements(
+          announcements.filter((announcement) => announcement.id !== id)
+        );
         setNotification({
           open: true,
           severity: "success",
-          message: "Annoucement deleted",
+          message: parseRes.message,
         });
       } else {
         setNotification({
           open: true,
           severity: "error",
-          message: parseRes,
+          message: parseRes.message,
         });
       }
-      window.location.reload();
     } catch (error) {
       setNotification({
         open: true,
@@ -221,54 +224,52 @@ const Annoucements = ({ userInformation, setNotification, forumid }) => {
       </div>
 
       <div>
-        {anncs.length === 0 ? (
+        {announcements.length === 0 ? (
           <Box display="flex" justifyContent="center" m={2}>
             <Typography variant="h4"> No announcements yet!</Typography>
           </Box>
         ) : (
-          anncs
-            .map((element) => Object.values(element))
-            .map((element) => (
-              <>
-                <Card className={classes.root} variant="contained">
-                  <CardContent>
-                    <Typography
-                      className={classes.title}
-                      color="textSecondary"
-                      gutterBottom
-                    >
-                      {element[2]}
+          announcements.map((announcement) => (
+            <>
+              <Card className={classes.root} variant="contained">
+                <CardContent>
+                  <Typography
+                    className={classes.title}
+                    color="textSecondary"
+                    gutterBottom
+                  >
+                    {announcement.date}
+                  </Typography>
+                  <Grid container wrap="nowrap" spacing={0}>
+                    <Typography variant="h5" component="h2">
+                      {announcement.title}
                     </Typography>
-                    <Grid container wrap="nowrap" spacing={0}>
-                      <Typography variant="h5" component="h2">
-                        {element[0]}
-                      </Typography>
-                    </Grid>
-                    <Grid container wrap="nowrap" spacing={0}>
-                      <Typography variant="body2" component="p">
-                        {element[1]}
-                      </Typography>
-                    </Grid>
-                  </CardContent>
-                  {userInformation.type === "Tutor" ? (
-                    <Box display="flex" flexDirection="row-reverse">
-                      <CardActions>
-                        <Button
-                          size="small"
-                          variant="contained"
-                          style={{ backgroundColor: "#CC0000", color: "white" }}
-                          onClick={deleteAnnoucement(element[0], element[1])}
-                        >
-                          Delete
-                        </Button>
-                      </CardActions>
-                    </Box>
-                  ) : null}
-                </Card>
+                  </Grid>
+                  <Grid container wrap="nowrap" spacing={0}>
+                    <Typography variant="body2" component="p">
+                      {announcement.body}
+                    </Typography>
+                  </Grid>
+                </CardContent>
+                {userInformation.type === "Tutor" ? (
+                  <Box display="flex" flexDirection="row-reverse">
+                    <CardActions>
+                      <Button
+                        size="small"
+                        variant="contained"
+                        style={{ backgroundColor: "#CC0000", color: "white" }}
+                        onClick={deleteAnnoucement(announcement.id)}
+                      >
+                        Delete
+                      </Button>
+                    </CardActions>
+                  </Box>
+                ) : null}
+              </Card>
 
-                <br />
-              </>
-            ))
+              <br />
+            </>
+          ))
         )}
       </div>
     </>
