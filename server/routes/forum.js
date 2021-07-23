@@ -132,15 +132,16 @@ router.post("/id", authorisation, async (req, res) => {
 
 //ANNOUNCMENTS
 //get announcements :
-router.post("/announcements", authorisation, async (req, res) => {
+router.get("/announcements", authorisation, async (req, res) => {
   try {
-    const { forumid } = req.body;
+    const { forumid } = req.headers;
+
     const announcements = await pool.query(
-      "SELECT title, body, date FROM announcements WHERE forumid = $1 ORDER BY date DESC",
+      "SELECT id, title, body, date FROM announcements WHERE forumid = $1 ORDER BY date DESC",
       [forumid]
     );
 
-    res.json(announcements.rows);
+    return res.json(announcements.rows);
   } catch (error) {
     console.error(error.message);
     res.status(500).json("Server error");
@@ -151,48 +152,60 @@ router.post("/announcements", authorisation, async (req, res) => {
 /* note: do not allow static (same annc) edit for immutability purposes 
  ie: for every EDIT, router.delete and router.post will be called
  to avoid use of router.put */
-router.post("/announcement", authorisation, async (req, res) => {
+router.post("/announcements", authorisation, async (req, res) => {
   try {
     const { forumid, title, body, date } = req.body;
 
     const announcement = await pool.query(
-      "INSERT INTO announcements VALUES ($1, $2, $3, $4) RETURNING *",
+      "INSERT INTO announcements (forumid ,title, body, date) VALUES ($1, $2, $3, $4) RETURNING *",
       [forumid, title, body, date]
     );
 
     if (announcement.rows.length === 0) {
-      res.json("Failed to post announcement");
+      return res.json({
+        status: false,
+        message: "Failed to post announcement",
+      });
     }
 
-    res.json(true);
+    return res.json({ status: true, message: "Announcement posted!" });
   } catch (error) {
     console.error(error.message);
-    res.status(500).json("Server error");
+    res.status(500).json({
+      status: false,
+      message: "Server error",
+    });
   }
 });
 
 // delete announcements
 router.delete("/announcements", authorisation, async (req, res) => {
   try {
-    const { title, body, forumid } = req.body;
+    const { id } = req.headers;
 
     //cannnot delete based on forum_id bc each S-T can have mutliple objects between them and tf f_id is not unique
     // student_id required since each tutor can post the same annc title/body to multiple students
     const announcement = await pool.query(
-      "DELETE FROM announcements WHERE title = $1 AND body= $2 AND forumid = $3 RETURNING *",
-      [title, body, forumid]
+      "DELETE FROM announcements WHERE id = $1 RETURNING *",
+      [id]
     );
 
     console.log(announcement);
 
     if (announcement.rows.length === 0) {
-      res.json("Failed to delete announcement");
-    } else {
-      res.json(true);
+      return res.json({
+        status: false,
+        message: "Failed to delete announcement",
+      });
     }
+
+    return res.json({ status: true, message: "Announcement deleted!" });
   } catch (error) {
     console.error(error.message);
-    res.status(500).json("Server error");
+    res.status(500).json({
+      status: false,
+      message: "Server error",
+    });
   }
 });
 
