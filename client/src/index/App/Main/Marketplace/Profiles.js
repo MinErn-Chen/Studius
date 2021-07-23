@@ -39,7 +39,7 @@ const Profiles = ({ profiles, handleProfileOpen, match }) => {
   const [searchArray, setSearchArray] = useState([]);
 
   useEffect(() => {
-    setSearchArray(search.split(" ").map((term) => term.toLowerCase()));
+    setSearchArray(search.split(",").map((term) => term.trim().toLowerCase()));
   }, [search]);
 
   return (
@@ -63,19 +63,21 @@ const Profiles = ({ profiles, handleProfileOpen, match }) => {
         </Grid>
         {profiles
           .filter((profile) => {
+            const subjects = Array.isArray(profile.subjects[0])
+              ? profile.subjects.map((subject) => subject.join(" "))
+              : profile.subjects;
+
             const values = [
-              profile.firstname,
-              profile.lastname,
-              ...profile.subjects,
-              profile.education,
-            ].map((term) => term.toLowerCase());
-            console.log(values);
-            console.log(searchArray);
+              `${profile.firstname} ${profile.lastname}`,
+              ...subjects,
+            ]
+              .concat(profile.education || [])
+              .map((term) => term.toLowerCase());
 
             return (
               searchArray.filter((term) =>
                 values.map((value) => value.includes(term)).includes(true)
-              ).length > 0
+              ).length === searchArray.length
             );
           })
           .map((profile) => (
