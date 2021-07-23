@@ -53,7 +53,8 @@ CREATE TABLE credentials(
 );
 
 CREATE TABLE announcements(
-    forumid uuid REFERENCES forums(id), 
+    id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+    forumid uuid REFERENCES forums(id),
     title TEXT, 
     body TEXT, 
     date VARCHAR(500)
