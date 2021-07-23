@@ -1,4 +1,4 @@
-import React from "react";
+import { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
@@ -23,7 +23,12 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Menu({ match }) {
   const classes = useStyles();
-  const [value, setValue] = React.useState(0);
+
+  const tabs = ["announcements", "assignments", "files", "qna"];
+
+  const [value, setValue] = useState(
+    tabs.indexOf(window.location.pathname.split("/").pop()) // weird ass solution but it works :D
+  );
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
