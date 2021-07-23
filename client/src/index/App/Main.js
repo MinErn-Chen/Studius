@@ -104,7 +104,7 @@ const Main = ({ match, setAuth, setNotification }) => {
           )}
         />
         <Route
-          path={`${match.url}/forum/:forumid/:subject`}
+          path={`${match.url}/forum/:forumid?/:subject?`}
           render={(props) => (
             <Forum
               {...props}

@@ -1,7 +1,7 @@
 import { useEffect, React } from "react";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
-import { Route, Switch, useParams } from "react-router-dom";
+import { Route, Switch, Redirect, useParams } from "react-router-dom";
 import Menu from "../Main/Forum/Menu";
 import Announcements from "../Main/Forum/Announcements";
 import Assignments from "../Main/Forum/Assignments";
@@ -35,10 +35,12 @@ const Forum = ({
   const classes = useStyles();
 
   useEffect(() => {
-    setAppBarTitle(`Forum : ${subject} `);
+    setAppBarTitle(`Forum - ${subject} `);
   }, [setAppBarTitle]);
 
-  return (
+  return !forumid && !subject ? (
+    <Redirect to={"/main/dashboard"} />
+  ) : (
     <>
       <Container maxWidth="lg">
         <Box
