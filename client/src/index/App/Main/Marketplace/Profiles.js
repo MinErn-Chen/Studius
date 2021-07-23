@@ -54,12 +54,15 @@ const Profiles = ({ profiles, handleProfileOpen, match }) => {
         className={classes.cardGrid}
       >
         <Grid item xs={12}>
-          <TextField
-            id="search"
-            label="Search"
-            onChange={(event) => setSearch(event.target.value)}
-            value={search}
-          />
+          <Container maxWidth="md">
+            <TextField
+              id="search"
+              label="Search"
+              onChange={(event) => setSearch(event.target.value)}
+              value={search}
+              fullWidth
+            />
+          </Container>
         </Grid>
         {profiles
           .filter((profile) => {
