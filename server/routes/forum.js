@@ -215,7 +215,7 @@ router.post("/qna", authorisation, async (req, res) => {
   try {
     const { forumid } = req.body;
     const questions = await pool.query(
-      "SELECT question, answer, dateAsked, dateResponded FROM qna WHERE forumid = $1 ORDER BY dateAsked DESC",
+      "SELECT question, answer, dateAsked, dateResponded FROM qna WHERE forumid = $1 ORDER BY dateResponded DESC, dateAsked DESC",
       [forumid]
     );
 
