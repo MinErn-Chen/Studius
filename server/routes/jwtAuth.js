@@ -13,7 +13,7 @@ router.post("/register", validInfo, async (req, res) => {
 
     // check if user email exists then handle error accordingly
     const user = await pool.query("SELECT * FROM users WHERE email = $1", [
-      email,
+      email.toLowerCase(),
     ]);
 
     if (user.rows.length > 0) {
@@ -29,7 +29,7 @@ router.post("/register", validInfo, async (req, res) => {
     // enter the new user inside the user database
     const newUser = await pool.query(
       `INSERT INTO ${type.toLowerCase()}s (type, firstname, lastname, email, password) VALUES ($1, $2, $3, $4, $5) RETURNING *`,
-      [type, firstname, lastname, email, bcryptPassword]
+      [type, firstname, lastname, email.toLowerCase(), bcryptPassword]
     );
 
     // generate the jwt token
@@ -50,7 +50,7 @@ router.post("/login", validInfo, async (req, res) => {
 
     // check if user email doesn't exist then handle error accordingly
     const user = await pool.query("SELECT * FROM users WHERE email = $1", [
-      email,
+      email.toLowerCase(),
     ]);
 
     if (user.rows.length === 0) {

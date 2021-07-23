@@ -98,7 +98,7 @@ const ProfileView = ({
       const body = { OUID: profile.id, subject: contractSubject };
 
       const response = await fetch("http://localhost:3000/forum/", {
-        method: "POST",
+        method: "PUT",
         headers: {
           "Content-Type": "application/json",
           token: localStorage.token,
@@ -109,9 +109,8 @@ const ProfileView = ({
       const parseRes = await response.json();
 
       setNotification({
+        ...parseRes,
         open: true,
-        severity: "success",
-        message: parseRes,
       });
     } catch (error) {
       setNotification({
@@ -175,7 +174,11 @@ const ProfileView = ({
           <Button onClick={handleContractClose} color="primary">
             Cancel
           </Button>
-          <Button onClick={handleContractConfirm} color="primary" autoFocus>
+          <Button
+            onClick={contractSubject && handleContractConfirm}
+            color="primary"
+            autoFocus
+          >
             Confirm
           </Button>
         </DialogActions>

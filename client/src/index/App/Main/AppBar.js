@@ -22,12 +22,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const AppBar = ({
-  userFirstName,
-  handleLogout,
-  handleSideBarOpen,
-  appBarTitle,
-}) => {
+const AppBar = ({ handleLogout, handleSideBarOpen, appBarTitle }) => {
   const classes = useStyles();
 
   const [anchorEl, setAnchorEl] = useState(null);
@@ -71,7 +66,7 @@ const AppBar = ({
             <MenuIcon />
           </IconButton>
           <Typography className={classes.title} variant="h6" noWrap>
-            {userFirstName}'s {appBarTitle}
+            {appBarTitle}
           </Typography>
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
