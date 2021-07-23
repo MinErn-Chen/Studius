@@ -12,6 +12,8 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import { Grid } from "@material-ui/core";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
 
 const useStyles = makeStyles({
   root: {
@@ -32,9 +34,8 @@ const useStyles = makeStyles({
 
 const Annoucements = ({ userInformation, setNotification, forumid }) => {
   const classes = useStyles();
-  const date = new Date();
-  const annoucementDate =
-    date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear(); // strangely its a month behind
+
+  dayjs.extend(relativeTime);
 
   const [dialogOpen, setDialogOpen] = useState(false);
   const [title, setTitle] = useState("");
@@ -56,7 +57,7 @@ const Annoucements = ({ userInformation, setNotification, forumid }) => {
       const announcementData = {
         title,
         body,
-        date: annoucementDate,
+        date: new Date().toISOString(),
       };
 
       const response = await fetch(
@@ -77,7 +78,10 @@ const Annoucements = ({ userInformation, setNotification, forumid }) => {
       const parseRes = await response.json();
 
       if (parseRes.status === true) {
-        setAnnouncements([...announcements, announcementData]);
+        setAnnouncements([
+          { ...announcementData, id: parseRes.id },
+          ...announcements,
+        ]);
         setNotification({
           open: true,
           severity: "success",
@@ -238,7 +242,9 @@ const Annoucements = ({ userInformation, setNotification, forumid }) => {
                     color="textSecondary"
                     gutterBottom
                   >
-                    {announcement.date}
+                    {`${dayjs(announcement.date).format("DD/MM/YYYY")} (${dayjs(
+                      announcement.date
+                    ).fromNow()})`}
                   </Typography>
                   <Grid container wrap="nowrap" spacing={0}>
                     <Typography variant="h5" component="h2">

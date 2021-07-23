@@ -12,6 +12,8 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import { Grid } from "@material-ui/core";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
 
 const useStyles = makeStyles({
   root: {
@@ -37,10 +39,10 @@ const useStyles = makeStyles({
 
 const QnA = ({ userInformation, setNotification, forumid }) => {
   const classes = useStyles();
-  const date = new Date(); // for both instances of asked and responded
-  const dateObj =
-    date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear();
 
+  dayjs.extend(relativeTime);
+
+  const [qnas, setQnas] = useState([]);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [ansDialogOpen, setAnsDialogOpen] = useState({
     open: false,
@@ -68,7 +70,13 @@ const QnA = ({ userInformation, setNotification, forumid }) => {
   // student
   const askQuestion = (question) => async () => {
     handleClose();
+
     try {
+      const qnaData = {
+        question,
+        date: new Date().toISOString(),
+      };
+
       const response = await fetch("http://localhost:3000/forum/qna/question", {
         method: "POST",
         headers: {
@@ -76,28 +84,27 @@ const QnA = ({ userInformation, setNotification, forumid }) => {
           token: localStorage.token,
         },
         body: JSON.stringify({
-          forumid: forumid,
-          question: question,
-          date: dateObj,
+          ...qnaData,
+          forumid,
         }),
       });
 
       const parseRes = await response.json();
 
-      if (parseRes === true) {
+      if (parseRes.status === true) {
+        setQnas([{ ...qnaData, id: parseRes.id }, ...qnas]);
         setNotification({
           open: true,
           severity: "success",
-          message: `Question posted`,
+          message: parseRes.message,
         });
       } else {
         setNotification({
           open: true,
           severity: "error",
-          message: parseRes,
+          message: parseRes.message,
         });
       }
-      window.location.reload();
     } catch (error) {
       console.error(error.message);
     }
@@ -116,7 +123,7 @@ const QnA = ({ userInformation, setNotification, forumid }) => {
         body: JSON.stringify({
           forumid: forumid,
           answer: answer,
-          date: dateObj,
+          date: new Date().toISOString(),
           question: question,
         }),
       });
@@ -136,7 +143,6 @@ const QnA = ({ userInformation, setNotification, forumid }) => {
           message: parseRes,
         });
       }
-      window.location.reload();
     } catch (error) {
       console.error(error.message);
     }
@@ -146,17 +152,17 @@ const QnA = ({ userInformation, setNotification, forumid }) => {
   const displayQnA = async () => {
     try {
       const response = await fetch("http://localhost:3000/forum/qna", {
-        method: "POST",
+        method: "GET",
         headers: {
           token: localStorage.token,
           "Content-Type": "application/json",
+          forumid,
         },
-        body: JSON.stringify({ forumid: forumid }),
       });
 
       const parseRes = await response.json();
 
-      window.qnas = parseRes;
+      setQnas(parseRes || []);
     } catch (error) {
       console.error(error.message);
     }
@@ -166,39 +172,33 @@ const QnA = ({ userInformation, setNotification, forumid }) => {
     displayQnA();
   }, []);
 
-  const qnas =
-    window.qnas === undefined ? [] : window.qnas === null ? [] : window.qnas;
-
-  const deleteQuestion = (question, answer) => async () => {
+  const deleteQuestion = (id) => async () => {
     try {
       const response = await fetch(`http://localhost:3000/forum/qna`, {
         method: "DELETE",
         headers: {
           token: localStorage.token,
           "Content-Type": "application/json",
+          id,
         },
-        body: JSON.stringify({
-          question: question,
-          forumid: forumid,
-        }),
       });
 
       const parseRes = await response.json();
 
-      if (parseRes === true) {
+      if (parseRes.status === true) {
+        setQnas(qnas.filter((qna) => qna.id !== id));
         setNotification({
           open: true,
           severity: "success",
-          message: "Question deleted",
+          message: parseRes.message,
         });
       } else {
         setNotification({
           open: true,
           severity: "error",
-          message: parseRes,
+          message: parseRes.message,
         });
       }
-      window.location.reload();
     } catch (error) {
       setNotification({
         open: true,
@@ -263,80 +263,86 @@ const QnA = ({ userInformation, setNotification, forumid }) => {
               <Typography variant="h4"> No questions yet!</Typography>
             </Box>
           ) : (
-            qnas
-              .map((element) => Object.values(element))
-              .map((element) => (
-                <>
-                  <Card className={classes.root} variant="elevation">
-                    <CardContent>
-                      <Typography
-                        className={classes.title}
-                        color="textSecondary"
-                        gutterBottom
-                      >
-                        {element[2] /*dateAsked*/}
-                      </Typography>
+            qnas.map((qna) => (
+              <div key={qna.id}>
+                <Card className={classes.root} variant="elevation">
+                  <CardContent>
+                    <Typography
+                      className={classes.title}
+                      color="textSecondary"
+                      gutterBottom
+                    >
+                      {`${dayjs(qna.dateasked).format("DD/MM/YYYY")} (${dayjs(
+                        qna.dateasked
+                      ).fromNow()})`}
+                    </Typography>
 
-                      <Grid container wrap="nowrap" spacing={0}>
-                        <Typography variant="h6" component="h2">
-                          {element[0] /*question*/}
-                        </Typography>
-                      </Grid>
-                      <Grid container wrap="nowrap" spacing={0}>
+                    <Grid container wrap="nowrap" spacing={0}>
+                      <Typography variant="h6" component="h2">
+                        {qna.question}
+                      </Typography>
+                    </Grid>
+                    {qna.answer && (
+                      <>
+                        <Grid container wrap="nowrap" spacing={0}>
+                          <Typography
+                            variant="h7"
+                            component="p"
+                            className={classes.footer}
+                          >
+                            {qna.answer}
+                          </Typography>
+                        </Grid>
+
                         <Typography
-                          variant="h7"
-                          component="p"
-                          className={classes.footer}
+                          color="textSecondary"
+                          gutterBottom
+                          className={classes.date}
                         >
-                          {element[1] /*answer*/}
+                          {`${dayjs(qna.dateresponded).format(
+                            "DD/MM/YYYY"
+                          )} (${dayjs(qna.dateresponded).fromNow()})`}
                         </Typography>
-                      </Grid>
+                      </>
+                    )}
+                  </CardContent>
 
-                      <Typography
-                        color="textSecondary"
-                        gutterBottom
-                        className={classes.date}
-                      >
-                        {element[3] /*dateResponded*/}
-                      </Typography>
-                    </CardContent>
-
-                    {userInformation.type === "Student" ? (
+                  {userInformation.type === "Student" ? (
+                    <Box display="flex" flexDirection="row-reverse">
+                      <CardActions>
+                        <Button
+                          size="small"
+                          variant="contained"
+                          style={{
+                            backgroundColor: "#CC0000",
+                            color: "white",
+                          }}
+                          onClick={deleteQuestion(qna.id)}
+                        >
+                          Delete
+                        </Button>
+                      </CardActions>
+                    </Box>
+                  ) : (
+                    <>
                       <Box display="flex" flexDirection="row-reverse">
                         <CardActions>
                           <Button
-                            size="small"
                             variant="contained"
-                            style={{
-                              backgroundColor: "#CC0000",
-                              color: "white",
-                            }}
-                            onClick={deleteQuestion(element[0], element[1])}
+                            colour="primary"
+                            onClick={handleAnsDiagOpen(qna.question)}
                           >
-                            Delete
+                            {qna.answer === null ? "answer" : "edit"}
                           </Button>
                         </CardActions>
                       </Box>
-                    ) : (
-                      <>
-                        <Box display="flex" flexDirection="row-reverse">
-                          <CardActions>
-                            <Button
-                              variant="contained"
-                              colour="primary"
-                              onClick={handleAnsDiagOpen(element[0])}
-                            >
-                              {element[1] === null ? "answer" : "edit"}
-                            </Button>
-                          </CardActions>
-                        </Box>
-                      </>
-                    )}
-                  </Card>
+                    </>
+                  )}
+                </Card>
 
-                  <br />
-                </>
-              ))
+                <br />
+              </div>
+            ))
           )}
         </div>
 

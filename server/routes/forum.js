@@ -168,7 +168,11 @@ router.post("/announcements", authorisation, async (req, res) => {
       });
     }
 
-    return res.json({ status: true, message: "Announcement posted!" });
+    return res.json({
+      status: true,
+      message: "Announcement posted!",
+      id: announcement.rows[0].id,
+    });
   } catch (error) {
     console.error(error.message);
     res.status(500).json({
@@ -211,15 +215,15 @@ router.delete("/announcements", authorisation, async (req, res) => {
 
 // QNA
 //get qna :
-router.post("/qna", authorisation, async (req, res) => {
+router.get("/qna", authorisation, async (req, res) => {
   try {
-    const { forumid } = req.body;
+    const { forumid } = req.headers;
     const questions = await pool.query(
-      "SELECT question, answer, dateAsked, dateResponded FROM qna WHERE forumid = $1 ORDER BY dateAsked DESC",
+      "SELECT id, question, answer, dateAsked, dateResponded FROM qna WHERE forumid = $1 ORDER BY dateAsked DESC",
       [forumid]
     );
 
-    res.json(questions.rows);
+    return res.json(questions.rows);
   } catch (error) {
     console.error(error.message);
     res.status(500).json("Server error");
@@ -237,16 +241,26 @@ router.post("/qna/question", authorisation, async (req, res) => {
     );
 
     if (qn.rows.length === 0) {
-      res.json("Failed to post question");
+      res.json({ status: false, message: "Failed to post question!" });
     } else if (qn.rows.length > 1) {
       // for precise Question obj identification at answer stage
-      res.json("Question has been asked before");
+      res.json({
+        status: false,
+        message: "Question has been answered before!",
+      });
     }
 
-    res.json(true);
+    res.json({
+      status: true,
+      message: "Question successfully posted!",
+      id: qn.rows[0].id,
+    });
   } catch (error) {
     console.error(error.message);
-    res.status(500).json("Server error");
+    res.status(500).json({
+      status: false,
+      message: "Server error",
+    });
   }
 });
 
@@ -276,24 +290,26 @@ router.put("/qna/answer", authorisation, async (req, res) => {
 // delete question (and answer if there is): student only
 router.delete("/qna", authorisation, async (req, res) => {
   try {
-    const { question, forumid } = req.body;
+    const { id } = req.headers;
 
     //cannnot delete based on forum_id bc each S-T can have mutliple objects between them and tf f_id is not unique
     // and recieve same answers across the system, but said student cannot post the same qn
 
     const entry = await pool.query(
-      "DELETE FROM qna WHERE question = $1 AND forumid = $2 RETURNING *",
-      [question, forumid]
+      "DELETE FROM qna WHERE id = $1 RETURNING *",
+      [id]
     );
 
     if (entry.rows.length === 0) {
-      res.json("Failed to delete question");
-    } else {
-      res.json(true);
+      return res.json({ status: false, message: "Failed to delete question!" });
     }
+    return res.json({
+      status: true,
+      message: "Successfully deleted question!",
+    });
   } catch (error) {
     console.error(error.message);
-    res.status(500).json("Server error");
+    res.status(500).json({ status: false, message: "Server error" });
   }
 });
 

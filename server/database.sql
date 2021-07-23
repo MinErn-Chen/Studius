@@ -61,6 +61,7 @@ CREATE TABLE announcements(
 );
 
 CREATE TABLE qna(
+    id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
     forumid uuid REFERENCES forums(id),  
     question TEXT,
     answer TEXT, 
