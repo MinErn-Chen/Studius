@@ -219,7 +219,11 @@ router.get("/qna", authorisation, async (req, res) => {
   try {
     const { forumid } = req.headers;
     const questions = await pool.query(
+<<<<<<< HEAD
       "SELECT id, question, answer, dateAsked, dateResponded FROM qna WHERE forumid = $1 ORDER BY dateAsked DESC",
+=======
+      "SELECT question, answer, dateAsked, dateResponded FROM qna WHERE forumid = $1 ORDER BY dateResponded DESC, dateAsked DESC",
+>>>>>>> 3ba6462db6086084289056b83ea32e92b41e4fda
       [forumid]
     );
 
