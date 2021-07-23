@@ -47,6 +47,7 @@ const QnA = ({ userInformation, setNotification, forumid }) => {
   const [ansDialogOpen, setAnsDialogOpen] = useState({
     open: false,
     question: "",
+    id: "",
   });
   const [question, setQuestion] = useState("");
   const [answer, setAnswer] = useState("");
@@ -55,8 +56,8 @@ const QnA = ({ userInformation, setNotification, forumid }) => {
     setDialogOpen(true);
   };
 
-  const handleAnsDiagOpen = (question) => () => {
-    setAnsDialogOpen({ open: true, question: question });
+  const handleAnsDiagOpen = (question, id) => () => {
+    setAnsDialogOpen({ open: true, question, id });
   };
 
   const handleClose = () => {
@@ -111,26 +112,29 @@ const QnA = ({ userInformation, setNotification, forumid }) => {
   };
 
   // tutor
-  const answerQuestion = (answer, question) => async () => {
-    handleClose();
+  const answerQuestion = (answer, id) => async () => {
+    setAnsDialogOpen({ open: false, question: "", id: "" });
+
+    console.log(id);
     try {
+      const date = new Date().toISOString();
       const response = await fetch("http://localhost:3000/forum/qna/answer", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
           token: localStorage.token,
         },
-        body: JSON.stringify({
-          forumid: forumid,
-          answer: answer,
-          date: new Date().toISOString(),
-          question: question,
-        }),
+        body: JSON.stringify({ id, answer, date }),
       });
 
       const parseRes = await response.json();
 
       if (parseRes === true) {
+        setQnas(
+          qnas.map((qna) =>
+            qna.id === id ? { ...qna, answer, dateresponded: date } : qna
+          )
+        );
         setNotification({
           open: true,
           severity: "success",
@@ -330,7 +334,7 @@ const QnA = ({ userInformation, setNotification, forumid }) => {
                           <Button
                             variant="contained"
                             colour="primary"
-                            onClick={handleAnsDiagOpen(qna.question)}
+                            onClick={handleAnsDiagOpen(qna.question, qna.id)}
                           >
                             {qna.answer === null ? "answer" : "edit"}
                           </Button>
@@ -372,7 +376,7 @@ const QnA = ({ userInformation, setNotification, forumid }) => {
                 cancel
               </Button>
               <Button
-                onClick={answerQuestion(answer, ansDialogOpen.question)}
+                onClick={answerQuestion(answer, ansDialogOpen.id)}
                 color="primary"
               >
                 answer

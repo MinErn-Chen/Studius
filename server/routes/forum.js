@@ -219,7 +219,7 @@ router.get("/qna", authorisation, async (req, res) => {
   try {
     const { forumid } = req.headers;
     const questions = await pool.query(
-      "SELECT question, answer, dateAsked, dateResponded FROM qna WHERE forumid = $1 ORDER BY dateResponded DESC, dateAsked DESC",
+      "SELECT id, question, answer, dateAsked, dateResponded FROM qna WHERE forumid = $1 ORDER BY dateResponded DESC, dateAsked DESC",
       [forumid]
     );
 
@@ -241,10 +241,10 @@ router.post("/qna/question", authorisation, async (req, res) => {
     );
 
     if (qn.rows.length === 0) {
-      res.json({ status: false, message: "Failed to post question!" });
+      return res.json({ status: false, message: "Failed to post question!" });
     } else if (qn.rows.length > 1) {
       // for precise Question obj identification at answer stage
-      res.json({
+      return res.json({
         status: false,
         message: "Question has been answered before!",
       });
@@ -267,13 +267,13 @@ router.post("/qna/question", authorisation, async (req, res) => {
 // answer: tutor only
 router.put("/qna/answer", authorisation, async (req, res) => {
   try {
-    const { forumid, answer, date, question } = req.body;
+    const { id, answer, date } = req.body;
 
     console.log(req.body);
 
     const ans = await pool.query(
-      "UPDATE qna SET answer = $1, dateresponded = $2 WHERE forumid = $3 AND question = $4 RETURNING *",
-      [answer, date, forumid, question]
+      "UPDATE qna SET answer = $1, dateresponded = $2 WHERE id = $3 RETURNING *",
+      [answer, date, id]
     );
 
     if (ans.rows.length === 0) {
