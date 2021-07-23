@@ -230,8 +230,8 @@ const Annoucements = ({ userInformation, setNotification, forumid }) => {
           </Box>
         ) : (
           announcements.map((announcement) => (
-            <>
-              <Card className={classes.root} variant="contained">
+            <div key={announcement.id}>
+              <Card className={classes.root}>
                 <CardContent>
                   <Typography
                     className={classes.title}
@@ -268,7 +268,7 @@ const Annoucements = ({ userInformation, setNotification, forumid }) => {
               </Card>
 
               <br />
-            </>
+            </div>
           ))
         )}
       </div>

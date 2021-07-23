@@ -69,11 +69,11 @@ const Engaged = ({ match, userInformation }) => {
   ) : (
     <>
       <Box display="flex" m={1}>
-        <Grid direction="rows" container spacing={2}>
-          {engaged.map((item) => (
-            <Grid item xs={8} sm={3}>
+        <Grid direction="row" container spacing={2}>
+          {engaged.map((item, index) => (
+            <Grid item xs={8} sm={3} key={index}>
               <Box borderRadius={5} {...defaultProps}>
-                <Card variant="contained" className={classes.root}>
+                <Card className={classes.root}>
                   <CardActionArea
                     className={classes.root}
                     component={RouterLink}

@@ -84,7 +84,7 @@ const Files = ({ match, setNotification, forumid }) => {
           {fileData === undefined ? null : fileData.name}
         </Box>
 
-        <form enctype="multipart/form-data">
+        <form encType="multipart/form-data">
           <Button
             type="submit"
             variant="outlined"

@@ -67,34 +67,34 @@ const Assignments = ({ match, setNotification, forumid }) => {
 
   return (
     <>
-    <Box display="flex" m={3} justifyContent="center">
-      <input
-        className={classes.upload}
-        id="upload"
-        type="file"
-        onChange={fileChangeHandler}
-      />
-      <label htmlFor="upload">
-        <Button variant="contained" color="secondary" component="span">
-          <PublishIcon />
-          Select File
-        </Button>
-      </label>
-      <Box component="span" m={1}>
-        {fileData === undefined ? null : fileData.name}
-      </Box>
-      <br />
-      <br />
-      <form enctype="multipart/form-data">
-        <Button
-          type="submit"
-          variant="outlined"
-          color="primary"
-          onClick={uploadFile}
-        >
-          Upload File
-        </Button>
-      </form>
+      <Box display="flex" m={3} justifyContent="center">
+        <input
+          className={classes.upload}
+          id="upload"
+          type="file"
+          onChange={fileChangeHandler}
+        />
+        <label htmlFor="upload">
+          <Button variant="contained" color="secondary" component="span">
+            <PublishIcon />
+            Select File
+          </Button>
+        </label>
+        <Box component="span" m={1}>
+          {fileData === undefined ? null : fileData.name}
+        </Box>
+        <br />
+        <br />
+        <form encType="multipart/form-data">
+          <Button
+            type="submit"
+            variant="outlined"
+            color="primary"
+            onClick={uploadFile}
+          >
+            Upload File
+          </Button>
+        </form>
       </Box>
       <br />
 
