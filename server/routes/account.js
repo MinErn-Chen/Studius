@@ -69,7 +69,7 @@ router.put("/email", authorisation, async (req, res) => {
     // update user email address and handle if user or attribute does not exist
     const updateAttributes = await pool.query(
       "UPDATE users SET email = $1 where id = $2 RETURNING *",
-      [email, req.user.id]
+      [email.toLowerCase(), req.user.id]
     );
 
     if (updateAttributes.rows.length === 0) {
